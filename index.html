@@ -11,9 +11,9 @@
   <meta name="application-name" content="成长">
   <meta name="msapplication-TileColor" content="#0f0f23">
   <meta name="msapplication-navbutton-color" content="#0f0f23">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%230f0f23'/%3E%3Ctext x='90' y='110' font-size='90' text-anchor='middle'%3E🌱%3C/text%3E%3C/svg%3E">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%230f0f23'/%3E%3Ctext x='90' y='110' font-size='90' text-anchor='middle'%3E🌱%3C/text%3E%3C/svg%3E">
-  <link rel="manifest" id="manifestLink">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
   <title>成长</title>
   <style>
     :root {
@@ -1950,33 +1950,8 @@
   <script>
     // ========== PWA 配置 ==========
     (function() {
-      // 内联 manifest
-      const manifest = {
-        name: '成长 — 习惯打卡与财务管理',
-        short_name: '成长',
-        description: '每日习惯打卡、周期任务、财务管理与基金追踪',
-        start_url: '.',
-        display: 'standalone',
-        background_color: '#0f0f23',
-        theme_color: '#0f0f23',
-        orientation: 'portrait',
-        icons: [
-          { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%230f0f23'/%3E%3Ctext x='96' y='125' font-size='96' text-anchor='middle'%3E🌱%3C/text%3E%3C/svg%3E", sizes: '192x192', type: 'image/svg+xml' },
-          { src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='100' fill='%230f0f23'/%3E%3Ctext x='256' y='340' font-size='260' text-anchor='middle'%3E🌱%3C/text%3E%3C/svg%3E", sizes: '512x512', type: 'image/svg+xml' }
-        ]
-      };
-      const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-      const manifestURL = URL.createObjectURL(manifestBlob);
-      document.getElementById('manifestLink').href = manifestURL;
-
-      // 清除旧的 Service Worker 和缓存
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => {
-          regs.forEach(r => r.unregister());
-        });
-      }
-      if ('caches' in window) {
-        caches.keys().then(names => names.forEach(n => caches.delete(n)));
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('Service Worker 注册失败:', err));
       }
     })();
 
@@ -3211,19 +3186,13 @@
     }
 
     function forceRefresh() {
-      if (confirm('确定要清除所有缓存并重新加载吗？\n\n这会保留你的打卡数据，只刷新页面代码。')) {
+      if (confirm('确定要刷新页面吗？\n\n这会保留你的打卡数据和离线缓存，只更新页面代码。')) {
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistrations().then(regs => {
-            regs.forEach(r => r.unregister());
+            regs.forEach(r => r.update());
           });
         }
-        if ('caches' in window) {
-          caches.keys().then(names => Promise.all(names.map(n => caches.delete(n)))).then(() => {
-            location.reload(true);
-          });
-        } else {
-          location.reload(true);
-        }
+        location.reload(true);
       }
     }
 
