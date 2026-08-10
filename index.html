@@ -2076,6 +2076,50 @@
     startMarketAutoRefresh();
     autoRefreshFunds();
 
+    function createDefaultSupplementItems() {
+      return [
+        { id: 1, name: '辅酶Q10 (澳世康)', icon: '❤️', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '脂溶性，随餐吸收更佳。避免晚上服用以免影响睡眠。', warning: '过量可能导致胃肠不适、失眠' },
+        { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后/早餐', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后30分钟内或早餐时服用，搭配碳水更佳。', warning: '过量增加肾脏负担' },
+        { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
+        { id: 4, name: 'MegLife 前列腺六合一', icon: '🎯', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '番茄红素、锯棕榈、南瓜籽等，针对前列腺/泌尿支持。', warning: '过量可能胃肠不适；前列腺问题建议先就医' },
+        { id: 5, name: 'VORSE 锌镁片', icon: '⚡', dosage: '按说明 1-2片', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '锌随餐减少胃部刺激，镁睡前有助放松。避免和高钙产品同服。', warning: '锌过量影响铜吸收；镁过量致腹泻；不要与其他锌镁产品叠加' },
+        { id: 6, name: '肌酸软糖', icon: '🍬', dosage: '3-5g', time: '运动后', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后或随餐服用，搭配葡萄糖吸收更佳。', warning: '过量可能导致胃肠不适、水肿' },
+        { id: 7, name: '鱼油', icon: '🐟', dosage: '1-2粒', time: '午餐/晚餐', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '随餐服用减少鱼腥味，脂肪帮助吸收。', warning: '过量可能影响凝血功能' },
+        { id: 8, name: 'Supovita 12合一多维牡蛎片', icon: '💊', dosage: '按说明 1片', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '复合维生素+牡蛎提取物，含锌、硒等，随餐服用。', warning: '含锌，避免与其他锌产品叠加；脂溶性维生素长期过量可能积累' },
+        { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '随餐', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '随餐服用减少胃部刺激。', warning: '过量可能加重肝脏负担' },
+        { id: 10, name: 'RAINBOWBAR 葫芦巴', icon: '🌱', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '葫芦巴提取物，常用于健身促睾/血糖支持。', warning: '可能影响血糖；糖尿病或服降糖药慎用' },
+        { id: 11, name: 'VITAS 瓜氨酸精氨酸粉', icon: '💥', dosage: '按说明 约5g', time: '运动前30分钟', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '瓜氨酸+精氨酸，提升血流与耐力，运动前服用。', warning: '过量可能胃肠不适、低血压；与降压药同用需谨慎' },
+        { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '晚餐后或睡前服用，与铁锌间隔2小时。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
+        { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
+        { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' },
+        { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' }
+      ];
+    }
+
+    function migrateLegacySupplementItems(items) {
+      const nameMap = {
+        '番茄红素六合一': 'MegLife 前列腺六合一',
+        '锌镁片': 'VORSE 锌镁片',
+        '复合多维锌镁片': 'Supovita 12合一多维牡蛎片',
+        '葫芦巴提取物': 'RAINBOWBAR 葫芦巴',
+        '黑金刚精氨酸片': 'VITAS 瓜氨酸精氨酸粉'
+      };
+      const defaults = createDefaultSupplementItems();
+      const merged = items.map(item => {
+        const newName = nameMap[item.name];
+        if (newName) {
+          const replacement = defaults.find(d => d.name === newName);
+          return replacement ? Object.assign({}, replacement, { id: item.id }) : item;
+        }
+        return item;
+      });
+      if (!merged.some(i => i.name === '蛹虫草玛咖片')) {
+        const newItem = defaults.find(d => d.name === '蛹虫草玛咖片');
+        merged.push(Object.assign({}, newItem, { id: Date.now() }));
+      }
+      return merged;
+    }
+
     function loadData() {
       try {
         const saved = JSON.parse(localStorage.getItem(LS_KEY));
@@ -2098,24 +2142,22 @@
             saved.modules.manifestation.goals = [];
           }
           if (!saved.modules.supplements || !saved.modules.supplements.items) {
-            saved.modules.supplements = { items: [
-              { id: 1, name: '辅酶Q10 (澳世康)', icon: '❤️', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, note: '脂溶性，随餐吸收更佳。避免晚上服用以免影响睡眠。', warning: '过量可能导致胃肠不适、失眠' },
-              { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后/早餐', timeSlot: 'morning', taken: false, note: '运动后30分钟内或早餐时服用，搭配碳水更佳。', warning: '过量增加肾脏负担' },
-              { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
-              { id: 4, name: '番茄红素六合一', icon: '🍅', dosage: '1-2粒', time: '午餐后', timeSlot: 'noon', taken: false, note: '脂溶性成分，随餐服用吸收更好。', warning: '长期过量可能影响肝功能' },
-              { id: 5, name: '锌镁片', icon: '⚡', dosage: '1粒', time: '晚餐后', timeSlot: 'evening', taken: false, note: '锌随餐减少胃部刺激，镁睡前有助放松。', warning: '锌过量影响铜吸收；镁过量致腹泻' },
-              { id: 6, name: '肌酸软糖', icon: '🍬', dosage: '3-5g', time: '运动后', timeSlot: 'workout', taken: false, note: '运动后或随餐服用，搭配葡萄糖吸收更佳。', warning: '过量可能导致胃肠不适、水肿' },
-              { id: 7, name: '鱼油', icon: '🐟', dosage: '1-2粒', time: '午餐/晚餐', timeSlot: 'noon', taken: false, note: '随餐服用减少鱼腥味，脂肪帮助吸收。', warning: '过量可能影响凝血功能' },
-              { id: 8, name: '复合多维锌镁片', icon: '🌿', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, note: '复合维生素建议早餐后服用，开启活力一天。', warning: '脂溶性维生素过量可能积累毒性' },
-              { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '随餐', timeSlot: 'noon', taken: false, note: '随餐服用减少胃部刺激。', warning: '过量可能加重肝脏负担' },
-              { id: 10, name: '葫芦巴提取物', icon: '🌱', dosage: '按说明', time: '随餐', timeSlot: 'noon', taken: false, note: '随餐服用，有助于血糖稳定。', warning: '过量可能导致低血糖' },
-              { id: 11, name: '黑金刚精氨酸片', icon: '🔥', dosage: '按说明', time: '运动前30分', timeSlot: 'workout', taken: false, note: '运动前30-60分钟空腹服用，提升血流。', warning: '过量可能导致胃肠不适，低血压慎用' },
-              { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, note: '晚餐后或睡前服用，与铁锌间隔2小时。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
-              { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
-              { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' }
-            ] };
+            saved.modules.supplements = { items: createDefaultSupplementItems() };
           } else if (!Array.isArray(saved.modules.supplements.items)) {
             saved.modules.supplements.items = [];
+          }
+          if (Array.isArray(saved.modules.supplements.items)) {
+            const badSixNames = ['VORSE 锌镁片', 'Supovita 12合一多维牡蛎片', 'VITAS 瓜氨酸精氨酸粉', 'RAINBOWBAR 葫芦巴', 'MegLife 前列腺六合一', '蛹虫草玛咖片'];
+            const isBadSixList = saved.modules.supplements.items.length === badSixNames.length && badSixNames.every(n => saved.modules.supplements.items.some(i => i.name === n));
+            if (isBadSixList) {
+              saved.modules.supplements.items = createDefaultSupplementItems();
+            } else {
+            const legacyNames = ['辅酶Q10 (澳世康)', '水解增肌粉', '冻干甜菜根粉', '番茄红素六合一', '锌镁片', '肌酸软糖', '鱼油', '复合多维锌镁片', '水飞蓟护肝片', '葫芦巴提取物', '黑金刚精氨酸片', '小分子液体钙', '营养米粉', '口服胶原蛋白'];
+            const isLegacyList = saved.modules.supplements.items.length === legacyNames.length && legacyNames.every(n => saved.modules.supplements.items.some(i => i.name === n));
+            if (isLegacyList) {
+              saved.modules.supplements.items = migrateLegacySupplementItems(saved.modules.supplements.items);
+            }
+            }
           }
           if (Array.isArray(saved.modules.supplements.items)) {
             saved.modules.supplements.items.forEach(item => {
@@ -2273,22 +2315,7 @@
             ]
           },
           supplements: {
-            items: [
-              { id: 1, name: '辅酶Q10 (澳世康)', icon: '❤️', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, note: '脂溶性，随餐吸收更佳。避免晚上服用以免影响睡眠。', warning: '过量可能导致胃肠不适、失眠' },
-              { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后/早餐', timeSlot: 'morning', taken: false, note: '运动后30分钟内或早餐时服用，搭配碳水更佳。', warning: '过量增加肾脏负担' },
-              { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
-              { id: 4, name: '番茄红素六合一', icon: '🍅', dosage: '1-2粒', time: '午餐后', timeSlot: 'noon', taken: false, note: '脂溶性成分，随餐服用吸收更好。', warning: '长期过量可能影响肝功能' },
-              { id: 5, name: '锌镁片', icon: '⚡', dosage: '1粒', time: '晚餐后', timeSlot: 'evening', taken: false, note: '锌随餐减少胃部刺激，镁睡前有助放松。', warning: '锌过量影响铜吸收；镁过量致腹泻' },
-              { id: 6, name: '肌酸软糖', icon: '🍬', dosage: '3-5g', time: '运动后', timeSlot: 'workout', taken: false, note: '运动后或随餐服用，搭配葡萄糖吸收更佳。', warning: '过量可能导致胃肠不适、水肿' },
-              { id: 7, name: '鱼油', icon: '🐟', dosage: '1-2粒', time: '午餐/晚餐', timeSlot: 'noon', taken: false, note: '随餐服用减少鱼腥味，脂肪帮助吸收。', warning: '过量可能影响凝血功能' },
-              { id: 8, name: '复合多维锌镁片', icon: '🌿', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, note: '复合维生素建议早餐后服用，开启活力一天。', warning: '脂溶性维生素过量可能积累毒性' },
-              { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '随餐', timeSlot: 'noon', taken: false, note: '随餐服用减少胃部刺激。', warning: '过量可能加重肝脏负担' },
-              { id: 10, name: '葫芦巴提取物', icon: '🌱', dosage: '按说明', time: '随餐', timeSlot: 'noon', taken: false, note: '随餐服用，有助于血糖稳定。', warning: '过量可能导致低血糖' },
-              { id: 11, name: '黑金刚精氨酸片', icon: '🔥', dosage: '按说明', time: '运动前30分', timeSlot: 'workout', taken: false, note: '运动前30-60分钟空腹服用，提升血流。', warning: '过量可能导致胃肠不适，低血压慎用' },
-              { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, note: '晚餐后或睡前服用，与铁锌间隔2小时。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
-              { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
-              { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' }
-            ]
+            items: createDefaultSupplementItems()
           }
         }
       };
