@@ -450,6 +450,49 @@
     }
     .habit-info .streak { color: var(--warning); font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
     .habit-info .streak::before { content: '🔥'; font-size: 10px; }
+    .achievement-badges { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 4px; vertical-align: middle; }
+    .achievement-badge {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--warning);
+      background: rgba(255,215,64,0.1);
+      border: 1px solid rgba(255,215,64,0.25);
+      border-radius: 6px;
+      padding: 1px 5px;
+      white-space: nowrap;
+    }
+    .achievement-toast {
+      position: fixed;
+      top: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(26,26,46,0.97);
+      border: 1px solid rgba(255,215,64,0.4);
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--warning);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      max-width: calc(100% - 32px);
+    }
+    .achievements-list { display: flex; flex-direction: column; gap: 10px; max-height: 60vh; overflow-y: auto; }
+    .achievement-item {
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(100,255,218,0.08);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+    .achievement-item-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .achievement-item-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .achievement-item-streak { font-size: 12px; color: var(--warning); font-weight: 700; }
+    .achievement-item-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+    .achievement-empty { font-size: 11px; color: var(--text2); }
+    .achievement-item-next { font-size: 11px; color: var(--text2); }
     .cycle-badge {
       display: inline-flex; align-items: center; gap: 3px;
       padding: 3px 10px; border-radius: 20px;
@@ -572,6 +615,68 @@
       border-top: 1px solid rgba(100,255,218,0.08);
       padding-bottom: env(safe-area-inset-bottom, 0);
     }
+    .undo-bar {
+      position: fixed;
+      left: 50%;
+      bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+      transform: translateX(-50%);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(26,26,46,0.96);
+      border: 1px solid rgba(100,255,218,0.2);
+      border-radius: 14px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      font-size: 13px;
+      color: var(--text);
+      max-width: calc(100% - 32px);
+    }
+    .undo-bar button {
+      border: none;
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #0a0a1a;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .update-banner {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(26,26,46,0.97);
+      border: 1px solid rgba(0,212,255,0.3);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      max-width: calc(100% - 32px);
+    }
+    .update-banner button {
+      border: none;
+      background: linear-gradient(135deg, var(--accent2), var(--primary));
+      color: #0a0a1a;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 7px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .reminder-row { margin-bottom: 12px; }
+    .reminder-row label { display: block; font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: 6px; }
+    .reminder-row .switch-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); }
+    .reminder-hint { font-size: 11px; color: var(--text2); line-height: 1.5; margin-bottom: 14px; }
     .nav-items {
       display: flex;
       justify-content: space-around;
@@ -705,6 +810,49 @@
     .cal-day.cycle-off { background: linear-gradient(135deg, #ff5252, #ff9f43); color: #fff; font-weight: 600; }
     .cal-day.cycle-feed { background: linear-gradient(135deg, #00e676, #00d4ff); color: #0a0a1a; font-weight: 600; }
     .cal-day.cycle-stop { background: rgba(0,0,0,0.2); color: var(--text2); }
+    .calendar-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .calendar-nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(100,255,218,0.15);
+      background: rgba(100,255,218,0.06);
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .cal-day-num { font-size: 12px; font-weight: 600; }
+    .cal-day .cal-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .cal-dot.check { background: #00e676; }
+    .cal-dot.supp { background: #00d4ff; }
+    .cal-dot.mani { background: #ffd740; }
+    .cal-day.has-check { box-shadow: inset 0 0 0 1px rgba(0,230,118,0.35); }
+    .calendar-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 14px;
+      font-size: 12px;
+      color: var(--text2);
+    }
+    .calendar-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .legend-dot.check { background: #00e676; }
+    .legend-dot.supp { background: #00d4ff; }
+    .legend-dot.mani { background: #ffd740; }
 
     .note-input {
       width: 100%;
@@ -842,6 +990,20 @@
       border-radius: var(--radius-sm);
       border: 1px solid rgba(100,255,218,0.06);
     }
+    .report-actions { display: flex; gap: 8px; margin-bottom: 16px; }
+    .report-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(0,212,255,0.07);
+      color: var(--accent2);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .report-btn:hover { background: rgba(0,212,255,0.14); }
 
     /* 彩带粒子 */
     .confetti-container {
@@ -1635,6 +1797,70 @@
       border-color: rgba(255,82,82,0.25);
       color: var(--danger);
     }
+    .supplement-schedule-wrap { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; }
+    .supplement-schedule {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      border: 1px solid;
+    }
+    .supplement-schedule.take { color: var(--success); border-color: rgba(0,230,118,0.25); background: rgba(0,230,118,0.08); }
+    .supplement-schedule.rest { color: var(--text2); border-color: rgba(100,255,218,0.12); background: rgba(100,255,218,0.05); }
+    .supplement-schedule.pending { color: var(--warning); border-color: rgba(255,215,64,0.25); background: rgba(255,215,64,0.08); }
+    .supplement-schedule.missed { color: var(--danger); border-color: rgba(255,82,82,0.3); background: rgba(255,82,82,0.1); }
+    .supplement-interactions {
+      background: rgba(255,215,64,0.06);
+      border: 1px solid rgba(255,215,64,0.18);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .supplement-interactions-title { font-size: 13px; font-weight: 700; color: var(--warning); margin-bottom: 10px; }
+    .supplement-interaction-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      padding: 8px 0;
+      border-top: 1px solid rgba(255,215,64,0.1);
+    }
+    .supplement-interaction-item:first-of-type { border-top: none; }
+    .supplement-interaction-name { font-size: 12px; font-weight: 700; color: var(--text); }
+    .supplement-interaction-text { font-size: 11px; color: var(--text2); line-height: 1.5; }
+    .supplement-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .supplement-tag {
+      font-size: 10px;
+      color: var(--accent2);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.15);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+    .supplement-tag-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .supplement-tag-chip {
+      padding: 7px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(100,255,218,0.12);
+      background: rgba(100,255,218,0.05);
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .supplement-tag-chip.active {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      color: #0a0a1a;
+      border-color: transparent;
+    }
 
     @media (max-width: 480px) {
       .market-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
@@ -1686,6 +1912,9 @@
       <button onclick="forceRefresh()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔄 刷新</button>
       <button onclick="openBackupModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">💾 备份</button>
       <button onclick="openStatsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📊 统计</button>
+      <button onclick="openCalendarOverviewModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📅 总览</button>
+      <button onclick="openReminderModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔔 提醒</button>
+      <button onclick="openAchievementsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🏆 成就</button>
       <button onclick="showDiagnostics()" style="font-size:10px;color:var(--warning);background:transparent;border:1px solid rgba(255,215,64,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔍 诊断</button>
     </div>
   </header>
@@ -1710,6 +1939,18 @@
     </div>
 
     <div id="moduleContent"></div>
+  </div>
+
+  <div id="updateBanner" class="update-banner" style="display:none">
+    <span>发现新版本，请刷新</span>
+    <button onclick="location.reload(true)">刷新</button>
+  </div>
+
+  <div id="achievementToast" class="achievement-toast" style="display:none"></div>
+
+  <div id="undoBar" class="undo-bar" style="display:none">
+    <span id="undoText">已删除</span>
+    <button onclick="undoLastDelete()">撤销</button>
   </div>
 
   <nav class="bottom-nav">
@@ -1908,6 +2149,10 @@
         <button class="stats-range-btn active" data-range="7" onclick="setStatsRange(7)">7日</button>
         <button class="stats-range-btn" data-range="30" onclick="setStatsRange(30)">30日</button>
       </div>
+      <div class="report-actions">
+        <button class="report-btn" onclick="exportReportCSV(7)">📄 导出7日CSV</button>
+        <button class="report-btn" onclick="exportReportCSV(30)">📄 导出30日CSV</button>
+      </div>
       <div class="stats-chart-section">
         <div class="stats-chart-title">✅ 打卡完成率</div>
         <canvas class="stats-chart" id="statsCheckinChart"></canvas>
@@ -1922,6 +2167,70 @@
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeStatsModal()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 日历总览弹窗 -->
+  <div class="overlay" id="calendarOverlay" onclick="closeCalendarOverviewModal(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>📅 日历总览</h3>
+        <button class="close" onclick="closeCalendarOverviewModal()">&times;</button>
+      </div>
+      <div class="calendar-nav">
+        <button class="calendar-nav-btn" onclick="changeCalendarMonth(-1)">‹</button>
+        <span id="calendarOverviewMonth"></span>
+        <button class="calendar-nav-btn" onclick="changeCalendarMonth(1)">›</button>
+      </div>
+      <div id="calendarOverviewBody"></div>
+      <div class="calendar-legend">
+        <span><span class="legend-dot check"></span> 打卡</span>
+        <span><span class="legend-dot supp"></span> 补剂</span>
+        <span><span class="legend-dot mani"></span> 显化</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeCalendarOverviewModal()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 每日提醒弹窗 -->
+  <div class="overlay" id="reminderOverlay" onclick="closeReminderModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>🔔 每日提醒</h3>
+        <button class="close" onclick="closeReminderModal()">&times;</button>
+      </div>
+      <div class="reminder-row">
+        <label>打卡提醒时间</label>
+        <input type="time" class="fund-form-input" id="reminderCheckinTime" value="09:00">
+      </div>
+      <div class="reminder-row">
+        <label>补剂提醒时间</label>
+        <input type="time" class="fund-form-input" id="reminderSupplementTime" value="20:00">
+      </div>
+      <div class="reminder-row">
+        <label class="switch-label"><input type="checkbox" id="reminderEnabled"> 开启每日提醒</label>
+      </div>
+      <p class="reminder-hint">提醒在应用打开时生效；真正的后台推送需要服务器支持。</p>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeReminderModal()">取消</button>
+        <button class="btn-primary" onclick="saveReminderSettings()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 成就弹窗 -->
+  <div class="overlay" id="achievementsOverlay" onclick="closeAchievementsModal(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>🏆 打卡成就</h3>
+        <button class="close" onclick="closeAchievementsModal()">&times;</button>
+      </div>
+      <div id="achievementsList" class="achievements-list"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeAchievementsModal()">关闭</button>
       </div>
     </div>
   </div>
@@ -1951,7 +2260,9 @@
     // ========== PWA 配置 ==========
     (function() {
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js').catch(err => console.log('Service Worker 注册失败:', err));
+        navigator.serviceWorker.register('sw.js')
+          .then(reg => setupUpdatePrompt(reg))
+          .catch(err => console.log('Service Worker 注册失败:', err));
       }
     })();
 
@@ -1971,8 +2282,10 @@
     };
 
     const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','study','game','fitness'];
+    const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
 
     let data = loadData();
+    validateAndRepairData();
     const today = getTodayStr();
     let activeModule = localStorage.getItem(LS_KEY + '_active') || 'daily';
     let pendingNoteId = null;
@@ -1980,9 +2293,12 @@
     let marketAutoFetchDone = false;
     let marketRefreshTimer = null;
     let skipCardEntryAnim = false;
+    const REMINDER_KEY = LS_KEY + '_reminders';
+    let reminderTimer = null;
 
     let manifestExpandedGoal = null;
     let manifestPendingGoalId = null;
+    let supplementTagFilter = 'all';
 
     const SUPPLEMENT_TIME_SLOTS = {
       morning: { label: '☀️ 早晨', color: '#ffd740', order: 1 },
@@ -2075,6 +2391,21 @@
     autoFetchMarketData();
     startMarketAutoRefresh();
     autoRefreshFunds();
+    startReminderLoop();
+
+    function normalizeSupplementItem(item) {
+      if (!item) return item;
+      if (item.stock === undefined) item.stock = null;
+      if (item.stockTotal === undefined) item.stockTotal = null;
+      if (item.stockUnit === undefined) item.stockUnit = '粒';
+      if (item.lowStockThreshold === undefined) item.lowStockThreshold = 10;
+      if (item.cycleEnabled === undefined) item.cycleEnabled = false;
+      if (item.cycleTakeDays === undefined) item.cycleTakeDays = 5;
+      if (item.cycleStopDays === undefined) item.cycleStopDays = 2;
+      if (item.cycleStart === undefined) item.cycleStart = '';
+      if (!Array.isArray(item.tags)) item.tags = [];
+      return item;
+    }
 
     function createDefaultSupplementItems() {
       return [
@@ -2093,7 +2424,7 @@
         { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
         { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' },
         { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' }
-      ];
+      ].map(normalizeSupplementItem);
     }
 
     function migrateLegacySupplementItems(items) {
@@ -2141,7 +2472,7 @@
           } else if (!Array.isArray(saved.modules.manifestation.goals)) {
             saved.modules.manifestation.goals = [];
           }
-          if (!saved.modules.supplements || !saved.modules.supplements.items) {
+          if (!saved.modules.supplements || !saved.modules.supplements.items || saved.modules.supplements.items.length === 0) {
             saved.modules.supplements = { items: createDefaultSupplementItems() };
           } else if (!Array.isArray(saved.modules.supplements.items)) {
             saved.modules.supplements.items = [];
@@ -2160,13 +2491,9 @@
             }
           }
           if (Array.isArray(saved.modules.supplements.items)) {
-            saved.modules.supplements.items.forEach(item => {
-              if (item.stock === undefined) item.stock = null;
-              if (item.stockTotal === undefined) item.stockTotal = null;
-              if (item.stockUnit === undefined) item.stockUnit = '粒';
-              if (item.lowStockThreshold === undefined) item.lowStockThreshold = 10;
-            });
+            saved.modules.supplements.items = saved.modules.supplements.items.map(normalizeSupplementItem);
           }
+          if (!saved.achievements || typeof saved.achievements !== 'object') saved.achievements = {};
           return saved;
         }
       } catch(e) {}
@@ -2184,6 +2511,181 @@
       } catch(e) {
         console.log('saveData 失败:', e);
       }
+    }
+
+    function validateAndRepairData() {
+      if (!data || !data.modules) {
+        data = initData();
+        return;
+      }
+      let repaired = false;
+      if (!data.achievements || typeof data.achievements !== 'object') {
+        data.achievements = {};
+        repaired = true;
+      }
+      const base = JSON.parse(JSON.stringify(initData().modules));
+      for (const key of Object.keys(base)) {
+        if (!data.modules[key]) {
+          data.modules[key] = base[key];
+          repaired = true;
+        }
+      }
+      ['daily', 'study', 'game', 'fitness', 'cycle', 'free'].forEach(key => {
+        const mod = data.modules[key];
+        if (!mod || !Array.isArray(mod.habits)) {
+          if (mod) mod.habits = [];
+          repaired = true;
+        }
+      });
+      const fin = data.modules.finance;
+      if (!fin) {
+        data.modules.finance = base.finance;
+        repaired = true;
+      } else {
+        if (typeof fin.targetAmount !== 'number' || isNaN(fin.targetAmount)) { fin.targetAmount = 10000; repaired = true; }
+        if (typeof fin.currentAmount !== 'number' || isNaN(fin.currentAmount)) { fin.currentAmount = 0; repaired = true; }
+        if (typeof fin.monthlyBudget !== 'number' || isNaN(fin.monthlyBudget)) { fin.monthlyBudget = 0; repaired = true; }
+        if (!Array.isArray(fin.transactions)) { fin.transactions = []; repaired = true; }
+        if (!fin.marketData || typeof fin.marketData !== 'object') { fin.marketData = {}; repaired = true; }
+        if (!Array.isArray(fin.funds)) { fin.funds = []; repaired = true; }
+        if (!Array.isArray(fin.habits)) { fin.habits = []; repaired = true; }
+      }
+      if (!Array.isArray(data.modules.manifestation.goals)) {
+        data.modules.manifestation.goals = [];
+        repaired = true;
+      }
+      if (!Array.isArray(data.modules.supplements.items)) {
+        data.modules.supplements.items = [];
+        repaired = true;
+      }
+      const validSupps = data.modules.supplements.items.filter(i => i && i.name);
+      if (validSupps.length !== data.modules.supplements.items.length) {
+        data.modules.supplements.items = validSupps;
+        repaired = true;
+      }
+      if (repaired) {
+        saveData();
+        setTimeout(() => alert('检测到数据异常，已自动修复'), 0);
+      }
+    }
+
+    let undoState = null;
+    let undoHideTimer = null;
+    let achievementToastTimer = null;
+
+    function captureUndoSnapshot(label) {
+      undoState = { label: label, data: JSON.parse(JSON.stringify(data)) };
+      const bar = document.getElementById('undoBar');
+      const text = document.getElementById('undoText');
+      if (bar) bar.style.display = 'flex';
+      if (text) text.textContent = label;
+      clearTimeout(undoHideTimer);
+      undoHideTimer = setTimeout(hideUndoBar, 8000);
+    }
+
+    function undoLastDelete() {
+      if (!undoState) return;
+      data = undoState.data;
+      saveData();
+      hideUndoBar();
+      renderModule(activeModule);
+      updateTotalStats();
+      renderNav();
+    }
+
+    function hideUndoBar() {
+      const bar = document.getElementById('undoBar');
+      if (bar) bar.style.display = 'none';
+      undoState = null;
+      clearTimeout(undoHideTimer);
+    }
+
+    function setupUpdatePrompt(reg) {
+      reg.addEventListener('updatefound', () => {
+        const newWorker = reg.installing;
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            const bar = document.getElementById('updateBanner');
+            if (bar) bar.style.display = 'flex';
+          }
+        });
+      });
+    }
+
+    function getReminderSettings() {
+      try {
+        return JSON.parse(localStorage.getItem(REMINDER_KEY)) || {};
+      } catch(e) {
+        return {};
+      }
+    }
+
+    function openReminderModal() {
+      const s = getReminderSettings();
+      document.getElementById('reminderEnabled').checked = !!s.enabled;
+      document.getElementById('reminderCheckinTime').value = s.checkinTime || '09:00';
+      document.getElementById('reminderSupplementTime').value = s.supplementTime || '20:00';
+      document.getElementById('reminderOverlay').classList.add('show');
+    }
+
+    function closeReminderModal(e) {
+      if (e && e.target !== document.getElementById('reminderOverlay')) return;
+      document.getElementById('reminderOverlay').classList.remove('show');
+    }
+
+    function saveReminderSettings() {
+      const settings = {
+        enabled: !!document.getElementById('reminderEnabled').checked,
+        checkinTime: document.getElementById('reminderCheckinTime').value || '09:00',
+        supplementTime: document.getElementById('reminderSupplementTime').value || '20:00',
+        lastCheckinDate: null,
+        lastSupplementDate: null
+      };
+      localStorage.setItem(REMINDER_KEY, JSON.stringify(settings));
+      if (settings.enabled && 'Notification' in window && Notification.permission !== 'granted') {
+        Notification.requestPermission().then(perm => {
+          if (perm !== 'granted') alert('未获得通知权限，提醒不会显示');
+        });
+      }
+      closeReminderModal();
+      startReminderLoop();
+    }
+
+    function startReminderLoop() {
+      clearInterval(reminderTimer);
+      reminderTimer = setInterval(checkAndSendReminders, 30000);
+      checkAndSendReminders();
+    }
+
+    function checkAndSendReminders() {
+      const s = getReminderSettings();
+      if (!s.enabled) return;
+      const now = new Date();
+      const hm = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      const todayStr = getTodayStr();
+      if (hm === s.checkinTime && s.lastCheckinDate !== todayStr) {
+        s.lastCheckinDate = todayStr;
+        localStorage.setItem(REMINDER_KEY, JSON.stringify(s));
+        sendReminderNotification('成长打卡', '今天还没有打卡，记得完成今天的习惯');
+      }
+      if (hm === s.supplementTime && s.lastSupplementDate !== todayStr) {
+        s.lastSupplementDate = todayStr;
+        localStorage.setItem(REMINDER_KEY, JSON.stringify(s));
+        sendReminderNotification('补剂提醒', '到吃补剂的时间了，记得查看补剂明细');
+      }
+    }
+
+    function sendReminderNotification(title, body) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+      const options = { body: body, icon: 'icon-192.png', badge: 'icon-192.png' };
+      try {
+        if (navigator.serviceWorker && navigator.serviceWorker.ready) {
+          navigator.serviceWorker.ready.then(reg => reg.showNotification(title, options)).catch(() => {});
+        } else {
+          new Notification(title, options);
+        }
+      } catch(e) {}
     }
 
     function escapeHtml(str) {
@@ -2252,6 +2754,7 @@
 
     function initData() {
       return {
+        achievements: {},
         modules: {
           daily: {
             habits: [
@@ -2394,7 +2897,7 @@
       const name = input.value.trim();
       if (!name) return;
       const mod = data.modules[activeModule];
-      const allHabits = Object.values(data.modules).flatMap(m => m.habits);
+      const allHabits = Object.values(data.modules).reduce((acc, m) => acc.concat(m.habits || []), []);
       const habit = {
         id: Date.now(),
         name: name,
@@ -2520,6 +3023,7 @@
     function deleteTransaction(id) {
       if (!confirm('确定删除这条记录吗？')) return;
       createAutoBackup('删除收支记录前');
+      captureUndoSnapshot('已删除收支记录');
       const fin = data.modules.finance;
       const idx = fin.transactions.findIndex(t => t.id === id);
       if (idx >= 0) {
@@ -2790,7 +3294,7 @@
     }
 
     const BACKUP_KEY = LS_KEY + '_backups';
-    const MAX_AUTO_BACKUPS = 20;
+    const MAX_AUTO_BACKUPS = 60;
 
     function getAutoBackups() {
       try {
@@ -3000,6 +3504,11 @@
         <div class="fund-form-row"><label>总库存（可选）</label><input type="number" class="fund-form-input" id="editSuppStockTotal" min="0" step="1" value="${typeof item.stockTotal === 'number' ? item.stockTotal : ''}"></div>
         <div class="fund-form-row"><label>单位</label><input type="text" class="fund-form-input" id="editSuppStockUnit" maxlength="4" value="${escapeHtml(item.stockUnit || '粒')}"></div>
         <div class="fund-form-row"><label>提醒阈值</label><input type="number" class="fund-form-input" id="editSuppLowThreshold" min="0" step="1" value="${typeof item.lowStockThreshold === 'number' ? item.lowStockThreshold : 10}"></div>
+        <div class="fund-form-row"><label>周期模式（吃 X 天停 Y 天）</label><label class="switch-label"><input type="checkbox" id="editSuppCycleEnabled" ${item.cycleEnabled ? 'checked' : ''}> 启用周期模式</label></div>
+        <div class="fund-form-row"><label>吃几天</label><input type="number" class="fund-form-input" id="editSuppCycleTake" min="1" value="${item.cycleTakeDays || 5}"></div>
+        <div class="fund-form-row"><label>停几天</label><input type="number" class="fund-form-input" id="editSuppCycleStop" min="0" value="${item.cycleStopDays || 0}"></div>
+        <div class="fund-form-row"><label>周期起始日期</label><input type="date" class="fund-form-input" id="editSuppCycleStart" value="${item.cycleStart || ''}"></div>
+        <div class="fund-form-row"><label>标签（逗号分隔，如：运动前,促睾）</label><input type="text" class="fund-form-input" id="editSuppTags" value="${escapeHtml((item.tags || []).join(','))}"></div>
         <div class="fund-form-row"><label>备注</label><textarea class="note-input" id="editSuppNote" style="min-height:60px;margin-bottom:0">${escapeHtml(item.note || '')}</textarea></div>
         <div class="fund-form-row"><label>警示</label><textarea class="note-input" id="editSuppWarning" style="min-height:60px;margin-bottom:0">${escapeHtml(item.warning || '')}</textarea></div>
       `;
@@ -3066,6 +3575,13 @@
         item.stockTotal = isNaN(stockTotalVal) || stockTotalVal < 0 ? null : stockTotalVal;
         item.stockUnit = document.getElementById('editSuppStockUnit').value.trim() || '粒';
         item.lowStockThreshold = isNaN(thresholdVal) || thresholdVal < 0 ? 10 : thresholdVal;
+        item.cycleEnabled = !!document.getElementById('editSuppCycleEnabled').checked;
+        item.cycleTakeDays = parseInt(document.getElementById('editSuppCycleTake').value, 10) || 5;
+        item.cycleStopDays = parseInt(document.getElementById('editSuppCycleStop').value, 10) || 0;
+        if (item.cycleTakeDays < 1) item.cycleTakeDays = 1;
+        if (item.cycleStopDays < 0) item.cycleStopDays = 0;
+        item.cycleStart = document.getElementById('editSuppCycleStart').value || '';
+        item.tags = document.getElementById('editSuppTags').value.split(/[,，]/).map(s => s.trim()).filter(Boolean);
         item.note = document.getElementById('editSuppNote').value.trim();
         item.warning = document.getElementById('editSuppWarning').value.trim();
         saveData();
@@ -3154,6 +3670,37 @@
       drawStatsChart('statsManifestChart', getManifestStats(dates), { max: null });
     }
 
+    function getDailyReportRows(days) {
+      const dates = getStatsDates(days);
+      const checkin = getCheckinStats(dates);
+      const mani = getManifestStats(dates);
+      const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
+      return dates.map((date, i) => {
+        const taken = suppItems.filter(it => it.records && it.records.some(r => r.date === date && r.taken)).length;
+        return {
+          date: date,
+          checkin: Math.round(checkin[i].value * 10) / 10,
+          supplement: taken + '/' + suppItems.length,
+          manifest: mani[i].value
+        };
+      });
+    }
+
+    function exportReportCSV(days) {
+      const rows = getDailyReportRows(days);
+      const header = ['日期', '打卡完成率(%)', '补剂服用', '显化记录'];
+      const lines = rows.map(r => [r.date, r.checkin, r.supplement, r.manifest].join(','));
+      const csv = '\uFEFF' + [header.join(','), ...lines].join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = (days === 7 ? '周报' : '月报') + '_' + getTodayStr() + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
+    }
+
     function drawStatsChart(canvasId, points, opts) {
       const canvas = document.getElementById(canvasId);
       if (!canvas) return;
@@ -3201,6 +3748,59 @@
           ctx.fillText(p.label, x, h - 5);
         }
       });
+    }
+
+    let calendarOverviewDate = new Date();
+
+    function openCalendarOverviewModal() {
+      calendarOverviewDate = new Date();
+      renderCalendarOverview();
+      document.getElementById('calendarOverlay').classList.add('show');
+    }
+
+    function closeCalendarOverviewModal(e) {
+      if (e && e.target !== document.getElementById('calendarOverlay')) return;
+      document.getElementById('calendarOverlay').classList.remove('show');
+    }
+
+    function changeCalendarMonth(delta) {
+      calendarOverviewDate.setMonth(calendarOverviewDate.getMonth() + delta);
+      renderCalendarOverview();
+    }
+
+    function renderCalendarOverview() {
+      const y = calendarOverviewDate.getFullYear();
+      const m = calendarOverviewDate.getMonth();
+      document.getElementById('calendarOverviewMonth').textContent = y + '年' + (m + 1) + '月';
+      const firstDay = new Date(y, m, 1).getDay();
+      const daysInMonth = new Date(y, m + 1, 0).getDate();
+      const todayStr = getTodayStr();
+      const dailyHabits = [];
+      for (const mod of Object.values(data.modules)) {
+        if (mod && Array.isArray(mod.habits)) {
+          for (const h of mod.habits) {
+            if (h.type === 'daily') dailyHabits.push(h);
+          }
+        }
+      }
+      const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
+      const goals = (data.modules.manifestation && data.modules.manifestation.goals) || [];
+      let cells = '';
+      for (let i = 0; i < firstDay; i++) cells += '<div class="cal-day empty"></div>';
+      for (let d = 1; d <= daysInMonth; d++) {
+        const ds = y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        const doneCount = dailyHabits.filter(h => h.records.includes(ds)).length;
+        const suppCount = suppItems.filter(i => i.records && i.records.some(r => r.date === ds && r.taken)).length;
+        const maniCount = goals.reduce((sum, g) => sum + (g.records ? g.records.filter(r => r.date === ds).length : 0), 0);
+        const cls = ['cal-day'];
+        if (ds === todayStr) cls.push('today');
+        if (doneCount > 0) cls.push('has-check');
+        if (suppCount > 0) cls.push('has-supp');
+        if (maniCount > 0) cls.push('has-mani');
+        cells += `<div class="${cls.join(' ')}"><span class="cal-day-num">${d}</span>${doneCount > 0 ? '<span class="cal-dot check"></span>' : ''}${suppCount > 0 ? '<span class="cal-dot supp"></span>' : ''}${maniCount > 0 ? '<span class="cal-dot mani"></span>' : ''}</div>`;
+      }
+      const heads = ['日', '一', '二', '三', '四', '五', '六'].map(w => `<div class="cal-head">${w}</div>`).join('');
+      document.getElementById('calendarOverviewBody').innerHTML = `<div class="calendar">${heads}${cells}</div>`;
     }
 
     function resetAllData() {
@@ -3532,6 +4132,7 @@
     function deleteFund(id) {
       if (!confirm('确定删除这只基金吗？')) return;
       createAutoBackup('删除基金前');
+      captureUndoSnapshot('已删除基金');
       data.modules.finance.funds = data.modules.finance.funds.filter(f => f.id !== id);
       saveData();
       renderModule('finance');
@@ -3788,6 +4389,7 @@
     function deleteManifestGoal(goalId) {
       if (!confirm('确定删除这个显化目标吗？所有记录也会一并删除。')) return;
       createAutoBackup('删除显化目标前');
+      captureUndoSnapshot('已删除显化目标');
       const mod = data.modules.manifestation;
       mod.goals = mod.goals.filter(g => g.id !== goalId);
       saveData();
@@ -3843,6 +4445,7 @@
       const goal = mod.goals.find(g => g.id === goalId);
       if (!goal || !goal.records) return;
       createAutoBackup('删除显化记录前');
+      captureUndoSnapshot('已删除显化记录');
       goal.records = goal.records.filter(r => r.id !== recordId);
       saveData();
       renderModule('manifestation');
@@ -3974,6 +4577,79 @@
       return `<div class="supplement-stock ${status === 'low' ? 'low' : status === 'empty' ? 'empty' : ''}"><span>📦 余量 ${item.stock}${unit}${totalText}</span>${badge}</div>`;
     }
 
+    function shouldTakeSupplement(item, dateStr) {
+      if (!item.cycleEnabled || !item.cycleStart || !item.cycleTakeDays) return true;
+      const diff = daysBetween(item.cycleStart, dateStr);
+      if (diff < 0) return false;
+      const cycleLength = item.cycleTakeDays + (item.cycleStopDays || 0);
+      return ((diff % cycleLength) + cycleLength) % cycleLength < item.cycleTakeDays;
+    }
+
+    function getSupplementMissedDays(item) {
+      if (item.taken) return 0;
+      if (!item.records || item.records.length === 0) return 0;
+      if (!shouldTakeSupplement(item, getTodayStr())) return 0;
+      let missed = 0;
+      const d = new Date();
+      for (let i = 1; i <= 30; i++) {
+        const t = new Date(d);
+        t.setDate(d.getDate() - i);
+        const ds = t.getFullYear() + '-' + String(t.getMonth()+1).padStart(2,'0') + '-' + String(t.getDate()).padStart(2,'0');
+        if (item.records && item.records.some(r => r.date === ds && r.taken)) break;
+        if (!shouldTakeSupplement(item, ds)) continue;
+        missed++;
+      }
+      return missed;
+    }
+
+    function renderSupplementScheduleHtml(item) {
+      const todayStr = getTodayStr();
+      const shouldTake = shouldTakeSupplement(item, todayStr);
+      const missed = getSupplementMissedDays(item);
+      let html = '';
+      if (item.cycleEnabled && item.cycleStart) {
+        html += `<div class="supplement-schedule ${shouldTake ? 'take' : 'rest'}"><span>${shouldTake ? '✅ 今日该吃' : '⏸️ 今日停服'}</span></div>`;
+      }
+      if (shouldTake && !item.taken) {
+        html += missed > 0
+          ? `<div class="supplement-schedule missed"><span>⚠️ 已断服 ${missed} 天</span></div>`
+          : `<div class="supplement-schedule pending"><span>今日未服</span></div>`;
+      }
+      if (!html) return '';
+      return `<div class="supplement-schedule-wrap">${html}</div>`;
+    }
+
+    function getSupplementGroups(item) {
+      const text = (item.name || '') + ' ' + (item.note || '') + ' ' + (item.warning || '');
+      return {
+        zinc: /锌|牡蛎/.test(text),
+        magnesium: /镁/.test(text),
+        calcium: /钙/.test(text),
+        fishOil: /鱼油|EPA|DHA/.test(text),
+        curcumin: /姜黄/.test(text),
+        arginine: /精氨酸|瓜氨酸/.test(text),
+        beetroot: /甜菜根/.test(text),
+        fenugreek: /葫芦巴/.test(text)
+      };
+    }
+
+    function getSupplementInteractionWarnings(items) {
+      const groups = items.map(getSupplementGroups);
+      const count = key => groups.filter(g => g[key]).length;
+      const warnings = [];
+      if (count('zinc') >= 2) warnings.push({ title: '多个产品含锌', text: '检测到 ' + count('zinc') + ' 个含锌产品，注意每天锌总量不宜长期超过 40mg。' });
+      if (count('magnesium') >= 2) warnings.push({ title: '多个产品含镁', text: '检测到 ' + count('magnesium') + ' 个含镁产品，补充剂镁建议每天 200-400mg，过量易腹泻。' });
+      if (count('zinc') >= 1 && count('calcium') >= 1) warnings.push({ title: '锌与钙建议错开', text: '锌和钙会互相影响吸收，建议间隔 2 小时以上服用。' });
+      const bloodCount = ['fishOil', 'curcumin', 'arginine', 'beetroot'].filter(key => count(key) > 0).length;
+      if (bloodCount >= 2) warnings.push({ title: '凝血/血压类叠加', text: '鱼油、姜黄素、精氨酸/瓜氨酸、甜菜根同时使用可能增强抗凝或降压效果，用药期间需谨慎。' });
+      return warnings;
+    }
+
+    function setSupplementTagFilter(tag) {
+      supplementTagFilter = tag || 'all';
+      renderModule('supplements');
+    }
+
     function updateSupplementInPlace(item) {
       const card = document.querySelector(`.supplement-item[data-id="${item.id}"]`);
       if (!card) return false;
@@ -3987,6 +4663,8 @@
       }
       const stockEl = card.querySelector('.supplement-stock');
       if (stockEl) stockEl.outerHTML = renderSupplementStockHtml(item);
+      const scheduleWrap = card.querySelector('.supplement-schedule-wrap');
+      if (scheduleWrap) scheduleWrap.outerHTML = renderSupplementScheduleHtml(item);
       const group = card.closest('.supplement-group');
       if (group) {
         const headerCount = group.querySelector('.supplement-group-count');
@@ -4050,6 +4728,11 @@
         stockTotal: null,
         stockUnit: '粒',
         lowStockThreshold: 10,
+        cycleEnabled: false,
+        cycleTakeDays: 5,
+        cycleStopDays: 2,
+        cycleStart: '',
+        tags: [],
         note: '',
         warning: ''
       });
@@ -4063,6 +4746,7 @@
     function deleteSupplement(id) {
       if (!confirm('确定删除这个补剂吗？')) return;
       createAutoBackup('删除补剂前');
+      captureUndoSnapshot('已删除补剂');
       data.modules.supplements.items = data.modules.supplements.items.filter(i => i.id !== id);
       saveData();
       renderModule('supplements');
@@ -4073,16 +4757,20 @@
     function renderSupplementsModule(container) {
       const mod = data.modules.supplements;
       const items = mod.items || [];
+      const allItems = items;
+      const visibleItems = supplementTagFilter === 'all' ? allItems : allItems.filter(i => (i.tags || []).includes(supplementTagFilter));
+      const allTags = [...new Set(allItems.reduce((acc, i) => acc.concat(i.tags || []), []))];
       const cfg = MODULE_CONFIG.supplements;
 
-      const takenCount = items.filter(i => i.taken).length;
-      const totalCount = items.length;
+      const takenCount = visibleItems.filter(i => i.taken).length;
+      const totalCount = visibleItems.length;
       const pct = totalCount ? Math.round(takenCount / totalCount * 100) : 0;
+      const interactionWarnings = getSupplementInteractionWarnings(allItems);
 
       // 按时间段分组
       const grouped = {};
       Object.keys(SUPPLEMENT_TIME_SLOTS).forEach(k => grouped[k] = []);
-      items.forEach(item => {
+      visibleItems.forEach(item => {
         const slot = item.timeSlot || 'noon';
         if (!grouped[slot]) grouped[slot] = [];
         grouped[slot].push(item);
@@ -4107,6 +4795,7 @@
                     <div class="supplement-item-icon">${item.icon}</div>
                     <div class="supplement-item-info">
                       <div class="supplement-item-name">${escapeHtml(item.name)}</div>
+                      ${(item.tags || []).length ? `<div class="supplement-tags">${item.tags.map(t => `<span class="supplement-tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
                       <div class="supplement-item-meta">
                         <span class="supplement-dosage">${escapeHtml(item.dosage)}</span>
                         <span class="supplement-time">⏰ ${escapeHtml(item.time)}</span>
@@ -4114,6 +4803,7 @@
                       ${item.note ? `<div class="supplement-note">💡 ${escapeHtml(item.note)}</div>` : ''}
                       ${item.warning ? `<div class="supplement-warning">⚠️ ${escapeHtml(item.warning)}</div>` : ''}
                       ${renderSupplementStockHtml(item)}
+                      ${renderSupplementScheduleHtml(item)}
                     </div>
                   </div>
                   <div class="supplement-item-actions">
@@ -4144,6 +4834,25 @@
           <div class="ph"><span>今日服用进度</span><span class="pp" style="color:${cfg.color}">${takenCount}/${totalCount}</span></div>
           <div class="pb"><div class="pf" style="width:${pct}%;background:linear-gradient(90deg,${cfg.color},${cfg.color}66)"></div></div>
         </div>
+
+        ${allTags.length ? `
+          <div class="supplement-tag-filter">
+            <button class="supplement-tag-chip ${supplementTagFilter === 'all' ? 'active' : ''}" data-tag="all" onclick="setSupplementTagFilter(this.dataset.tag)">全部</button>
+            ${allTags.map(t => `<button class="supplement-tag-chip ${supplementTagFilter === t ? 'active' : ''}" data-tag="${escapeHtml(t)}" onclick="setSupplementTagFilter(this.dataset.tag)">${escapeHtml(t)}</button>`).join('')}
+          </div>
+        ` : ''}
+
+        ${interactionWarnings.length ? `
+          <div class="supplement-interactions">
+            <div class="supplement-interactions-title">⚠️ 相互作用提醒</div>
+            ${interactionWarnings.map(w => `
+              <div class="supplement-interaction-item">
+                <span class="supplement-interaction-name">${w.title}</span>
+                <span class="supplement-interaction-text">${w.text}</span>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
 
         <div class="add-box">
           <input type="text" id="supplementInput" placeholder="添加新补剂..." maxlength="30"
@@ -4194,6 +4903,8 @@
         const streak = getStreak(h.records);
         meta.innerHTML = `<span>${h.records.length} 天已坚持</span>` + (streak > 0 ? `<span>·</span><span class="streak">${streak} 天</span>` : '');
       }
+      const badges = card.querySelector('.achievement-badges');
+      if (badges) badges.innerHTML = renderHabitAchievementBadgesHtml(h);
       const container = document.getElementById('moduleContent');
       let modNeed = 0, modDone = 0;
       for (const x of data.modules[moduleId].habits) {
@@ -4212,6 +4923,74 @@
       return true;
     }
 
+    function renderHabitAchievementBadgesHtml(h) {
+      const unlocked = (data.achievements && data.achievements[h.id]) || [];
+      if (!unlocked.length) return '';
+      return unlocked.map(m => `<span class="achievement-badge">🏆 ${m}天</span>`).join('');
+    }
+
+    function checkHabitAchievements(h) {
+      if (!data.achievements) data.achievements = {};
+      const streak = getStreak(h.records);
+      const unlocked = data.achievements[h.id] || [];
+      const newly = ACHIEVEMENT_MILESTONES.filter(m => streak >= m && !unlocked.includes(m));
+      if (newly.length) {
+        data.achievements[h.id] = [...new Set([...unlocked, ...newly])].sort((a, b) => a - b);
+        saveData();
+      }
+      return newly;
+    }
+
+    function showAchievementToast(text) {
+      const toast = document.getElementById('achievementToast');
+      if (!toast) return;
+      toast.textContent = text;
+      toast.style.display = 'flex';
+      clearTimeout(achievementToastTimer);
+      achievementToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+
+    function openAchievementsModal() {
+      renderAchievementsModal();
+      document.getElementById('achievementsOverlay').classList.add('show');
+    }
+
+    function closeAchievementsModal(e) {
+      if (e && e.target !== document.getElementById('achievementsOverlay')) return;
+      document.getElementById('achievementsOverlay').classList.remove('show');
+    }
+
+    function renderAchievementsModal() {
+      const listEl = document.getElementById('achievementsList');
+      const dailyHabits = [];
+      for (const mod of Object.values(data.modules)) {
+        if (mod && Array.isArray(mod.habits)) {
+          for (const h of mod.habits) {
+            if (h.type === 'daily') dailyHabits.push(h);
+          }
+        }
+      }
+      if (!dailyHabits.length) {
+        listEl.innerHTML = '<div class="backup-empty">还没有每日打卡项目</div>';
+        return;
+      }
+      listEl.innerHTML = dailyHabits.map(h => {
+        const streak = getStreak(h.records);
+        const unlocked = (data.achievements && data.achievements[h.id]) || [];
+        const next = ACHIEVEMENT_MILESTONES.find(m => !unlocked.includes(m));
+        return `
+          <div class="achievement-item">
+            <div class="achievement-item-head">
+              <span class="achievement-item-name">${h.icon} ${escapeHtml(h.name)}</span>
+              <span class="achievement-item-streak">${streak} 天</span>
+            </div>
+            <div class="achievement-item-badges">${unlocked.length ? unlocked.map(m => `<span class="achievement-badge">🏆 ${m}天</span>`).join('') : '<span class="achievement-empty">暂无成就</span>'}</div>
+            <div class="achievement-item-next">${next ? '下一成就：连续 ' + next + ' 天' : '全部成就已达成 🎉'}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function doToggle(moduleId, id, note) {
       const h = data.modules[moduleId].habits.find(x => x.id === id);
       if (!h) return;
@@ -4228,6 +5007,7 @@
       const triggerEl = document.activeElement && document.activeElement.getBoundingClientRect ? document.activeElement : null;
       const triggerRect = triggerEl ? triggerEl.getBoundingClientRect() : null;
       const isDone = h.records.includes(today);
+      const newAchievements = isDone && h.type === 'daily' ? checkHabitAchievements(h) : [];
       let updatedInPlace = false;
       if (h.type === 'daily') {
         updatedInPlace = updateDailyCardInPlace(moduleId, h);
@@ -4240,6 +5020,9 @@
       updateTotalStats();
       renderNav();
       vibrate(isDone ? 25 : 12);
+      if (newAchievements.length) {
+        showAchievementToast('🏆 ' + h.name + '：连续 ' + newAchievements.join('/') + ' 天成就达成！');
+      }
 
       // 只让当前打卡按钮播放动效，避免整张列表重新入场
       if (isDone && !wasDone) {
@@ -4273,6 +5056,7 @@
     function deleteHabit(moduleId, id) {
       if (!confirm('确定删除这个目标吗？历史记录也会一并删除。')) return;
       createAutoBackup('删除打卡目标前');
+      captureUndoSnapshot('已删除打卡目标');
       data.modules[moduleId].habits = data.modules[moduleId].habits.filter(x => x.id !== id);
       saveData();
       renderModule(activeModule);
@@ -4360,7 +5144,7 @@
         <div class="habit-card ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}">
           <div class="icon">${h.icon}</div>
           <div class="habit-info" onclick="showCalendar('${moduleId}', ${h.id})" style="cursor:pointer">
-            <div class="name">${escapeHtml(h.name)}</div>
+            <div class="name">${escapeHtml(h.name)} <span class="achievement-badges" data-habit="${h.id}">${renderHabitAchievementBadgesHtml(h)}</span></div>
             <div class="meta">
               <span>${h.records.length} 天已坚持</span>
               ${streak > 0 ? '<span>·</span><span class="streak">' + streak + ' 天</span>' : ''}
