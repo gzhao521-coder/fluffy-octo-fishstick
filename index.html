@@ -2420,7 +2420,7 @@
         { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '随餐', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '随餐服用减少胃部刺激。', warning: '过量可能加重肝脏负担' },
         { id: 10, name: 'RAINBOWBAR 葫芦巴', icon: '🌱', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '葫芦巴提取物，常用于健身促睾/血糖支持。', warning: '可能影响血糖；糖尿病或服降糖药慎用' },
         { id: 11, name: 'VITAS 瓜氨酸精氨酸粉', icon: '💥', dosage: '按说明 约5g', time: '运动前30分钟', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '瓜氨酸+精氨酸，提升血流与耐力，运动前服用。', warning: '过量可能胃肠不适、低血压；与降压药同用需谨慎' },
-        { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '晚餐后或睡前服用，与铁锌间隔2小时。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
+        { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '午餐后随餐服用，与铁锌间隔2小时以上。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
         { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
         { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' },
         { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' }
@@ -2492,6 +2492,12 @@
           }
           if (Array.isArray(saved.modules.supplements.items)) {
             saved.modules.supplements.items = saved.modules.supplements.items.map(normalizeSupplementItem);
+            saved.modules.supplements.items.forEach(item => {
+              if (item.name === '小分子液体钙' && item.time === '晚餐后/睡前' && item.timeSlot === 'evening') {
+                item.time = '午餐后';
+                item.timeSlot = 'noon';
+              }
+            });
           }
           if (!saved.achievements || typeof saved.achievements !== 'object') saved.achievements = {};
           return saved;
