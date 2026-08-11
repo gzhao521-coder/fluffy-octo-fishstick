@@ -1,4 +1,4 @@
-const CACHE_NAME = 'growth-checkin-v13';
+const CACHE_NAME = 'growth-checkin-v14';
 const APP_SHELL = [
   './',
   './index.html',
@@ -11,15 +11,25 @@ const NETWORK_TIMEOUT = 6000;
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => Promise.all(APP_SHELL.map(url => cache.add(url).catch(() => null))))
+      .then(cache => cache.addAll(APP_SHELL))
       .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
+    caches.open(CACHE_NAME)
+      .then(cache => cache.keys())
+      .then(keys => {
+        const hasShell = keys.some(req => req.url.indexOf('/index.html') !== -1 || req.url.endsWith('/'));
+        return caches.keys().then(allKeys => Promise.all(
+          allKeys.filter(key => {
+            if (key === CACHE_NAME) return false;
+            if (key.indexOf('growth-checkin-') === 0 && !hasShell) return false;
+            return true;
+          }).map(key => caches.delete(key))
+        ));
+      })
       .then(() => self.clients.claim())
   );
 });
@@ -35,7 +45,14 @@ function withTimeout(promise, ms) {
 }
 
 async function handleRequest(request) {
-  const cached = await caches.match(request);
+  let cached = null;
+  const cacheKeys = (await caches.keys()).filter(key => key.indexOf('growth-checkin-') === 0).sort().reverse();
+  for (const key of cacheKeys) {
+    try {
+      cached = await caches.match(request, { cacheName: key, ignoreSearch: true });
+      if (cached) break;
+    } catch (e) {}
+  }
   const network = fetch(request).then(response => {
     if (response && response.status === 200 && (response.type === 'basic' || response.type === 'default')) {
       const copy = response.clone();
