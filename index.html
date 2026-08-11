@@ -1862,6 +1862,85 @@
       border-color: transparent;
     }
 
+    /* 身体记录 */
+    .body-add-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      border: 1px dashed rgba(0,212,255,0.35);
+      background: rgba(0,212,255,0.08);
+      color: var(--accent2);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: all 0.2s ease;
+    }
+    .body-add-btn:hover { background: rgba(0,212,255,0.15); border-color: rgba(0,212,255,0.55); }
+    .body-record-list { display: flex; flex-direction: column; gap: 10px; }
+    .body-record-card {
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius);
+      padding: 14px;
+      border: 1px solid rgba(0,212,255,0.08);
+      transition: all 0.2s ease;
+      animation: slideUp 0.3s ease backwards;
+    }
+    .body-record-card:hover { border-color: rgba(0,212,255,0.2); }
+    .body-record-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .body-record-date { font-size: 11px; color: var(--text2); font-weight: 600; }
+    .body-record-actions { display: flex; gap: 4px; }
+    .body-record-btn {
+      width: 28px; height: 28px;
+      border: none; background: transparent;
+      color: #4a4a6a; font-size: 14px;
+      cursor: pointer; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .body-record-btn:hover { color: var(--primary); background: rgba(0,212,255,0.1); }
+    .body-record-btn.del:hover { color: var(--danger); background: rgba(255,82,82,0.1); }
+    .body-record-tags { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+    .body-tag, .body-phase {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 7px;
+      border: 1px solid;
+    }
+    .body-tag.fit { color: #6bcb77; border-color: rgba(107,203,119,0.3); background: rgba(107,203,119,0.1); }
+    .body-tag.supp { color: #bd34fe; border-color: rgba(189,52,254,0.3); background: rgba(189,52,254,0.1); }
+    .body-tag.overall { color: #ffd740; border-color: rgba(255,215,64,0.3); background: rgba(255,215,64,0.1); }
+    .body-tag.sleep { color: #4d96ff; border-color: rgba(77,150,255,0.3); background: rgba(77,150,255,0.1); }
+    .body-tag.other { color: var(--text2); border-color: rgba(100,255,218,0.15); background: rgba(100,255,218,0.05); }
+    .body-phase { color: var(--accent2); border-color: rgba(0,212,255,0.2); background: rgba(0,212,255,0.06); }
+    .body-record-content { font-size: 13px; color: var(--text); line-height: 1.65; white-space: pre-wrap; word-break: break-word; }
+    .body-record-rating { font-size: 12px; color: #ffd740; letter-spacing: 1px; }
+    .body-rating-options { display: flex; gap: 8px; margin-bottom: 14px; }
+    .body-rating-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(100,255,218,0.15);
+      background: rgba(0,0,0,0.2);
+      color: var(--text2);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .body-rating-btn:hover { border-color: var(--primary); transform: scale(1.05); }
+    .body-rating-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      border-color: transparent;
+      color: #0a0a1a;
+      box-shadow: 0 4px 16px rgba(100,255,218,0.25);
+    }
+    .body-form-row { margin-bottom: 12px; }
+    .body-form-row label { display: block; font-size: 12px; color: var(--text2); font-weight: 600; margin-bottom: 6px; }
+    .body-form-row .form-grid { display: flex; gap: 10px; }
+    .body-form-row .form-grid > div { flex: 1; min-width: 0; }
+
     @media (max-width: 480px) {
       .market-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 10px; }
       .market-item { padding: 12px 6px; }
@@ -1908,7 +1987,7 @@
     <h1>成长</h1>
     <div class="date" id="todayDate"></div>
     <div style="display:flex;gap:6px;justify-content:center;margin-top:4px;flex-wrap:wrap">
-      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v10</span>
+      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v11</span>
       <button onclick="forceRefresh()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔄 刷新</button>
       <button onclick="openBackupModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">💾 备份</button>
       <button onclick="openStatsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📊 统计</button>
@@ -2256,6 +2335,59 @@
     </div>
   </div>
 
+  <!-- 身体记录弹窗 -->
+  <div class="overlay" id="bodyOverlay" onclick="closeBodyModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="bodyModalTitle">记录身体变化</h3>
+        <button class="close" onclick="closeBodyModal()">&times;</button>
+      </div>
+      <div class="body-form-row">
+        <label>日期</label>
+        <input type="date" class="fund-form-input" id="bodyDate">
+      </div>
+      <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>类型</label>
+            <select class="fund-form-input" id="bodyCategory">
+              <option value="健身">💪 健身</option>
+              <option value="补剂">💊 补剂</option>
+              <option value="整体">🧬 整体状态</option>
+              <option value="睡眠">😴 睡眠</option>
+              <option value="其他">📝 其他</option>
+            </select>
+          </div>
+          <div>
+            <label>阶段</label>
+            <select class="fund-form-input" id="bodyPhase">
+              <option>刚开始</option>
+              <option>第1周</option>
+              <option>第2周</option>
+              <option>第3周</option>
+              <option>第1个月</option>
+              <option>第2个月</option>
+              <option>第3个月</option>
+              <option>其他阶段</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
+        <label>具体变化 / 感受</label>
+        <textarea class="note-input" id="bodyContent" placeholder="例如：训练耐力提升，睡眠更深，精力更稳定，胃口变好..." style="min-height:100px;margin-bottom:0"></textarea>
+      </div>
+      <div class="body-form-row">
+        <label>整体状态</label>
+        <div class="body-rating-options" id="bodyRatingOptions"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeBodyModal()">取消</button>
+        <button class="btn-primary" onclick="saveBodyRecord()">保存</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ========== PWA 配置 ==========
     (function() {
@@ -2287,10 +2419,11 @@
       cycle:   { name: '周期打卡', icon: '⏰', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(100,255,218,0.1))', desc: '周期性任务 · 定时提醒' },
       free:    { name: '自由打卡', icon: '🌟', color: '#ff6b6b', bg: 'linear-gradient(135deg, rgba(255,107,107,0.15), rgba(189,52,254,0.1))', desc: '自由安排 · 灵活记录' },
       manifestation: { name: '显化记录', icon: '✨', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '意念显化 · 愿望成真' },
-      supplements: { name: '补剂明细', icon: '💊', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '每日补剂 · 科学服用' }
+      supplements: { name: '补剂明细', icon: '💊', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '每日补剂 · 科学服用' },
+      body: { name: '身体记录', icon: '🧬', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(189,52,254,0.1))', desc: '健身补剂 · 记录身体变化' }
     };
 
-    const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','study','game','fitness'];
+    const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','study','game','fitness'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
 
     let data = loadData();
@@ -2308,6 +2441,8 @@
     let manifestExpandedGoal = null;
     let manifestPendingGoalId = null;
     let supplementTagFilter = 'all';
+    let bodyEditId = null;
+    let bodyRating = 4;
 
     const SUPPLEMENT_TIME_SLOTS = {
       morning: { label: '☀️ 早晨', color: '#ffd740', order: 1 },
@@ -2386,7 +2521,7 @@
     }
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
-    document.getElementById('versionTag').textContent = 'v10';
+    document.getElementById('versionTag').textContent = 'v11';
 
     // 调试：检查数据状态
     console.log('=== 调试信息 ===');
@@ -2508,6 +2643,9 @@
               }
             });
           }
+          if (!saved.modules.body || !Array.isArray(saved.modules.body.records)) {
+            saved.modules.body = { records: [] };
+          }
           if (!saved.achievements || typeof saved.achievements !== 'object') saved.achievements = {};
           return saved;
         }
@@ -2577,6 +2715,16 @@
       if (validSupps.length !== data.modules.supplements.items.length) {
         data.modules.supplements.items = validSupps;
         repaired = true;
+      }
+      if (!data.modules.body || !Array.isArray(data.modules.body.records)) {
+        data.modules.body = { records: [] };
+        repaired = true;
+      } else {
+        const validBodyRecords = data.modules.body.records.filter(r => r && r.id && r.content);
+        if (validBodyRecords.length !== data.modules.body.records.length) {
+          data.modules.body.records = validBodyRecords;
+          repaired = true;
+        }
       }
       if (repaired) {
         saveData();
@@ -2834,6 +2982,9 @@
           },
           supplements: {
             items: createDefaultSupplementItems()
+          },
+          body: {
+            records: []
           }
         }
       };
@@ -3289,7 +3440,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v10');
+      info.push('版本: v11');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -3344,7 +3495,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v10',
+        version: 'v11',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -4885,6 +5036,164 @@
       `;
     }
 
+    // ========== 身体记录 ==========
+    const BODY_CATEGORY_META = {
+      '健身': { icon: '💪', cls: 'fit' },
+      '补剂': { icon: '💊', cls: 'supp' },
+      '整体': { icon: '🧬', cls: 'overall' },
+      '睡眠': { icon: '😴', cls: 'sleep' },
+      '其他': { icon: '📝', cls: 'other' }
+    };
+
+    function getBodyRecords() {
+      return (data.modules.body && data.modules.body.records) || [];
+    }
+
+    function renderBodyRatingPicker() {
+      const el = document.getElementById('bodyRatingOptions');
+      if (!el) return;
+      el.innerHTML = [1, 2, 3, 4, 5].map(v => `
+        <button type="button" class="body-rating-btn ${v === bodyRating ? 'active' : ''}" onclick="selectBodyRating(${v})" title="${v}分">${v}</button>
+      `).join('');
+    }
+
+    function selectBodyRating(v) {
+      bodyRating = v;
+      renderBodyRatingPicker();
+    }
+
+    function openBodyModal(id) {
+      const rec = id ? getBodyRecords().find(r => r.id === id) : null;
+      bodyEditId = rec ? rec.id : null;
+      bodyRating = rec && rec.rating ? rec.rating : 4;
+      document.getElementById('bodyModalTitle').textContent = rec ? '编辑身体记录' : '记录身体变化';
+      document.getElementById('bodyDate').value = rec ? rec.date : getTodayStr();
+      document.getElementById('bodyCategory').value = rec ? rec.category : '健身';
+      document.getElementById('bodyPhase').value = rec ? (rec.phase || '第1周') : '第1周';
+      document.getElementById('bodyContent').value = rec ? rec.content : '';
+      renderBodyRatingPicker();
+      document.getElementById('bodyOverlay').classList.add('show');
+    }
+
+    function closeBodyModal(e) {
+      if (e && e.target !== document.getElementById('bodyOverlay')) return;
+      document.getElementById('bodyOverlay').classList.remove('show');
+      bodyEditId = null;
+    }
+
+    function saveBodyRecord() {
+      const content = document.getElementById('bodyContent').value.trim();
+      const date = document.getElementById('bodyDate').value || getTodayStr();
+      if (!content) {
+        alert('请填写具体变化或感受');
+        return;
+      }
+      const records = getBodyRecords();
+      const category = document.getElementById('bodyCategory').value || '其他';
+      const phase = document.getElementById('bodyPhase').value || '刚开始';
+      if (bodyEditId) {
+        const rec = records.find(r => r.id === bodyEditId);
+        if (rec) {
+          rec.date = date;
+          rec.category = category;
+          rec.phase = phase;
+          rec.content = content;
+          rec.rating = bodyRating;
+        }
+      } else {
+        records.unshift({ id: Date.now(), date: date, category: category, phase: phase, content: content, rating: bodyRating });
+      }
+      data.modules.body.records = records;
+      saveData();
+      closeBodyModal();
+      renderModule('body');
+      updateTotalStats();
+      renderNav();
+    }
+
+    function deleteBodyRecord(id) {
+      if (!confirm('确定删除这条身体记录吗？')) return;
+      createAutoBackup('删除身体记录前');
+      captureUndoSnapshot('已删除身体记录');
+      data.modules.body.records = getBodyRecords().filter(r => r.id !== id);
+      saveData();
+      renderModule('body');
+      updateTotalStats();
+      renderNav();
+    }
+
+    function renderBodyModule(container) {
+      const records = getBodyRecords().slice().sort((a, b) => b.date.localeCompare(a.date) || b.id - a.id);
+      const cfg = MODULE_CONFIG.body;
+      const total = records.length;
+      const fitnessCount = records.filter(r => r.category === '健身').length;
+      const supplementCount = records.filter(r => r.category === '补剂').length;
+
+      const recordsHtml = records.map(rec => {
+        const meta = BODY_CATEGORY_META[rec.category] || BODY_CATEGORY_META['其他'];
+        const rating = rec.rating ? Math.min(5, Math.max(1, rec.rating)) : 0;
+        const stars = rating ? '★'.repeat(rating) + '☆'.repeat(5 - rating) : '';
+        return `
+          <div class="body-record-card">
+            <div class="body-record-head">
+              <span class="body-record-date">📅 ${rec.date}</span>
+              <div class="body-record-actions">
+                <button class="body-record-btn" onclick="openBodyModal(${rec.id})" title="编辑">✏️</button>
+                <button class="body-record-btn del" onclick="deleteBodyRecord(${rec.id})" title="删除">×</button>
+              </div>
+            </div>
+            <div class="body-record-tags">
+              <span class="body-tag ${meta.cls}">${meta.icon} ${escapeHtml(rec.category)}</span>
+              ${rec.phase ? `<span class="body-phase">${escapeHtml(rec.phase)}</span>` : ''}
+              ${stars ? `<span class="body-record-rating">${stars}</span>` : ''}
+            </div>
+            <div class="body-record-content">${escapeHtml(rec.content)}</div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="module-title-bar">
+          <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
+          <div class="m-text">
+            <div class="m-name">${cfg.name}</div>
+            <div class="m-desc">${cfg.desc}</div>
+          </div>
+          <div class="m-progress">${total}</div>
+        </div>
+
+        <div class="stats body-record-stats">
+          <div class="stat-card">
+            <div class="icon-wrap">🧬</div>
+            <div class="num">${total}</div>
+            <div class="label">总记录</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon-wrap">💪</div>
+            <div class="num">${fitnessCount}</div>
+            <div class="label">健身后</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon-wrap">💊</div>
+            <div class="num">${supplementCount}</div>
+            <div class="label">补剂后</div>
+          </div>
+        </div>
+
+        <button class="body-add-btn" onclick="openBodyModal()">＋ 记录身体变化</button>
+
+        ${records.length ? `
+          <div class="body-record-list">${recordsHtml}</div>
+        ` : `
+          <div class="empty-state">
+            <div class="big">🧬</div>
+            <p>还没有身体记录</p>
+            <p style="font-size:12px;color:var(--text2);margin-top:4px">健身或吃补剂一段时间后，记录下身体的变化和感受</p>
+          </div>
+        `}
+      `;
+    }
+
     function toggleCheck(moduleId, id) {
       const h = data.modules[moduleId].habits.find(x => x.id === id);
       if (!h) return;
@@ -5096,6 +5405,10 @@
       }
       if (moduleId === 'supplements') {
         renderSupplementsModule(container);
+        return;
+      }
+      if (moduleId === 'body') {
+        renderBodyModule(container);
         return;
       }
 
