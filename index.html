@@ -2266,7 +2266,7 @@
           refreshing = true;
           location.reload();
         });
-        navigator.serviceWorker.register('sw.js')
+        navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
           .then(reg => {
             setupUpdatePrompt(reg);
             reg.update().catch(() => {});
