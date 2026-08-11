@@ -1,16 +1,24 @@
-上传到 GitHub 仓库根目录的文件：
+成长 PWA 部署与恢复说明
+
+上传到 GitHub 仓库根目录的文件（5 个都要上传）：
   index.html
   sw.js
   manifest.webmanifest
   icon-192.png
   icon-512.png
 
-上传后访问：
+线上地址：
   https://gzhao521-coder.github.io/fluffy-octo-fishstick/
 
-手机端：
-  iPhone Safari：打开链接 → 分享 → 添加到主屏幕
-  Android Chrome：打开链接 → 菜单 → 安装应用 / 添加到主屏幕
+2026-08-11 已升级 Service Worker 到 v12。
+以后更新功能时，index.html 和 sw.js 必须一起上传，
+否则手机上的旧缓存不会自动替换。
 
-如果 Android 仍没有“安装应用”，请在仓库 Settings → Pages 里确认
-Source 已经选择 main 分支的根目录，并等 1-2 分钟重新打开页面。
+如果手机仍然一直显示“正在载入”：
+1. 用手机浏览器打开：
+   https://gzhao521-coder.github.io/fluffy-octo-fishstick/?v=20260811
+2. 若还是旧页面，清除该网站的数据后再打开，
+   或使用无痕/隐私窗口打开一次。
+3. 如果手机主屏装的是旧版应用，删除后重新添加。
+4. GitHub 打开缓慢时，可以先在普通浏览器里打开一次，
+   等页面完全显示后再关闭，下次从主屏打开会走新缓存。
