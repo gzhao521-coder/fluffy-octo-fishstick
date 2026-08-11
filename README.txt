@@ -10,7 +10,10 @@
 线上地址：
   https://gzhao521-coder.github.io/fluffy-octo-fishstick/
 
-2026-08-11 已升级 Service Worker 到 v12。
+2026-08-11 已升级 Service Worker 到 v13。
+新版改成“优先使用手机里的离线缓存”，
+只要成功打开过一次，之后即使 GitHub 很慢或连不上，
+从主屏打开也会立即显示，不再一直转圈。
 以后更新功能时，index.html 和 sw.js 必须一起上传，
 否则手机上的旧缓存不会自动替换。
 
