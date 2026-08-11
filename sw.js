@@ -1,7 +1,8 @@
-const CACHE_NAME = 'growth-checkin-v15';
+const CACHE_NAME = 'growth-checkin-v16';
 const APP_SHELL = [
   './',
   './index.html',
+  './recovery.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png'
@@ -49,7 +50,7 @@ async function handleRequest(request) {
   const cacheKeys = (await caches.keys()).filter(key => key.indexOf('growth-checkin-') === 0).sort().reverse();
   for (const key of cacheKeys) {
     try {
-      cached = await caches.match(request, { cacheName: key, ignoreSearch: true });
+      cached = await caches.match(request, { cacheName: key });
       if (cached) break;
     } catch (e) {}
   }
