@@ -2269,7 +2269,7 @@
         navigator.serviceWorker.register('sw.js')
           .then(reg => {
             setupUpdatePrompt(reg);
-            reg.update();
+            reg.update().catch(() => {});
           })
           .catch(err => console.log('Service Worker 注册失败:', err));
       }
