@@ -2260,8 +2260,17 @@
     // ========== PWA 配置 ==========
     (function() {
       if ('serviceWorker' in navigator) {
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (refreshing) return;
+          refreshing = true;
+          location.reload();
+        });
         navigator.serviceWorker.register('sw.js')
-          .then(reg => setupUpdatePrompt(reg))
+          .then(reg => {
+            setupUpdatePrompt(reg);
+            reg.update();
+          })
           .catch(err => console.log('Service Worker 注册失败:', err));
       }
     })();
