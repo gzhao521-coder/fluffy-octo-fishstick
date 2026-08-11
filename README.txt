@@ -10,10 +10,14 @@
 线上地址：
   https://gzhao521-coder.github.io/fluffy-octo-fishstick/
 
-2026-08-11 已升级 Service Worker 到 v15。
+2026-08-11 已升级 Service Worker 到 v16。
 新增“身体记录”模块：可按日期记录健身、补剂后的身体变化和感受。
 新版缓存更新失败时会保留旧版缓存作为备用，
 不会再出现“更新一半导致白屏”的问题。
+
+手机没有更新时，用浏览器打开更新页：
+  https://gzhao521-coder.github.io/fluffy-octo-fishstick/recovery.html
+它会自动检查新版并跳回应用，不需要清除数据。
 新版改成“优先使用手机里的离线缓存”，
 只要成功打开过一次，之后即使 GitHub 很慢或连不上，
 从主屏打开也会立即显示，不再一直转圈。
