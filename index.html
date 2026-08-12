@@ -2181,6 +2181,420 @@
       .weekly-rate { flex-wrap: wrap; }
       .reading-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
     }
+
+    /* ========== v20 视觉升级 ========== */
+    body {
+      background:
+        linear-gradient(160deg, rgba(100,255,218,0.045), transparent 34%),
+        linear-gradient(210deg, rgba(0,212,255,0.05), transparent 42%),
+        linear-gradient(135deg, #080818 0%, #0d1029 42%, #15102c 68%, #0b1024 100%);
+      background-attachment: fixed;
+    }
+    .orb { display: none; }
+    .grid-bg {
+      opacity: 0.65;
+      background-image:
+        linear-gradient(rgba(100,255,218,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+      background-size: 42px 42px;
+    }
+
+    header {
+      background: linear-gradient(180deg, rgba(8,8,24,0.94), rgba(13,13,31,0.82));
+      border-bottom: 1px solid rgba(100,255,218,0.14);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.28), inset 0 -1px 0 rgba(255,255,255,0.04);
+    }
+    header h1 { filter: drop-shadow(0 4px 18px rgba(100,255,218,0.18)); }
+    header .date { color: #a8b2d1; }
+    header button {
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    header button:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(0,212,255,0.12); }
+
+    .stats { gap: 14px; }
+    .stat-card {
+      background: linear-gradient(160deg, rgba(255,255,255,0.095), rgba(255,255,255,0.025));
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 32px rgba(0,0,0,0.22);
+    }
+    .stat-card::before {
+      height: 3px;
+      background: linear-gradient(90deg, #64ffda, #00d4ff, transparent);
+      opacity: 0.9;
+    }
+    .stat-card:nth-child(2)::before { background: linear-gradient(90deg, #00e676, #64ffda, transparent); }
+    .stat-card:nth-child(3)::before { background: linear-gradient(90deg, #ffd740, #ff9f43, transparent); }
+    .stat-card .icon-wrap {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 6px 18px rgba(0,0,0,0.2);
+    }
+    .stat-card .num {
+      background: linear-gradient(135deg, #ffffff, #c9f8ef 45%, #8ee7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 10px rgba(100,255,218,0.16));
+    }
+
+    .module-title-bar .m-icon {
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 10px 28px rgba(0,0,0,0.3), 0 0 24px rgba(0,212,255,0.08);
+    }
+    .module-title-bar .m-text .m-name { letter-spacing: 0.4px; }
+    .module-title-bar .m-progress { filter: drop-shadow(0 3px 12px rgba(100,255,218,0.2)); }
+
+    .add-box {
+      background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025));
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 28px rgba(0,0,0,0.18);
+    }
+    .add-box input { background: rgba(0,0,0,0.24); box-shadow: inset 0 2px 8px rgba(0,0,0,0.18); }
+
+    .module-progress-bar {
+      background: linear-gradient(160deg, rgba(255,255,255,0.075), rgba(255,255,255,0.02));
+      border-color: rgba(255,255,255,0.09);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 10px 26px rgba(0,0,0,0.18);
+    }
+    .module-progress-bar .pb {
+      background: rgba(0,0,0,0.34);
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.28);
+    }
+    .module-progress-bar .pf {
+      background-image: linear-gradient(90deg, rgba(255,255,255,0.18), transparent 35%);
+      box-shadow: 0 0 14px rgba(100,255,218,0.18);
+    }
+
+    .habit-card,
+    .finance-card,
+    .fund-card,
+    .market-item,
+    .tx-item,
+    .body-record-card,
+    .supplement-item,
+    .manifest-goal,
+    .reading-stat-card {
+      background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025));
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 12px 30px rgba(0,0,0,0.22);
+    }
+    .habit-card:hover,
+    .finance-card:hover,
+    .fund-card:hover,
+    .market-item:hover,
+    .tx-item:hover,
+    .body-record-card:hover,
+    .supplement-item:hover,
+    .manifest-goal:hover {
+      border-color: rgba(100,255,218,0.2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 16px 38px rgba(0,0,0,0.3), 0 0 22px rgba(100,255,218,0.06);
+    }
+
+    .check-btn,
+    .makeup-btn,
+    .body-record-btn,
+    .supplement-check-btn,
+    .supplement-edit-btn,
+    .supplement-del-btn,
+    .fund-card-btn {
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .check-btn:hover,
+    .makeup-btn:hover,
+    .body-record-btn:hover,
+    .supplement-check-btn:hover,
+    .fund-card-btn:hover { transform: translateY(-2px); }
+
+    .finance-actions .finance-btn,
+    .backup-btn,
+    .report-btn,
+    .stats-range-btn,
+    .body-add-btn,
+    .reading-add-btn {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .modal {
+      background: linear-gradient(170deg, rgba(28,28,54,0.98), rgba(14,14,34,0.98));
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07);
+    }
+    .modal-header { border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 14px; }
+    .modal-header h3 {
+      background: linear-gradient(90deg, #fff, #9cf4e5 45%, #8ee7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .modal-header .close {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .bottom-nav {
+      background: linear-gradient(180deg, rgba(10,10,26,0.9), rgba(8,8,22,0.96));
+      border-top: 1px solid rgba(100,255,218,0.12);
+      box-shadow: 0 -12px 34px rgba(0,0,0,0.3);
+    }
+    .nav-item { border-radius: 18px; }
+    .nav-item.active {
+      background: linear-gradient(180deg, rgba(100,255,218,0.14), rgba(0,212,255,0.05));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 22px rgba(0,0,0,0.18);
+    }
+    .nav-item.active .nav-icon {
+      background: linear-gradient(135deg, rgba(100,255,218,0.16), rgba(0,212,255,0.1));
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: 0 0 16px rgba(100,255,218,0.12);
+    }
+    .nav-item.active .nav-indicator {
+      width: 26px;
+      background: linear-gradient(90deg, #64ffda, #00d4ff);
+      box-shadow: 0 0 14px rgba(100,255,218,0.6);
+    }
+
+    .overlay { background: rgba(4,4,14,0.72); backdrop-filter: blur(12px); }
+
+    .daily-hero {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 18px 16px;
+      margin-bottom: 16px;
+      border-radius: 18px;
+      background: linear-gradient(150deg, rgba(100,255,218,0.12), rgba(0,212,255,0.05) 45%, rgba(189,52,254,0.08));
+      border: 1px solid rgba(100,255,218,0.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 36px rgba(0,0,0,0.28), 0 0 28px rgba(100,255,218,0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .daily-hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    }
+    .daily-hero-main { flex: 1; min-width: 0; }
+    .daily-greeting {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .daily-quote {
+      font-size: 12px;
+      line-height: 1.55;
+      color: #b7c2df;
+      margin-bottom: 10px;
+    }
+    .daily-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: 12px;
+      color: #a8b2d1;
+    }
+    .daily-meta b {
+      color: #fff;
+      background: linear-gradient(135deg, rgba(100,255,218,0.2), rgba(0,212,255,0.12));
+      border-radius: 6px;
+      padding: 1px 7px;
+      font-size: 13px;
+    }
+    .daily-hero-ring {
+      width: 66px;
+      height: 66px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: conic-gradient(#64ffda 0deg, rgba(255,255,255,0.08) 0deg);
+      box-shadow: 0 0 22px rgba(100,255,218,0.16);
+      position: relative;
+    }
+    .daily-hero-ring::before {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border-radius: 50%;
+      background: rgba(10,10,26,0.9);
+    }
+    .daily-hero-ring span {
+      position: relative;
+      z-index: 1;
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+    }
+    @media (max-width: 480px) {
+      .daily-hero { padding: 15px 13px; gap: 12px; }
+      .daily-hero-ring { width: 58px; height: 58px; }
+      .daily-greeting { font-size: 18px; }
+    }
+
+    .daily-tips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tip-chip {
+      padding: 7px 11px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid rgba(0,212,255,0.18);
+      background: rgba(0,212,255,0.08);
+      color: #9eeaff;
+    }
+    .tip-chip.warn {
+      border-color: rgba(255,159,67,0.24);
+      background: rgba(255,159,67,0.1);
+      color: #ffc18a;
+    }
+    .tip-chip.danger {
+      border-color: rgba(255,82,82,0.24);
+      background: rgba(255,82,82,0.1);
+      color: #ff9d9d;
+    }
+    .tip-chip.good {
+      border-color: rgba(0,230,118,0.22);
+      background: rgba(0,230,118,0.1);
+      color: #9df0bd;
+    }
+
+    .weekly-report-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .weekly-report-card {
+      padding: 14px 12px;
+      border-radius: 10px;
+      background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.025));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+    .weekly-report-label { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+    .weekly-report-num { font-size: 22px; font-weight: 800; color: #fff; }
+    .weekly-report-sub { font-size: 11px; color: #a8b2d1; margin-top: 4px; }
+    .weekly-report-message {
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(100,255,218,0.07);
+      border: 1px solid rgba(100,255,218,0.14);
+      color: #b7e9df;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    @media (max-width: 480px) {
+      .weekly-report-grid { grid-template-columns: 1fr; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(100,255,218,0.28), rgba(0,212,255,0.18)); border-radius: 99px; }
+
+    @media (max-width: 480px) {
+      .stat-card { padding: 16px 4px; }
+      .nav-item.active .nav-icon { padding: 5px; }
+      .modal { padding: 20px 16px; }
+    }
+
+    /* ========== v23 精细交互 ========== */
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overscroll-behavior-y: none;
+    }
+    ::selection { background: rgba(100,255,218,0.25); color: #fff; }
+    button { touch-action: manipulation; }
+    button:active { transform: scale(0.97); }
+    input, textarea, select { font: inherit; }
+    input:focus-visible, textarea:focus-visible, select:focus-visible {
+      outline: 2px solid rgba(100,255,218,0.45);
+      outline-offset: 2px;
+    }
+
+    .module-title-bar { position: relative; }
+    .module-title-bar::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -2px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(100,255,218,0.25), rgba(0,212,255,0.16), transparent);
+      background-size: 200% 100%;
+      animation: moduleShine 5s linear infinite;
+    }
+    @keyframes moduleShine {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .daily-hero { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .daily-hero:active { transform: scale(0.995); }
+    .daily-hero-ring { animation: ringBreath 3s ease-in-out infinite; }
+    @keyframes ringBreath {
+      0%, 100% { box-shadow: 0 0 18px rgba(100,255,218,0.12); }
+      50% { box-shadow: 0 0 30px rgba(100,255,218,0.26); }
+    }
+
+    .tip-chip { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+    .tip-chip:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.18); }
+    .empty-state .big { filter: drop-shadow(0 10px 28px rgba(100,255,218,0.12)); }
+
+    .modal { scrollbar-width: thin; scrollbar-color: rgba(100,255,218,0.35) transparent; }
+
+    .finance-btn,
+    .backup-btn,
+    .report-btn,
+    .stats-range-btn,
+    .body-add-btn,
+    .reading-add-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    .finance-btn::after,
+    .backup-btn::after,
+    .report-btn::after,
+    .stats-range-btn::after,
+    .body-add-btn::after,
+    .reading-add-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.5s ease;
+      pointer-events: none;
+    }
+    .finance-btn:hover::after,
+    .backup-btn:hover::after,
+    .report-btn:hover::after,
+    .stats-range-btn:hover::after,
+    .body-add-btn:hover::after,
+    .reading-add-btn:hover::after { left: 120%; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2193,11 +2607,12 @@
     <h1>成长</h1>
     <div class="date" id="todayDate"></div>
     <div style="display:flex;gap:6px;justify-content:center;margin-top:4px;flex-wrap:wrap">
-      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v19</span>
+      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v23</span>
       <span id="netStatus" class="net-status">•••</span>
       <button onclick="forceRefresh()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔄 刷新</button>
       <button onclick="openBackupModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">💾 备份</button>
       <button onclick="openStatsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📊 统计</button>
+      <button onclick="openWeeklyReport()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📅 周报</button>
       <button onclick="openCalendarOverviewModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📅 总览</button>
       <button onclick="openReminderModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔔 提醒</button>
       <button onclick="openAchievementsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🏆 成就</button>
@@ -2207,6 +2622,20 @@
   </header>
 
   <div class="container">
+    <div id="dailyHero" class="daily-hero">
+      <div class="daily-hero-main">
+        <div class="daily-greeting" id="dailyGreeting"></div>
+        <div class="daily-quote" id="dailyQuote"></div>
+        <div class="daily-meta">
+          <span>连续坚持 <b id="overallStreak">0</b> 天</span>
+          <span>今日完成 <b id="heroDone">0/0</b></span>
+        </div>
+      </div>
+      <div class="daily-hero-ring" id="heroRing"><span id="heroPct">0%</span></div>
+    </div>
+
+    <div id="dailyTips" class="daily-tips"></div>
+
     <div class="stats" id="statsBox">
       <div class="stat-card">
         <div class="icon-wrap">📋</div>
@@ -2486,6 +2915,20 @@
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeStatsModal()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 每周复盘弹窗 -->
+  <div class="overlay" id="weeklyOverlay" onclick="closeWeeklyReport(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>📅 每周复盘</h3>
+        <button class="close" onclick="closeWeeklyReport()">&times;</button>
+      </div>
+      <div id="weeklyReportContent"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeWeeklyReport()">关闭</button>
       </div>
     </div>
   </div>
@@ -2773,6 +3216,22 @@
 
     const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','reading','study','game','fitness'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
+    const DAILY_QUOTES = [
+      '今天也是值得认真过的一天。',
+      '完成一件小事，也比原地不动强。',
+      '你坚持的样子，正在变成更好的自己。',
+      '慢一点没关系，停下来才可怕。',
+      '今天积累的一点点，明天都会算数。',
+      '把注意力放在下一步，而不是整座山。',
+      '给自己一次机会，今天不打折。',
+      '真正的成长，是在没人看见时也继续。',
+      '先完成，再完美。',
+      '每一天都是重启的机会。',
+      '别小看五分钟，它足以改变方向。',
+      '当你觉得难，说明正在上坡。',
+      '今天不辜负，明天不慌张。',
+      '记录本身就是一种力量。'
+    ];
 
     let data = loadData();
     validateAndRepairData();
@@ -2872,7 +3331,7 @@
     }
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
-    document.getElementById('versionTag').textContent = 'v19';
+    document.getElementById('versionTag').textContent = 'v23';
 
     renderNav();
     renderModule(activeModule);
@@ -4000,7 +4459,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v19');
+      info.push('版本: v23');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -4083,7 +4542,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v19',
+        version: 'v23',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -4355,6 +4814,117 @@
       if (e && e.target !== document.getElementById('editOverlay')) return;
       document.getElementById('editOverlay').classList.remove('show');
       editState = null;
+    }
+
+    function getWeekDates() {
+      const dates = [];
+      const now = new Date();
+      const day = now.getDay() || 7;
+      const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day + 1);
+      for (let d = new Date(monday); d <= now; d.setDate(d.getDate() + 1)) {
+        dates.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
+      }
+      return dates;
+    }
+
+    function getWeeklyHabitStats(days) {
+      let need = 0, done = 0;
+      for (const mod of Object.values(data.modules)) {
+        if (!mod || !Array.isArray(mod.habits)) continue;
+        for (const h of mod.habits) {
+          for (const date of days) {
+            if (h.type === 'daily') {
+              need++;
+              if (h.records.includes(date)) done++;
+            } else if (h.type === 'period' && isPeriodDay(h, date)) {
+              need++;
+              if (h.records.includes(date)) done++;
+            }
+          }
+        }
+      }
+      return { need: need, done: done, pct: need ? Math.round(done / need * 100) : 0 };
+    }
+
+    function getWeeklySupplementStats(days) {
+      const items = (data.modules.supplements && data.modules.supplements.items) || [];
+      let need = 0, done = 0;
+      days.forEach(date => {
+        items.forEach(item => {
+          if (!shouldTakeSupplement(item, date)) return;
+          need++;
+          if (item.records && item.records.some(r => r.date === date && r.taken)) done++;
+        });
+      });
+      return { need: need, done: done, pct: need ? Math.round(done / need * 100) : 0 };
+    }
+
+    function getWeeklyReadingStats(days) {
+      const records = getReadingRecords().filter(r => days.includes(r.date));
+      return {
+        sessions: records.length,
+        minutes: records.reduce((sum, r) => sum + (Number(r.durationMinutes) || 0), 0),
+        pages: records.reduce((sum, r) => sum + (Number(r.pages) || 0), 0)
+      };
+    }
+
+    function openWeeklyReport() {
+      const days = getWeekDates();
+      const habit = getWeeklyHabitStats(days);
+      const supp = getWeeklySupplementStats(days);
+      const reading = getWeeklyReadingStats(days);
+      const bodyCount = getBodyRecords().filter(r => days.includes(r.date)).length;
+      const finance = getFinanceStats();
+      const monthLabel = (new Date().getMonth() + 1) + '月';
+      let message = '这周已经开始积累，每天多做一点就好。';
+      if (habit.pct >= 100 && supp.pct >= 100) {
+        message = '这周状态非常完整，打卡和补剂都跟上了，继续保持这种节奏。';
+      } else if (habit.pct >= 80) {
+        message = '这周打卡完成率很高，把剩下的小缺口补上会更完整。';
+      } else if (reading.minutes > 0) {
+        message = '这周有阅读记录，已经比原地不动强很多，明天继续翻几页。';
+      }
+      document.getElementById('weeklyReportContent').innerHTML = `
+        <div class="weekly-report-grid">
+          <div class="weekly-report-card">
+            <div class="weekly-report-label">本周打卡</div>
+            <div class="weekly-report-num">${habit.done}/${habit.need}</div>
+            <div class="weekly-report-sub">完成率 ${habit.pct}%</div>
+          </div>
+          <div class="weekly-report-card">
+            <div class="weekly-report-label">补剂完成</div>
+            <div class="weekly-report-num">${supp.done}/${supp.need}</div>
+            <div class="weekly-report-sub">完成率 ${supp.pct}%</div>
+          </div>
+          <div class="weekly-report-card">
+            <div class="weekly-report-label">本周阅读</div>
+            <div class="weekly-report-num">${reading.sessions} 次</div>
+            <div class="weekly-report-sub">${formatReadingDuration(reading.minutes)}</div>
+          </div>
+          <div class="weekly-report-card">
+            <div class="weekly-report-label">身体记录</div>
+            <div class="weekly-report-num">${bodyCount} 条</div>
+            <div class="weekly-report-sub">记录变化和感受</div>
+          </div>
+          <div class="weekly-report-card">
+            <div class="weekly-report-label">${monthLabel}支出</div>
+            <div class="weekly-report-num">${formatMoney(finance.monthSpent)}</div>
+            <div class="weekly-report-sub">${finance.budget > 0 ? '预算 ' + formatMoney(finance.budget) : '未设置预算'}</div>
+          </div>
+          <div class="weekly-report-card">
+            <div class="weekly-report-label">累计阅读页数</div>
+            <div class="weekly-report-num">${reading.pages} 页</div>
+            <div class="weekly-report-sub">本周读书记录</div>
+          </div>
+        </div>
+        <div class="weekly-report-message">${message}</div>
+      `;
+      document.getElementById('weeklyOverlay').classList.add('show');
+    }
+
+    function closeWeeklyReport(e) {
+      if (e && e.target !== document.getElementById('weeklyOverlay')) return;
+      document.getElementById('weeklyOverlay').classList.remove('show');
     }
 
     let statsRange = 7;
@@ -5492,6 +6062,7 @@
       if (!updated) renderModule('supplements');
       updateTotalStats();
       renderNav();
+      celebrateIfComplete();
     }
 
     function addSupplement() {
@@ -6208,6 +6779,7 @@
       updateTotalStats();
       renderNav();
       vibrate(isDone ? 25 : 12);
+      celebrateIfComplete();
       if (newAchievements.length) {
         showAchievementToast('🏆 ' + h.name + '：连续 ' + newAchievements.join('/') + ' 天成就达成！');
       }
@@ -6310,6 +6882,7 @@
       renderModule(activeModule);
       updateTotalStats();
       renderNav();
+      celebrateIfComplete();
     }
 
     function deleteHabit(moduleId, id) {
@@ -6494,7 +7067,7 @@
       `;
     }
 
-    function updateTotalStats() {
+    function getTodayCompletion() {
       let totalHabits = 0, totalNeed = 0, totalDone = 0;
       for (const [modId, mod] of Object.entries(data.modules)) {
         if (modId === 'supplements') {
@@ -6520,10 +7093,108 @@
           }
         }
       }
+      return { totalHabits: totalHabits, totalNeed: totalNeed, totalDone: totalDone };
+    }
+
+    function getDateStr(d) {
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function hasRecordOnDate(dateStr) {
+      for (const modId of ['daily', 'study', 'game', 'fitness', 'free']) {
+        const mod = data.modules[modId];
+        if (!mod || !Array.isArray(mod.habits)) continue;
+        for (const h of mod.habits) {
+          if (h.type === 'daily' && h.records.includes(dateStr)) return true;
+          if (h.type === 'period' && isPeriodDay(h, dateStr) && h.records.includes(dateStr)) return true;
+        }
+      }
+      return false;
+    }
+
+    function getOverallStreak() {
+      const d = new Date();
+      if (!hasRecordOnDate(getDateStr(d))) d.setDate(d.getDate() - 1);
+      let streak = 0;
+      while (hasRecordOnDate(getDateStr(d))) {
+        streak++;
+        d.setDate(d.getDate() - 1);
+      }
+      return streak;
+    }
+
+    function getDayOfYear(d) {
+      return Math.floor((d - new Date(d.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+    }
+
+    function updateDailyHero() {
+      const hero = document.getElementById('dailyHero');
+      if (!hero) return;
+      const now = new Date();
+      const h = now.getHours();
+      let greeting = '晚上好';
+      if (h < 6) greeting = '夜深了';
+      else if (h < 11) greeting = '早上好';
+      else if (h < 13) greeting = '中午好';
+      else if (h < 18) greeting = '下午好';
+      document.getElementById('dailyGreeting').textContent = greeting + '，今天继续';
+      document.getElementById('dailyQuote').textContent = DAILY_QUOTES[getDayOfYear(now) % DAILY_QUOTES.length];
+      const s = getTodayCompletion();
+      const pct = s.totalNeed ? Math.round(s.totalDone / s.totalNeed * 100) : 0;
+      document.getElementById('overallStreak').textContent = getOverallStreak();
+      document.getElementById('heroDone').textContent = s.totalDone + '/' + s.totalNeed;
+      document.getElementById('heroPct').textContent = pct + '%';
+      const ring = document.getElementById('heroRing');
+      if (ring) ring.style.background = `conic-gradient(#64ffda ${pct * 3.6}deg, rgba(255,255,255,0.08) 0deg)`;
+      renderDailyTips();
+    }
+
+    function renderDailyTips() {
+      const el = document.getElementById('dailyTips');
+      if (!el) return;
+      const tips = [];
+      const todayStr = getTodayStr();
+      let pendingHabits = 0;
+      for (const mod of Object.values(data.modules)) {
+        if (!mod || !Array.isArray(mod.habits)) continue;
+        for (const h of mod.habits) {
+          if (h.type === 'daily' && !h.records.includes(todayStr)) pendingHabits++;
+          if (h.type === 'period' && isPeriodDay(h, todayStr) && !h.records.includes(todayStr)) pendingHabits++;
+        }
+      }
+      const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
+      const pendingSupps = suppItems.filter(i => shouldTakeSupplement(i, todayStr) && !i.taken);
+      const readingToday = getReadingRecords().some(r => r.date === todayStr);
+      const finance = getFinanceStats();
+      if (pendingHabits) tips.push({ text: '还有 ' + pendingHabits + ' 个打卡未完成', cls: 'warn' });
+      if (pendingSupps.length) tips.push({ text: '还有 ' + pendingSupps.length + ' 种补剂未服用', cls: 'warn' });
+      if (!readingToday) tips.push({ text: '今天还没有看书', cls: '' });
+      if (finance.budget > 0 && finance.monthSpent > finance.budget) tips.push({ text: '本月预算已超支', cls: 'danger' });
+      if (!tips.length) tips.push({ text: '今日目标已全部完成', cls: 'good' });
+      el.innerHTML = tips.map(t => `<span class="tip-chip ${t.cls}">${t.text}</span>`).join('');
+    }
+
+    function celebrateIfComplete() {
+      const celebratedKey = LS_KEY + '_celebrated';
+      if (localStorage.getItem(celebratedKey) === getTodayStr()) return;
+      const s = getTodayCompletion();
+      if (!s.totalNeed || s.totalDone < s.totalNeed) return;
+      localStorage.setItem(celebratedKey, getTodayStr());
+      const w = window.innerWidth || document.documentElement.clientWidth || 0;
+      spawnConfetti(w / 2, 130);
+      showAchievementToast('今日全部完成，你真的很棒');
+    }
+
+    function updateTotalStats() {
+      const stats = getTodayCompletion();
+      const totalHabits = stats.totalHabits;
+      const totalNeed = stats.totalNeed;
+      const totalDone = stats.totalDone;
       document.getElementById('sTotal').textContent = totalHabits;
       document.getElementById('sDone').textContent = totalDone;
       const rate = totalNeed ? Math.round(totalDone / totalNeed * 100) : 0;
       document.getElementById('sRate').textContent = rate + '%';
+      updateDailyHero();
     }
 
     function showCalendar(moduleId, id) {
