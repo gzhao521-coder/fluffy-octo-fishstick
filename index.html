@@ -4307,19 +4307,22 @@
 
     function fetchFundNav(fundCode) {
       const callbackName = 'fund_cb_' + Date.now() + '_' + fundCode;
-      const url = `https://fundgz.1234567.com.cn/js/${fundCode}.js?rt=${Date.now()}&callback=${callbackName}`;
+      const url = `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo?pageIndex=1&pageSize=1&plat=Android&appType=ttjj&product=EFund&Version=1&deviceid=fund_nav_${Date.now()}&Fcodes=${fundCode}&_=${Date.now()}&callback=${callbackName}`;
       return jsonpFetch(url, callbackName, 8000, 'fund_' + fundCode).then(data => {
-        if (data && data.fundcode) {
+        const item = data && Array.isArray(data.Datas) ? data.Datas[0] : null;
+        if (item && item.FCODE) {
+          const nav = parseFloat(item.NAV);
+          if (isNaN(nav) || nav <= 0) throw new Error('净值数据格式错误');
           return {
-            name: data.name,
-            code: data.fundcode,
-            navDate: data.jzrq,
-            nav: parseFloat(data.dwjz),
-            estimateNav: parseFloat(data.gsz),
-            changePct: parseFloat(data.gszzl)
+            name: item.SHORTNAME || '',
+            code: item.FCODE,
+            navDate: item.PDATE || '',
+            nav: nav,
+            estimateNav: parseFloat(item.GSZ) || nav,
+            changePct: parseFloat(item.NAVCHGRT || item.GSZZL) || 0
           };
         }
-        throw new Error('数据格式错误');
+        throw new Error('未查询到该基金');
       });
     }
 
@@ -4347,7 +4350,10 @@
       }).catch(err => {
         if (err && err.message === '请求已取消') return;
         console.error('获取基金净值失败:', err);
-        if (!silent) alert('获取基金净值失败：' + err.message + '\n\n请检查基金代码是否正确，或稍后重试。');
+        if (!silent) {
+          const hint = err && err.message === '未查询到该基金' ? '请检查基金代码是否正确。' : '请稍后重试。';
+          alert('获取基金净值失败：' + err.message + '\n\n' + hint);
+        }
       });
     }
 
