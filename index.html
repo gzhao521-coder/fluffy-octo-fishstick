@@ -1150,7 +1150,7 @@
     }
     .finance-actions {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
       gap: 10px;
       margin-bottom: 20px;
       animation: slideUp 0.4s ease backwards;
@@ -1975,6 +1975,212 @@
       .check-btn { width: 40px; height: 40px; }
       header h1 { font-size: 22px; }
     }
+
+    .net-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: var(--text2);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.18);
+      border-radius: 6px;
+      padding: 2px 8px;
+    }
+    .net-status.offline { color: var(--warning); border-color: rgba(255,215,64,0.25); background: rgba(255,215,64,0.08); }
+
+    .lock-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5,5,18,0.88);
+      backdrop-filter: blur(12px);
+    }
+    .lock-box {
+      width: min(320px, calc(100vw - 40px));
+      padding: 28px 22px;
+      border: 1px solid rgba(100,255,218,0.15);
+      background: rgba(12,12,30,0.95);
+      border-radius: 12px;
+      text-align: center;
+    }
+    .lock-box .lock-icon { font-size: 34px; margin-bottom: 12px; }
+    .lock-box input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin: 8px 0 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 16px;
+      text-align: center;
+      letter-spacing: 4px;
+    }
+    .lock-box button {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid rgba(100,255,218,0.25);
+      background: rgba(100,255,218,0.1);
+      color: var(--primary);
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .lock-box .lock-hint { font-size: 11px; color: var(--text2); margin-top: 12px; }
+
+    .weekly-rate {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin: 10px 0 14px;
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.12);
+      border-radius: 8px;
+      font-size: 12px;
+      color: var(--text2);
+    }
+    .weekly-rate .mini-bar {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .weekly-rate .mini-bar > div {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, #64ffda, #00d4ff);
+    }
+    .weekly-rate .weekly-num { color: var(--text); font-weight: 700; white-space: nowrap; }
+
+    .makeup-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(0,212,255,0.08);
+      color: var(--accent2);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .makeup-btn:hover { background: rgba(0,212,255,0.16); color: #fff; }
+
+    .trend-section {
+      margin: 12px 0;
+      padding: 12px;
+      background: rgba(0,212,255,0.05);
+      border: 1px solid rgba(0,212,255,0.1);
+      border-radius: 8px;
+    }
+    .trend-section-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+    .trend-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 74px;
+      padding-top: 6px;
+    }
+    .trend-bar-item {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100%;
+      gap: 4px;
+    }
+    .trend-pair {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      min-height: 0;
+    }
+    .trend-bar-track {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      background: rgba(255,255,255,0.04);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .trend-bar-fill {
+      width: 100%;
+      min-height: 2px;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #00e676, #64ffda);
+    }
+    .trend-bar-fill.expense { background: linear-gradient(180deg, #ff6b6b, #ff9f43); }
+    .trend-bar-label {
+      font-size: 10px;
+      color: var(--text2);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .low-stock-banner {
+      margin: 10px 0 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,159,67,0.25);
+      background: rgba(255,159,67,0.08);
+      border-radius: 8px;
+      font-size: 12px;
+      color: #ffb86b;
+      line-height: 1.5;
+    }
+
+    .body-trend-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .reading-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+    .reading-stat-card {
+      padding: 12px 8px;
+      text-align: center;
+      background: rgba(255,159,67,0.07);
+      border: 1px solid rgba(255,159,67,0.14);
+      border-radius: 8px;
+    }
+    .reading-stat-card .num { font-size: 18px; font-weight: 800; color: #ffb86b; }
+    .reading-stat-card .label { font-size: 11px; color: var(--text2); margin-top: 4px; }
+    .reading-book-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .reading-meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+    .reading-meta span { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.07); border-radius: 6px; padding: 2px 6px; }
+    .reading-note { font-size: 12px; color: var(--text); line-height: 1.55; white-space: pre-wrap; word-break: break-word; }
+    .reading-add-btn {
+      width: 100%;
+      padding: 13px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: 1px solid rgba(255,159,67,0.22);
+      background: rgba(255,159,67,0.08);
+      color: #ffb86b;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    @media (max-width: 480px) {
+      .body-trend-grid { grid-template-columns: 1fr; }
+      .weekly-rate { flex-wrap: wrap; }
+      .reading-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    }
   </style>
 </head>
 <body>
@@ -1987,13 +2193,15 @@
     <h1>成长</h1>
     <div class="date" id="todayDate"></div>
     <div style="display:flex;gap:6px;justify-content:center;margin-top:4px;flex-wrap:wrap">
-      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v11</span>
+      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v19</span>
+      <span id="netStatus" class="net-status">•••</span>
       <button onclick="forceRefresh()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔄 刷新</button>
       <button onclick="openBackupModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">💾 备份</button>
       <button onclick="openStatsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📊 统计</button>
       <button onclick="openCalendarOverviewModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📅 总览</button>
       <button onclick="openReminderModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔔 提醒</button>
       <button onclick="openAchievementsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🏆 成就</button>
+      <button onclick="openPinModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔒 锁</button>
       <button onclick="showDiagnostics()" style="font-size:10px;color:var(--warning);background:transparent;border:1px solid rgba(255,215,64,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔍 诊断</button>
     </div>
   </header>
@@ -2027,6 +2235,15 @@
 
   <div id="achievementToast" class="achievement-toast" style="display:none"></div>
 
+  <div id="lockOverlay" class="lock-overlay" style="display:none">
+    <div class="lock-box">
+      <div class="lock-icon">🔒</div>
+      <input type="password" id="lockPinInput" inputmode="numeric" maxlength="6" placeholder="输入 4-6 位 PIN">
+      <button onclick="unlockApp()">解锁</button>
+      <div class="lock-hint">应用已启用 PIN 保护</div>
+    </div>
+  </div>
+
   <div id="undoBar" class="undo-bar" style="display:none">
     <span id="undoText">已删除</span>
     <button onclick="undoLastDelete()">撤销</button>
@@ -2057,6 +2274,29 @@
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeNoteModal()">取消</button>
         <button class="btn-primary" onclick="confirmNote()">确认打卡</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="makeupOverlay" onclick="closeMakeupModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>↩ 补卡</h3>
+        <button class="close" onclick="closeMakeupModal()">&times;</button>
+      </div>
+      <input type="hidden" id="makeupHabitId">
+      <input type="hidden" id="makeupModuleId">
+      <div class="reminder-row">
+        <label>补卡日期</label>
+        <input type="date" class="fund-form-input" id="makeupDate">
+      </div>
+      <div class="reminder-row">
+        <label>备注（可选）</label>
+        <textarea class="note-input" id="makeupNote" placeholder="例如：当天太忙忘记打卡，事后补记..." style="min-height:80px;margin-bottom:0"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeMakeupModal()">取消</button>
+        <button class="btn-primary" onclick="saveMakeupRecord()">确认补卡</button>
       </div>
     </div>
   </div>
@@ -2286,16 +2526,56 @@
         <input type="time" class="fund-form-input" id="reminderCheckinTime" value="09:00">
       </div>
       <div class="reminder-row">
-        <label>补剂提醒时间</label>
-        <input type="time" class="fund-form-input" id="reminderSupplementTime" value="20:00">
+        <label>早晨补剂提醒</label>
+        <input type="time" class="fund-form-input" id="reminderMorningTime" value="08:30">
+      </div>
+      <div class="reminder-row">
+        <label>中午补剂提醒</label>
+        <input type="time" class="fund-form-input" id="reminderNoonTime" value="12:30">
+      </div>
+      <div class="reminder-row">
+        <label>晚上补剂提醒</label>
+        <input type="time" class="fund-form-input" id="reminderEveningTime" value="20:00">
+      </div>
+      <div class="reminder-row">
+        <label>运动后补剂提醒</label>
+        <input type="time" class="fund-form-input" id="reminderWorkoutTime" value="18:30">
       </div>
       <div class="reminder-row">
         <label class="switch-label"><input type="checkbox" id="reminderEnabled"> 开启每日提醒</label>
+      </div>
+      <div class="reminder-row">
+        <label class="switch-label"><input type="checkbox" id="reminderSmartMode" checked> 只提醒未完成项目</label>
       </div>
       <p class="reminder-hint">提醒在应用打开时生效；真正的后台推送需要服务器支持。</p>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeReminderModal()">取消</button>
         <button class="btn-primary" onclick="saveReminderSettings()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="pinOverlay" onclick="closePinModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>🔒 PIN 保护</h3>
+        <button class="close" onclick="closePinModal()">&times;</button>
+      </div>
+      <div class="reminder-row">
+        <label>当前 PIN（未设置则留空）</label>
+        <input type="password" class="fund-form-input" id="pinCurrent" inputmode="numeric" maxlength="6" placeholder="4-6 位数字">
+      </div>
+      <div class="reminder-row">
+        <label>新 PIN（留空并确认则关闭锁定）</label>
+        <input type="password" class="fund-form-input" id="pinNew" inputmode="numeric" maxlength="6" placeholder="4-6 位数字">
+      </div>
+      <div class="reminder-row">
+        <label>确认新 PIN</label>
+        <input type="password" class="fund-form-input" id="pinConfirm" inputmode="numeric" maxlength="6" placeholder="再次输入">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closePinModal()">取消</button>
+        <button class="btn-primary" onclick="savePinSettings()">保存</button>
       </div>
     </div>
   </div>
@@ -2378,12 +2658,79 @@
         <textarea class="note-input" id="bodyContent" placeholder="例如：训练耐力提升，睡眠更深，精力更稳定，胃口变好..." style="min-height:100px;margin-bottom:0"></textarea>
       </div>
       <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>体重（kg，可选）</label>
+            <input type="number" class="fund-form-input" id="bodyWeight" step="0.1" min="0">
+          </div>
+          <div>
+            <label>睡眠（小时，可选）</label>
+            <input type="number" class="fund-form-input" id="bodySleep" step="0.5" min="0" max="24">
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
         <label>整体状态</label>
         <div class="body-rating-options" id="bodyRatingOptions"></div>
       </div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeBodyModal()">取消</button>
         <button class="btn-primary" onclick="saveBodyRecord()">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 看书记录弹窗 -->
+  <div class="overlay" id="readingOverlay" onclick="closeReadingModal(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="readingModalTitle">记录读书</h3>
+        <button class="close" onclick="closeReadingModal()">&times;</button>
+      </div>
+      <input type="hidden" id="readingId">
+      <div class="body-form-row">
+        <label>书名</label>
+        <input type="text" class="fund-form-input" id="readingBookName" placeholder="如：活着、三体、原子习惯" maxlength="40">
+      </div>
+      <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>作者（可选）</label>
+            <input type="text" class="fund-form-input" id="readingAuthor" placeholder="如：余华" maxlength="20">
+          </div>
+          <div>
+            <label>日期</label>
+            <input type="date" class="fund-form-input" id="readingDate">
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>阅读时长（分钟）</label>
+            <input type="number" class="fund-form-input" id="readingMinutes" placeholder="如：60" min="1" step="1">
+          </div>
+          <div>
+            <label>阅读页数（可选）</label>
+            <input type="number" class="fund-form-input" id="readingPages" placeholder="如：35" min="1" step="1">
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
+        <label>状态</label>
+        <select class="fund-form-input" id="readingStatus">
+          <option value="在读">📖 在读</option>
+          <option value="读完">✅ 读完</option>
+          <option value="想读">⭐ 想读</option>
+        </select>
+      </div>
+      <div class="body-form-row">
+        <label>阅读笔记 / 感想（可选）</label>
+        <textarea class="note-input" id="readingNote" placeholder="例如：今天读到第 3 章，收获是..." style="min-height:90px;margin-bottom:0"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeReadingModal()">取消</button>
+        <button class="btn-primary" onclick="saveReadingRecord()">保存</button>
       </div>
     </div>
   </div>
@@ -2420,10 +2767,11 @@
       free:    { name: '自由打卡', icon: '🌟', color: '#ff6b6b', bg: 'linear-gradient(135deg, rgba(255,107,107,0.15), rgba(189,52,254,0.1))', desc: '自由安排 · 灵活记录' },
       manifestation: { name: '显化记录', icon: '✨', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '意念显化 · 愿望成真' },
       supplements: { name: '补剂明细', icon: '💊', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '每日补剂 · 科学服用' },
-      body: { name: '身体记录', icon: '🧬', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(189,52,254,0.1))', desc: '健身补剂 · 记录身体变化' }
+      body: { name: '身体记录', icon: '🧬', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(189,52,254,0.1))', desc: '健身补剂 · 记录身体变化' },
+      reading: { name: '看书记录', icon: '📖', color: '#ff9f43', bg: 'linear-gradient(135deg, rgba(255,159,67,0.15), rgba(255,215,64,0.1))', desc: '阅读书单 · 时间记录' }
     };
 
-    const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','study','game','fitness'];
+    const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','reading','study','game','fitness'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
 
     let data = loadData();
@@ -2436,13 +2784,16 @@
     let marketRefreshTimer = null;
     let skipCardEntryAnim = false;
     const REMINDER_KEY = LS_KEY + '_reminders';
+    const PIN_KEY = LS_KEY + '_pin';
     let reminderTimer = null;
+    let appUnlocked = true;
 
     let manifestExpandedGoal = null;
     let manifestPendingGoalId = null;
     let supplementTagFilter = 'all';
     let bodyEditId = null;
     let bodyRating = 4;
+    let readingEditId = null;
 
     const SUPPLEMENT_TIME_SLOTS = {
       morning: { label: '☀️ 早晨', color: '#ffd740', order: 1 },
@@ -2521,13 +2872,7 @@
     }
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
-    document.getElementById('versionTag').textContent = 'v11';
-
-    // 调试：检查数据状态
-    console.log('=== 调试信息 ===');
-    console.log('LS_KEY:', LS_KEY);
-    console.log('manifestation:', data.modules.manifestation);
-    console.log('supplements:', data.modules.supplements);
+    document.getElementById('versionTag').textContent = 'v19';
 
     renderNav();
     renderModule(activeModule);
@@ -2536,6 +2881,19 @@
     startMarketAutoRefresh();
     autoRefreshFunds();
     startReminderLoop();
+    maybePromptBackup();
+    updateNetworkStatus();
+    checkPinLock();
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
+
+    function updateNetworkStatus() {
+      const el = document.getElementById('netStatus');
+      if (!el) return;
+      const online = navigator.onLine;
+      el.textContent = online ? '在线' : '离线';
+      el.classList.toggle('offline', !online);
+    }
 
     function normalizeSupplementItem(item) {
       if (!item) return item;
@@ -2646,6 +3004,9 @@
           if (!saved.modules.body || !Array.isArray(saved.modules.body.records)) {
             saved.modules.body = { records: [] };
           }
+          if (!saved.modules.reading || !Array.isArray(saved.modules.reading.records)) {
+            saved.modules.reading = { records: [] };
+          }
           if (!saved.achievements || typeof saved.achievements !== 'object') saved.achievements = {};
           return saved;
         }
@@ -2726,6 +3087,16 @@
           repaired = true;
         }
       }
+      if (!data.modules.reading || !Array.isArray(data.modules.reading.records)) {
+        data.modules.reading = { records: [] };
+        repaired = true;
+      } else {
+        const validReadingRecords = data.modules.reading.records.filter(r => r && r.id && r.bookName);
+        if (validReadingRecords.length !== data.modules.reading.records.length) {
+          data.modules.reading.records = validReadingRecords;
+          repaired = true;
+        }
+      }
       if (repaired) {
         saveData();
         setTimeout(() => alert('检测到数据异常，已自动修复'), 0);
@@ -2786,9 +3157,14 @@
 
     function openReminderModal() {
       const s = getReminderSettings();
+      const slots = s.slotTimes || {};
       document.getElementById('reminderEnabled').checked = !!s.enabled;
       document.getElementById('reminderCheckinTime').value = s.checkinTime || '09:00';
-      document.getElementById('reminderSupplementTime').value = s.supplementTime || '20:00';
+      document.getElementById('reminderSmartMode').checked = s.smartMode !== false;
+      document.getElementById('reminderMorningTime').value = slots.morning || '08:30';
+      document.getElementById('reminderNoonTime').value = slots.noon || '12:30';
+      document.getElementById('reminderEveningTime').value = slots.evening || s.supplementTime || '20:00';
+      document.getElementById('reminderWorkoutTime').value = slots.workout || '18:30';
       document.getElementById('reminderOverlay').classList.add('show');
     }
 
@@ -2800,10 +3176,16 @@
     function saveReminderSettings() {
       const settings = {
         enabled: !!document.getElementById('reminderEnabled').checked,
+        smartMode: !!document.getElementById('reminderSmartMode').checked,
         checkinTime: document.getElementById('reminderCheckinTime').value || '09:00',
-        supplementTime: document.getElementById('reminderSupplementTime').value || '20:00',
+        slotTimes: {
+          morning: document.getElementById('reminderMorningTime').value || '08:30',
+          noon: document.getElementById('reminderNoonTime').value || '12:30',
+          evening: document.getElementById('reminderEveningTime').value || '20:00',
+          workout: document.getElementById('reminderWorkoutTime').value || '18:30'
+        },
         lastCheckinDate: null,
-        lastSupplementDate: null
+        lastSupplementSlots: {}
       };
       localStorage.setItem(REMINDER_KEY, JSON.stringify(settings));
       if (settings.enabled && 'Notification' in window && Notification.permission !== 'granted') {
@@ -2821,6 +3203,19 @@
       checkAndSendReminders();
     }
 
+    function hasPendingCheckins() {
+      const todayStr = getTodayStr();
+      for (const modId of Object.keys(data.modules)) {
+        const mod = data.modules[modId];
+        if (!mod || !Array.isArray(mod.habits)) continue;
+        for (const h of mod.habits) {
+          if (h.type === 'daily' && !h.records.includes(todayStr)) return true;
+          if (h.type === 'period' && isPeriodDay(h, todayStr) && !h.records.includes(todayStr)) return true;
+        }
+      }
+      return false;
+    }
+
     function checkAndSendReminders() {
       const s = getReminderSettings();
       if (!s.enabled) return;
@@ -2830,12 +3225,29 @@
       if (hm === s.checkinTime && s.lastCheckinDate !== todayStr) {
         s.lastCheckinDate = todayStr;
         localStorage.setItem(REMINDER_KEY, JSON.stringify(s));
-        sendReminderNotification('成长打卡', '今天还没有打卡，记得完成今天的习惯');
+        if (!s.smartMode || hasPendingCheckins()) {
+          sendReminderNotification('成长打卡', s.smartMode ? '今天还有未完成项目，记得完成打卡' : '到打卡时间了，记得完成今天的习惯');
+        }
       }
-      if (hm === s.supplementTime && s.lastSupplementDate !== todayStr) {
-        s.lastSupplementDate = todayStr;
+      const slotTimes = s.slotTimes || {};
+      const slotLabels = { morning: '早晨', noon: '中午', evening: '晚上', workout: '运动后' };
+      for (const slot of Object.keys(slotLabels)) {
+        const time = slotTimes[slot] || (slot === 'evening' ? s.supplementTime : '');
+        if (!time || hm !== time) continue;
+        const notified = s.lastSupplementSlots || {};
+        if (notified[slot] === todayStr) continue;
+        notified[slot] = todayStr;
+        s.lastSupplementSlots = notified;
         localStorage.setItem(REMINDER_KEY, JSON.stringify(s));
-        sendReminderNotification('补剂提醒', '到吃补剂的时间了，记得查看补剂明细');
+        const slotItems = (data.modules.supplements && data.modules.supplements.items ? data.modules.supplements.items : [])
+          .filter(i => (i.timeSlot || 'noon') === slot);
+        if (!slotItems.length) continue;
+        const pending = slotItems.filter(i => shouldTakeSupplement(i, todayStr) && !i.taken).map(i => i.name);
+        if (pending.length) {
+          sendReminderNotification('补剂提醒', slotLabels[slot] + '还有未服用：' + pending.slice(0, 3).join('、'));
+        } else if (!s.smartMode) {
+          sendReminderNotification('补剂提醒', '到' + slotLabels[slot] + '补剂时间了，记得查看补剂明细');
+        }
       }
     }
 
@@ -2849,6 +3261,73 @@
           new Notification(title, options);
         }
       } catch(e) {}
+    }
+
+    function checkPinLock() {
+      const pin = localStorage.getItem(PIN_KEY);
+      if (!pin) return;
+      appUnlocked = false;
+      const overlay = document.getElementById('lockOverlay');
+      const input = document.getElementById('lockPinInput');
+      if (overlay) overlay.style.display = 'flex';
+      if (input) input.value = '';
+      setTimeout(() => input && input.focus(), 100);
+    }
+
+    function unlockApp() {
+      const input = document.getElementById('lockPinInput');
+      const pin = localStorage.getItem(PIN_KEY);
+      if (!pin) return;
+      if (input.value !== pin) {
+        input.value = '';
+        input.focus();
+        showInfoToast('PIN 不正确，请重试');
+        return;
+      }
+      appUnlocked = true;
+      document.getElementById('lockOverlay').style.display = 'none';
+    }
+
+    function openPinModal() {
+      const hasPin = !!localStorage.getItem(PIN_KEY);
+      document.getElementById('pinCurrent').value = '';
+      document.getElementById('pinNew').value = '';
+      document.getElementById('pinConfirm').value = '';
+      document.getElementById('pinOverlay').classList.add('show');
+      document.getElementById('pinCurrent').placeholder = hasPin ? '当前 PIN' : '未设置，保持留空';
+    }
+
+    function closePinModal(e) {
+      if (e && e.target !== document.getElementById('pinOverlay')) return;
+      document.getElementById('pinOverlay').classList.remove('show');
+    }
+
+    function savePinSettings() {
+      const currentPin = localStorage.getItem(PIN_KEY) || '';
+      const currentInput = document.getElementById('pinCurrent').value;
+      const newPin = document.getElementById('pinNew').value;
+      const confirmPin = document.getElementById('pinConfirm').value;
+      if (currentPin && currentInput !== currentPin) {
+        alert('当前 PIN 不正确');
+        return;
+      }
+      if (newPin || confirmPin) {
+        if (!/^\d{4,6}$/.test(newPin)) {
+          alert('PIN 必须是 4-6 位数字');
+          return;
+        }
+        if (newPin !== confirmPin) {
+          alert('两次输入的新 PIN 不一致');
+          return;
+        }
+        localStorage.setItem(PIN_KEY, newPin);
+        showInfoToast('PIN 已设置，下次打开需要解锁');
+      } else {
+        localStorage.removeItem(PIN_KEY);
+        appUnlocked = true;
+        showInfoToast('PIN 保护已关闭');
+      }
+      closePinModal();
     }
 
     function escapeHtml(str) {
@@ -2985,6 +3464,9 @@
           },
           body: {
             records: []
+          },
+          reading: {
+            records: []
           }
         }
       };
@@ -3112,6 +3594,77 @@
         .map(([name, amount]) => ({ name: name, amount: amount }))
         .sort((a, b) => b.amount - a.amount);
       return { target, current, budget, pct, remaining, txs, monthIncome, monthExpense, monthSpent, budgetRemaining, budgetPct, expenseCategories };
+    }
+
+    function getFinanceTrend() {
+      const txs = data.modules.finance.transactions || [];
+      const months = [];
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        months.push({ key: key, label: (d.getMonth() + 1) + '月', income: 0, expense: 0 });
+      }
+      txs.forEach(tx => {
+        if (!tx.date) return;
+        const d = new Date(tx.date + 'T00:00:00');
+        const key = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+        const month = months.find(m => m.key === key);
+        if (!month) return;
+        if (tx.type === 'income') month.income += tx.amount;
+        else month.expense += tx.amount;
+      });
+      return months;
+    }
+
+    function renderFinanceTrendHtml() {
+      const trend = getFinanceTrend();
+      const max = Math.max(1, ...trend.reduce((acc, m) => acc.concat([m.income, m.expense]), []));
+      const bars = trend.map(m => {
+        const incomeH = Math.max(2, Math.round(m.income / max * 100));
+        const expenseH = Math.max(2, Math.round(m.expense / max * 100));
+        return `
+          <div class="trend-bar-item">
+            <div class="trend-pair">
+              <div class="trend-bar-track"><div class="trend-bar-fill" style="height:${incomeH}%" title="收入 ${formatMoney(m.income)}"></div></div>
+              <div class="trend-bar-track"><div class="trend-bar-fill expense" style="height:${expenseH}%" title="支出 ${formatMoney(m.expense)}"></div></div>
+            </div>
+            <div class="trend-bar-label">${m.label}</div>
+          </div>
+        `;
+      }).join('');
+      return `
+        <div class="trend-section">
+          <div class="trend-section-title">📈 近 6 月收支趋势</div>
+          <div class="trend-bars">${bars}</div>
+        </div>
+      `;
+    }
+
+    function exportFinanceCSV() {
+      const txs = (data.modules.finance.transactions || []).slice().sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const rows = [['日期', '类型', '分类', '金额', '备注']];
+      txs.forEach(tx => {
+        rows.push([
+          tx.date || '',
+          tx.type === 'income' ? '收入' : '支出',
+          tx.category || '其他',
+          String(tx.amount),
+          (tx.note || '').replace(/[\r\n,]+/g, ' ')
+        ]);
+      });
+      const csv = '\ufeff' + rows.map(r => r.join(',')).join('\r\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = '财务收支_' + getTodayStr() + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 0);
     }
 
     function openFinanceTargetModal() {
@@ -3275,6 +3828,8 @@
       if (budgetCard) budgetCard.outerHTML = renderBudgetCardHtml(stats);
       const categorySection = document.querySelector('.category-section');
       if (categorySection) categorySection.outerHTML = renderCategorySectionHtml(stats);
+      const trendSection = document.querySelector('.trend-section');
+      if (trendSection) trendSection.outerHTML = renderFinanceTrendHtml();
       const mp = document.querySelector('.module-title-bar .m-progress');
       if (mp) mp.textContent = stats.pct + '%';
     }
@@ -3373,6 +3928,7 @@
         </div>
 
         ${renderBudgetCardHtml(stats)}
+        ${renderFinanceTrendHtml()}
 
         <!-- 快捷操作 -->
         <div class="finance-actions">
@@ -3391,6 +3947,10 @@
           <button class="finance-btn budget" onclick="openFinanceTargetModal()">
             <span class="finance-btn-icon">💰</span>
             <span>设预算</span>
+          </button>
+          <button class="finance-btn" onclick="exportFinanceCSV()">
+            <span class="finance-btn-icon">📄</span>
+            <span>导出CSV</span>
           </button>
         </div>
 
@@ -3440,7 +4000,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v11');
+      info.push('版本: v19');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -3460,7 +4020,35 @@
     }
 
     const BACKUP_KEY = LS_KEY + '_backups';
-    const MAX_AUTO_BACKUPS = 60;
+    const BACKUP_PROMPT_KEY = LS_KEY + '_backup_prompt';
+    const MAX_AUTO_BACKUPS = 20;
+
+    function simpleHash(str) {
+      let h = 5381;
+      for (let i = 0; i < str.length; i++) {
+        h = ((h * 33) ^ str.charCodeAt(i)) >>> 0;
+      }
+      return h.toString(16);
+    }
+
+    function showInfoToast(text) {
+      const toast = document.getElementById('achievementToast');
+      if (!toast) return;
+      toast.textContent = text;
+      toast.style.display = 'flex';
+      clearTimeout(achievementToastTimer);
+      achievementToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 5000);
+    }
+
+    function maybePromptBackup() {
+      try {
+        const last = parseInt(localStorage.getItem(BACKUP_PROMPT_KEY) || '0', 10);
+        if (!last || Date.now() - last > 7 * 24 * 60 * 60 * 1000) {
+          localStorage.setItem(BACKUP_PROMPT_KEY, String(Date.now()));
+          setTimeout(() => showInfoToast('💾 距上次导出备份已超过 7 天，建议在“备份”里导出一份'), 1200);
+        }
+      } catch(e) {}
+    }
 
     function getAutoBackups() {
       try {
@@ -3495,10 +4083,12 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v11',
+        version: 'v19',
         exportedAt: new Date().toISOString(),
         data: data
       };
+      payload.checksum = simpleHash(JSON.stringify(payload.data));
+      try { localStorage.setItem(BACKUP_PROMPT_KEY, String(Date.now())); } catch(e) {}
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -3522,6 +4112,9 @@
           const imported = parsed && parsed.data && parsed.data.modules ? parsed.data : parsed;
           if (!imported || !imported.modules) throw new Error('文件格式不正确，缺少 modules 数据');
           if (!imported.modules.daily || !Array.isArray(imported.modules.daily.habits)) throw new Error('备份文件缺少每日打卡数据');
+          if (parsed && parsed.checksum && simpleHash(JSON.stringify(imported)) !== parsed.checksum) {
+            throw new Error('备份文件校验失败，可能已损坏');
+          }
           createAutoBackup('导入前备份');
           localStorage.setItem(LS_KEY, JSON.stringify(imported));
           data = loadData();
@@ -4326,6 +4919,19 @@
       });
     }
 
+    function appendFundNavRecord(fund) {
+      if (!fund.records) fund.records = [];
+      const date = getTodayStr();
+      const record = { date: date, nav: fund.currentNav, changePct: fund.changePct || 0 };
+      const idx = fund.records.findIndex(r => r.date === date);
+      if (idx >= 0) {
+        fund.records[idx] = record;
+      } else {
+        fund.records.push(record);
+      }
+      if (fund.records.length > 30) fund.records = fund.records.slice(-30);
+    }
+
     function refreshFundNav(fundId, silent) {
       const fin = data.modules.finance;
       const fund = fin.funds.find(f => f.id === fundId);
@@ -4334,9 +4940,8 @@
         fund.currentNav = data.estimateNav || data.nav;
         fund.navDate = data.navDate || getTodayStr();
         fund.changePct = data.changePct || 0;
-        if (!fund.records) fund.records = [];
-        fund.records.push({ date: getTodayStr(), nav: fund.currentNav, changePct: fund.changePct });
-        if (fund.records.length > 30) fund.records = fund.records.slice(-30);
+        fund.lastUpdatedAt = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+        appendFundNavRecord(fund);
         saveData();
         renderModule('finance');
         updateTotalStats();
@@ -4367,9 +4972,8 @@
           fund.currentNav = data.estimateNav || data.nav;
           fund.navDate = data.navDate || getTodayStr();
           fund.changePct = data.changePct || 0;
-          if (!fund.records) fund.records = [];
-          fund.records.push({ date: getTodayStr(), nav: fund.currentNav, changePct: fund.changePct });
-          if (fund.records.length > 30) fund.records = fund.records.slice(-30);
+          fund.lastUpdatedAt = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
+          appendFundNavRecord(fund);
           completed++;
           if (completed === funds.length) {
             saveData();
@@ -4425,7 +5029,7 @@
             <div class="fund-card-header">
               <div class="fund-card-info">
                 <div class="fund-card-name">${escapeHtml(fund.name)}</div>
-                <div class="fund-card-code">${escapeHtml(fund.code)}</div>
+                <div class="fund-card-code">${escapeHtml(fund.code)}${fund.lastUpdatedAt ? ' · 更新于 ' + escapeHtml(fund.lastUpdatedAt) : ''}</div>
               </div>
               <div class="fund-card-actions">
                 <button class="fund-card-btn" onclick="refreshFundNav(${fund.id})" title="刷新净值">🔄</button>
@@ -4749,6 +5353,12 @@
       return `<div class="supplement-stock ${status === 'low' ? 'low' : status === 'empty' ? 'empty' : ''}"><span>📦 余量 ${item.stock}${unit}${totalText}</span>${badge}</div>`;
     }
 
+    function renderLowStockBannerHtml(items) {
+      const low = items.filter(i => ['low', 'empty'].includes(getStockStatus(i)));
+      if (!low.length) return '';
+      return `<div class="low-stock-banner">⚠️ ${low.length} 种补剂需要补货：${low.map(i => escapeHtml(i.name)).join('、')}</div>`;
+    }
+
     function shouldTakeSupplement(item, dateStr) {
       if (!item.cycleEnabled || !item.cycleStart || !item.cycleTakeDays) return true;
       const diff = daysBetween(item.cycleStart, dateStr);
@@ -4848,6 +5458,8 @@
       }
       const container = document.getElementById('moduleContent');
       const items = data.modules.supplements.items || [];
+      const banner = container.querySelector('.low-stock-banner');
+      if (banner) banner.outerHTML = renderLowStockBannerHtml(items);
       const takenCount = items.filter(i => i.taken).length;
       const totalCount = items.length;
       const pct = totalCount ? Math.round(takenCount / totalCount * 100) : 0;
@@ -5007,6 +5619,8 @@
           <div class="pb"><div class="pf" style="width:${pct}%;background:linear-gradient(90deg,${cfg.color},${cfg.color}66)"></div></div>
         </div>
 
+        ${renderLowStockBannerHtml(allItems)}
+
         ${allTags.length ? `
           <div class="supplement-tag-filter">
             <button class="supplement-tag-chip ${supplementTagFilter === 'all' ? 'active' : ''}" data-tag="all" onclick="setSupplementTagFilter(this.dataset.tag)">全部</button>
@@ -5077,6 +5691,8 @@
       document.getElementById('bodyCategory').value = rec ? rec.category : '健身';
       document.getElementById('bodyPhase').value = rec ? (rec.phase || '第1周') : '第1周';
       document.getElementById('bodyContent').value = rec ? rec.content : '';
+      document.getElementById('bodyWeight').value = rec && typeof rec.weight === 'number' ? rec.weight : '';
+      document.getElementById('bodySleep').value = rec && typeof rec.sleepHours === 'number' ? rec.sleepHours : '';
       renderBodyRatingPicker();
       document.getElementById('bodyOverlay').classList.add('show');
     }
@@ -5097,6 +5713,10 @@
       const records = getBodyRecords();
       const category = document.getElementById('bodyCategory').value || '其他';
       const phase = document.getElementById('bodyPhase').value || '刚开始';
+      const weightInput = parseFloat(document.getElementById('bodyWeight').value);
+      const sleepInput = parseFloat(document.getElementById('bodySleep').value);
+      const weight = isNaN(weightInput) ? null : weightInput;
+      const sleepHours = isNaN(sleepInput) ? null : sleepInput;
       if (bodyEditId) {
         const rec = records.find(r => r.id === bodyEditId);
         if (rec) {
@@ -5105,9 +5725,11 @@
           rec.phase = phase;
           rec.content = content;
           rec.rating = bodyRating;
+          rec.weight = weight;
+          rec.sleepHours = sleepHours;
         }
       } else {
-        records.unshift({ id: Date.now(), date: date, category: category, phase: phase, content: content, rating: bodyRating });
+        records.unshift({ id: Date.now(), date: date, category: category, phase: phase, content: content, rating: bodyRating, weight: weight, sleepHours: sleepHours });
       }
       data.modules.body.records = records;
       saveData();
@@ -5126,6 +5748,45 @@
       renderModule('body');
       updateTotalStats();
       renderNav();
+    }
+
+    function renderNumericTrendHtml(title, unit, items) {
+      if (!items.length) return '';
+      const sorted = items.slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).slice(-12);
+      const values = sorted.map(r => r.value);
+      const latest = values[values.length - 1];
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const range = max - min || 1;
+      const bars = sorted.map(r => {
+        const h = Math.max(8, Math.round((r.value - min) / range * 100));
+        return `
+          <div class="trend-bar-item">
+            <div class="trend-pair">
+              <div class="trend-bar-track"><div class="trend-bar-fill" style="height:${h}%" title="${r.date} · ${r.value}${unit}"></div></div>
+            </div>
+            <div class="trend-bar-label">${String(r.date).slice(5)}</div>
+          </div>
+        `;
+      }).join('');
+      return `
+        <div class="trend-section">
+          <div class="trend-section-title">${title} · 最新 ${latest}${unit}</div>
+          <div class="trend-bars">${bars}</div>
+        </div>
+      `;
+    }
+
+    function renderBodyTrendsHtml(records) {
+      const weight = records.filter(r => typeof r.weight === 'number' && !isNaN(r.weight)).map(r => ({ date: r.date, value: r.weight }));
+      const sleep = records.filter(r => typeof r.sleepHours === 'number' && !isNaN(r.sleepHours)).map(r => ({ date: r.date, value: r.sleepHours }));
+      if (!weight.length && !sleep.length) return '';
+      return `
+        <div class="body-trend-grid">
+          ${renderNumericTrendHtml('⚖️ 体重趋势', 'kg', weight)}
+          ${renderNumericTrendHtml('😴 睡眠趋势', 'h', sleep)}
+        </div>
+      `;
     }
 
     function renderBodyModule(container) {
@@ -5186,6 +5847,8 @@
           </div>
         </div>
 
+        ${renderBodyTrendsHtml(getBodyRecords())}
+
         <button class="body-add-btn" onclick="openBodyModal()">＋ 记录身体变化</button>
 
         ${records.length ? `
@@ -5195,6 +5858,199 @@
             <div class="big">🧬</div>
             <p>还没有身体记录</p>
             <p style="font-size:12px;color:var(--text2);margin-top:4px">健身或吃补剂一段时间后，记录下身体的变化和感受</p>
+          </div>
+        `}
+      `;
+    }
+
+    // ========== 看书记录 ==========
+    function getReadingRecords() {
+      return (data.modules.reading && data.modules.reading.records) || [];
+    }
+
+    function formatReadingDuration(minutes) {
+      const m = Number(minutes) || 0;
+      if (m <= 0) return '0 分钟';
+      if (m < 60) return m + ' 分钟';
+      const h = Math.floor(m / 60);
+      const rest = m % 60;
+      return rest ? h + ' 小时 ' + rest + ' 分钟' : h + ' 小时';
+    }
+
+    function getReadingWeekTrend(records) {
+      const days = [];
+      const now = new Date();
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+        const date = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        days.push({ date: date, label: (d.getMonth() + 1) + '/' + d.getDate(), minutes: 0 });
+      }
+      records.forEach(r => {
+        const day = days.find(d => d.date === r.date);
+        if (day) day.minutes += Number(r.durationMinutes) || 0;
+      });
+      return days;
+    }
+
+    function renderReadingWeekTrendHtml(records) {
+      const days = getReadingWeekTrend(records);
+      const max = Math.max(1, ...days.map(d => d.minutes));
+      const bars = days.map(d => {
+        const h = Math.max(3, Math.round(d.minutes / max * 100));
+        return `
+          <div class="trend-bar-item">
+            <div class="trend-pair">
+              <div class="trend-bar-track"><div class="trend-bar-fill" style="height:${h}%" title="${d.date} · ${d.minutes} 分钟"></div></div>
+            </div>
+            <div class="trend-bar-label">${d.label}</div>
+          </div>
+        `;
+      }).join('');
+      return `
+        <div class="trend-section">
+          <div class="trend-section-title">📖 最近 7 天阅读时长</div>
+          <div class="trend-bars">${bars}</div>
+        </div>
+      `;
+    }
+
+    function openReadingModal(id) {
+      const rec = id ? getReadingRecords().find(r => r.id === id) : null;
+      readingEditId = rec ? rec.id : null;
+      document.getElementById('readingModalTitle').textContent = rec ? '编辑读书记录' : '记录读书';
+      document.getElementById('readingId').value = rec ? rec.id : '';
+      document.getElementById('readingBookName').value = rec ? rec.bookName : '';
+      document.getElementById('readingAuthor').value = rec ? (rec.author || '') : '';
+      document.getElementById('readingDate').value = rec ? rec.date : getTodayStr();
+      document.getElementById('readingMinutes').value = rec ? rec.durationMinutes : '';
+      document.getElementById('readingPages').value = rec ? rec.pages : '';
+      document.getElementById('readingStatus').value = rec ? (rec.status || '在读') : '在读';
+      document.getElementById('readingNote').value = rec ? (rec.note || '') : '';
+      document.getElementById('readingOverlay').classList.add('show');
+      setTimeout(() => document.getElementById('readingBookName').focus(), 100);
+    }
+
+    function closeReadingModal(e) {
+      if (e && e.target !== document.getElementById('readingOverlay')) return;
+      document.getElementById('readingOverlay').classList.remove('show');
+      readingEditId = null;
+    }
+
+    function saveReadingRecord() {
+      const bookName = document.getElementById('readingBookName').value.trim();
+      const author = document.getElementById('readingAuthor').value.trim();
+      const date = document.getElementById('readingDate').value || getTodayStr();
+      const durationMinutes = Math.max(0, parseInt(document.getElementById('readingMinutes').value, 10) || 0);
+      const pages = Math.max(0, parseInt(document.getElementById('readingPages').value, 10) || 0);
+      const status = document.getElementById('readingStatus').value || '在读';
+      const note = document.getElementById('readingNote').value.trim();
+      if (!bookName) {
+        alert('请输入书名');
+        return;
+      }
+      const records = getReadingRecords();
+      if (readingEditId) {
+        const rec = records.find(r => r.id === readingEditId);
+        if (rec) {
+          rec.bookName = bookName;
+          rec.author = author;
+          rec.date = date;
+          rec.durationMinutes = durationMinutes;
+          rec.pages = pages;
+          rec.status = status;
+          rec.note = note;
+        }
+      } else {
+        records.unshift({
+          id: Date.now(),
+          bookName: bookName,
+          author: author,
+          date: date,
+          durationMinutes: durationMinutes,
+          pages: pages,
+          status: status,
+          note: note
+        });
+      }
+      data.modules.reading.records = records;
+      saveData();
+      closeReadingModal();
+      renderModule('reading');
+      renderNav();
+    }
+
+    function deleteReadingRecord(id) {
+      if (!confirm('确定删除这条读书记录吗？')) return;
+      createAutoBackup('删除看书记录前');
+      captureUndoSnapshot('已删除看书记录');
+      data.modules.reading.records = getReadingRecords().filter(r => r.id !== id);
+      saveData();
+      renderModule('reading');
+      renderNav();
+    }
+
+    function renderReadingModule(container) {
+      const records = getReadingRecords().slice().sort((a, b) => String(b.date).localeCompare(String(a.date)) || b.id - a.id);
+      const cfg = MODULE_CONFIG.reading;
+      const totalSessions = records.length;
+      const totalMinutes = records.reduce((sum, r) => sum + (Number(r.durationMinutes) || 0), 0);
+      const uniqueBooks = new Set(records.map(r => String(r.bookName || '').trim()).filter(Boolean)).size;
+
+      const recordsHtml = records.map(rec => `
+        <div class="body-record-card">
+          <div class="body-record-head">
+            <span class="body-record-date">📅 ${rec.date} · ${escapeHtml(rec.status || '在读')}</span>
+            <div class="body-record-actions">
+              <button class="body-record-btn" onclick="openReadingModal(${rec.id})" title="编辑">✏️</button>
+              <button class="body-record-btn del" onclick="deleteReadingRecord(${rec.id})" title="删除">×</button>
+            </div>
+          </div>
+          <div class="reading-book-title">📖 ${escapeHtml(rec.bookName)}</div>
+          <div class="reading-meta">
+            <span>⏱ ${formatReadingDuration(rec.durationMinutes)}</span>
+            ${rec.pages ? '<span>📄 ' + rec.pages + ' 页</span>' : ''}
+            ${rec.author ? '<span>✍️ ' + escapeHtml(rec.author) + '</span>' : ''}
+          </div>
+          ${rec.note ? `<div class="reading-note">${escapeHtml(rec.note)}</div>` : ''}
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="module-title-bar">
+          <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
+          <div class="m-text">
+            <div class="m-name">${cfg.name}</div>
+            <div class="m-desc">${cfg.desc}</div>
+          </div>
+          <div class="m-progress">${totalSessions}</div>
+        </div>
+
+        <div class="reading-stats">
+          <div class="reading-stat-card">
+            <div class="num">${totalSessions}</div>
+            <div class="label">记录次数</div>
+          </div>
+          <div class="reading-stat-card">
+            <div class="num">${formatReadingDuration(totalMinutes)}</div>
+            <div class="label">累计阅读</div>
+          </div>
+          <div class="reading-stat-card">
+            <div class="num">${uniqueBooks}</div>
+            <div class="label">读过的书</div>
+          </div>
+        </div>
+
+        ${renderReadingWeekTrendHtml(records)}
+
+        <button class="reading-add-btn" onclick="openReadingModal()">＋ 记录读书</button>
+
+        ${records.length ? `
+          <div class="body-record-list">${recordsHtml}</div>
+        ` : `
+          <div class="empty-state">
+            <div class="big">📖</div>
+            <p>还没有看书记录</p>
+            <p style="font-size:12px;color:var(--text2);margin-top:4px">记录书名、阅读时长、页数和感想</p>
           </div>
         `}
       `;
@@ -5250,6 +6106,8 @@
       if (pf) pf.style.width = pct + '%';
       const mp = container.querySelector('.module-title-bar .m-progress');
       if (mp) mp.textContent = pct + '%';
+      const weekly = container.querySelector('.weekly-rate');
+      if (weekly) weekly.outerHTML = renderWeeklyRateHtml(moduleId);
       return true;
     }
 
@@ -5383,6 +6241,77 @@
       pendingNoteModule = null;
     }
 
+    function getWeeklyCompletion(moduleId) {
+      const mod = data.modules[moduleId];
+      const habits = mod && Array.isArray(mod.habits) ? mod.habits : [];
+      const now = new Date();
+      const day = now.getDay() || 7;
+      const monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - day + 1);
+      let need = 0, done = 0;
+      for (let d = new Date(monday); d <= now; d.setDate(d.getDate() + 1)) {
+        const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        habits.forEach(h => {
+          if (h.type === 'cycle') return;
+          if (h.type === 'period' && !isPeriodDay(h, ds)) return;
+          need++;
+          if (h.records.includes(ds)) done++;
+        });
+      }
+      return { need: need, done: done, pct: need ? Math.round(done / need * 100) : 0 };
+    }
+
+    function renderWeeklyRateHtml(moduleId) {
+      const w = getWeeklyCompletion(moduleId);
+      if (!w.need) return '';
+      return `
+        <div class="weekly-rate">
+          <span>本周完成率</span>
+          <div class="mini-bar"><div style="width:${w.pct}%"></div></div>
+          <span class="weekly-num">${w.done}/${w.need} · ${w.pct}%</span>
+        </div>
+      `;
+    }
+
+    function openMakeupModal(moduleId, id) {
+      const h = data.modules[moduleId] && data.modules[moduleId].habits.find(x => x.id === id);
+      if (!h) return;
+      document.getElementById('makeupHabitId').value = id;
+      document.getElementById('makeupModuleId').value = moduleId;
+      document.getElementById('makeupDate').value = getTodayStr();
+      document.getElementById('makeupNote').value = (h.notes && h.notes[getTodayStr()]) || '';
+      document.getElementById('makeupOverlay').classList.add('show');
+    }
+
+    function closeMakeupModal(e) {
+      if (e && e.target !== document.getElementById('makeupOverlay')) return;
+      document.getElementById('makeupOverlay').classList.remove('show');
+    }
+
+    function saveMakeupRecord() {
+      const moduleId = document.getElementById('makeupModuleId').value;
+      const id = parseInt(document.getElementById('makeupHabitId').value, 10);
+      const date = document.getElementById('makeupDate').value;
+      const note = document.getElementById('makeupNote').value.trim();
+      if (!date) { alert('请选择补卡日期'); return; }
+      if (date > getTodayStr()) { alert('不能补未来的日期'); return; }
+      const h = data.modules[moduleId] && data.modules[moduleId].habits.find(x => x.id === id);
+      if (!h) return;
+      if (h.records.includes(date)) {
+        alert('该日期已经打卡，无需补卡');
+        return;
+      }
+      h.records.push(date);
+      if (note) {
+        if (!h.notes) h.notes = {};
+        h.notes[date] = note;
+      }
+      saveData();
+      closeMakeupModal();
+      renderModule(activeModule);
+      updateTotalStats();
+      renderNav();
+    }
+
     function deleteHabit(moduleId, id) {
       if (!confirm('确定删除这个目标吗？历史记录也会一并删除。')) return;
       createAutoBackup('删除打卡目标前');
@@ -5415,6 +6344,10 @@
       }
       if (moduleId === 'body') {
         renderBodyModule(container);
+        return;
+      }
+      if (moduleId === 'reading') {
+        renderReadingModule(container);
         return;
       }
 
@@ -5456,6 +6389,7 @@
         </div>
 
         ${hasHabits ? `
+          ${renderWeeklyRateHtml(moduleId)}
           <div class="module-progress-bar">
             <div class="ph"><span>模块进度</span><span class="pp" style="color:${cfg.color}">${modDone}/${modNeed}</span></div>
             <div class="pb"><div class="pf" style="width:${pct}%;background:linear-gradient(90deg,${cfg.color},${cfg.color}66)"></div></div>
@@ -5487,6 +6421,7 @@
           <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="点击打卡">
             ${isDone ? '✓' : ''}
           </button>
+          <button class="makeup-btn" onclick="openMakeupModal('${moduleId}', ${h.id})" title="补卡">↩</button>
           <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
           <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
         </div>
