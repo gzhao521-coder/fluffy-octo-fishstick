@@ -18,8 +18,8 @@
   <style>
     :root {
       --bg: #0f0f23;
-      --card: rgba(255,255,255,0.06);
-      --card-solid: #1a1a2e;
+      --card: rgba(255,255,255,0.055);
+      --card-solid: #181828;
       --text: #f0f0f5;
       --text2: #8892b0;
       --primary: #64ffda;
@@ -34,9 +34,9 @@
       --success: #00e676;
       --danger: #ff5252;
       --warning: #ffd740;
-      --radius-sm: 12px;
-      --radius: 20px;
-      --radius-lg: 28px;
+      --radius-sm: 10px;
+      --radius: 14px;
+      --radius-lg: 18px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -101,9 +101,11 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: linear-gradient(135deg, #0a0a1a 0%, #0f0f23 25%, #1a0a2e 50%, #0f0f23 75%, #0a0a1a 100%);
-      background-size: 400% 400%;
-      animation: bgShift 20s ease infinite;
+      background:
+        radial-gradient(1000px 520px at 15% -10%, rgba(100,255,218,0.07), transparent 60%),
+        radial-gradient(900px 520px at 105% 108%, rgba(0,212,255,0.06), transparent 60%),
+        linear-gradient(160deg, #0b0b1c, #101024 55%, #0d0d20);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
       padding-bottom: 90px;
@@ -113,27 +115,31 @@
 
     /* 装饰光球 */
     .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
-      z-index: 0;
-      animation: breathe 6s ease-in-out infinite;
+      display: none;
     }
-    .orb-1 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(100,255,218,0.12), transparent 70%); top: -100px; right: -80px; animation-delay: 0s; }
-    .orb-2 { width: 250px; height: 250px; background: radial-gradient(circle, rgba(189,52,254,0.1), transparent 70%); bottom: 100px; left: -100px; animation-delay: 2s; }
-    .orb-3 { width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,212,255,0.08), transparent 70%); top: 40%; right: -60px; animation-delay: 4s; }
 
     /* 网格背景 */
     .grid-bg {
       position: fixed;
       inset: 0;
       background-image: 
-        linear-gradient(rgba(100,255,218,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(100,255,218,0.03) 1px, transparent 1px);
+        linear-gradient(rgba(100,255,218,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100,255,218,0.02) 1px, transparent 1px);
       background-size: 50px 50px;
       pointer-events: none;
       z-index: 0;
+    }
+
+    .stat-card .num,
+    .finance-card-value,
+    .market-item-price,
+    .fund-card-stat-value,
+    .module-title-bar .m-progress,
+    .daily-meta b,
+    .finance-progress-text,
+    .market-item-change {
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
     }
 
     header {
@@ -156,7 +162,7 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       letter-spacing: 3px;
-      animation: gradientText 6s ease infinite;
+      animation: none;
     }
     header .date {
       font-size: 12px;
@@ -165,35 +171,94 @@
       font-weight: 500;
       letter-spacing: 1px;
     }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 6px;
+      padding: 0;
+    }
+    .header-menu-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      color: var(--primary);
+      background: rgba(100,255,218,0.08);
+      border: 1px solid rgba(100,255,218,0.2);
+      cursor: pointer;
+      line-height: 1;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .header-menu-btn:hover {
+      background: rgba(100,255,218,0.16);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    .header-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .header-menu-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 8px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(100,255,218,0.08);
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .header-menu-item:hover {
+      color: var(--text);
+      border-color: rgba(100,255,218,0.2);
+      transform: translateY(-1px);
+    }
+    .header-menu-item .header-menu-icon {
+      font-size: 20px;
+      line-height: 1;
+    }
     .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; position: relative; z-index: 1; }
 
     /* 统计卡片 - 玻璃拟态 */
     .stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-bottom: 20px;
+      gap: 8px;
+      margin-bottom: 14px;
     }
     .stat-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       background: var(--card);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-radius: var(--radius);
-      padding: 18px 8px;
-      text-align: center;
+      padding: 12px;
+      text-align: left;
       border: 1px solid rgba(100,255,218,0.08);
       position: relative;
       overflow: hidden;
       transition: all 0.3s ease;
-      animation: slideUp 0.5s ease backwards;
+      animation: none;
     }
     .stat-card:nth-child(1) { animation-delay: 0.1s; }
     .stat-card:nth-child(2) { animation-delay: 0.2s; }
     .stat-card:nth-child(3) { animation-delay: 0.3s; }
     .stat-card:hover {
-      transform: translateY(-4px);
       border-color: rgba(100,255,218,0.2);
-      box-shadow: 0 8px 32px rgba(100,255,218,0.1);
+      box-shadow: 0 6px 22px rgba(100,255,218,0.08);
     }
     .stat-card::before {
       content: '';
@@ -204,27 +269,27 @@
       opacity: 0.6;
     }
     .stat-card .icon-wrap {
-      width: 36px; height: 36px;
+      width: 34px; height: 34px;
       border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 8px;
+      margin: 0;
       font-size: 18px;
       background: rgba(100,255,218,0.1);
       border: 1px solid rgba(100,255,218,0.15);
-      animation: float 3s ease-in-out infinite;
+      animation: none;
     }
     .stat-card:nth-child(1) .icon-wrap { animation-delay: 0s; }
     .stat-card:nth-child(2) .icon-wrap { animation-delay: 0.5s; background: rgba(0,230,118,0.1); border-color: rgba(0,230,118,0.15); }
     .stat-card:nth-child(3) .icon-wrap { animation-delay: 1s; background: rgba(255,215,64,0.1); border-color: rgba(255,215,64,0.15); }
     .stat-card .num {
-      font-size: 24px;
+      font-size: 19px;
       font-weight: 800;
       color: var(--text);
       line-height: 1.2;
       transition: all 0.3s ease;
     }
     .stat-card .num.pop { animation: numberPop 0.4s ease; }
-    .stat-card .label { font-size: 11px; color: var(--text2); margin-top: 4px; font-weight: 500; letter-spacing: 0.5px; }
+    .stat-card .label { font-size: 11px; color: var(--text2); margin-top: 0; font-weight: 500; letter-spacing: 0.5px; }
 
     /* 模块标题 */
     .module-title-bar {
@@ -298,7 +363,7 @@
     .add-box input:focus { border-color: var(--primary); background: rgba(0,0,0,0.3); box-shadow: 0 0 15px rgba(100,255,218,0.1); }
     .add-box button {
       padding: 12px 22px;
-      background: linear-gradient(135deg, var(--primary), var(--accent2));
+      background: linear-gradient(135deg, var(--module-color, var(--primary)), var(--module-color, var(--primary))88);
       color: #0a0a1a;
       border: none;
       border-radius: var(--radius-sm);
@@ -307,7 +372,7 @@
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(100,255,218,0.3);
+      box-shadow: 0 4px 15px var(--module-color, #64ffda)33;
       position: relative;
       overflow: hidden;
     }
@@ -322,7 +387,7 @@
     .add-box button:hover::after { left: 100%; }
     .add-box button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 25px rgba(100,255,218,0.4);
+      box-shadow: 0 6px 25px var(--module-color, #64ffda)44;
     }
     .add-box button:active { transform: translateY(0); }
 
@@ -605,20 +670,22 @@
     /* 底部导航 */
     .bottom-nav {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(10,10,26,0.85);
+      left: 10px;
+      right: 10px;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      border-radius: 18px;
+      background: rgba(12,12,28,0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       z-index: 100;
-      border-top: 1px solid rgba(100,255,218,0.08);
-      padding-bottom: env(safe-area-inset-bottom, 0);
+      border: 1px solid rgba(100,255,218,0.12);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.05);
+      padding: 6px;
     }
     .undo-bar {
       position: fixed;
       left: 50%;
-      bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+      bottom: calc(86px + env(safe-area-inset-bottom, 0px));
       transform: translateX(-50%);
       z-index: 300;
       display: flex;
@@ -681,18 +748,19 @@
       display: flex;
       justify-content: space-around;
       align-items: center;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 4px 4px 8px;
+      margin: 0;
+      padding: 0;
       position: relative;
+      gap: 2px;
     }
     .nav-item {
       flex: 1;
+      min-width: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 2px;
-      padding: 6px 2px;
+      padding: 6px 1px;
       cursor: pointer;
       border-radius: 16px;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -702,19 +770,22 @@
       position: relative;
     }
     .nav-item:hover { color: var(--text2); background: rgba(100,255,218,0.05); }
-    .nav-item.active { color: var(--primary); }
+    .nav-item.active { color: var(--nav-color, var(--primary)); }
     .nav-item .nav-icon {
-      font-size: 22px;
+      font-size: 20px;
       line-height: 1;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       z-index: 2;
     }
-    .nav-item.active .nav-icon { transform: translateY(-4px) scale(1.2); filter: drop-shadow(0 4px 8px rgba(100,255,218,0.4)); }
+    .nav-item.active .nav-icon { transform: translateY(-2px) scale(1.1); filter: drop-shadow(0 4px 8px rgba(100,255,218,0.4)); }
     .nav-item .nav-label {
-      font-size: 9px;
+      font-size: 8px;
       font-weight: 600;
       white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
       transition: all 0.3s ease;
       opacity: 0.7;
     }
@@ -747,6 +818,51 @@
       z-index: 3;
     }
     .nav-item.has-pending .nav-dot { display: block; }
+    .nav-more-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    .nav-more-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 8px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(100,255,218,0.08);
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .nav-more-item .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-more-item:hover {
+      color: var(--text);
+      border-color: rgba(100,255,218,0.2);
+      transform: translateY(-1px);
+    }
+    .nav-more-item.active {
+      color: var(--nav-color, var(--primary));
+      background: rgba(100,255,218,0.12);
+      border-color: rgba(100,255,218,0.28);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+    .nav-more-item.has-pending::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ff5252, #ff9f43);
+    }
 
     /* 弹窗 */
     .overlay {
@@ -774,6 +890,7 @@
     }
     .modal.wide { max-width: 480px; }
     @keyframes pop { from { transform: scale(0.85) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+    @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .modal-header h3 { font-size: 17px; font-weight: 700; color: var(--text); }
     .modal-header .close {
@@ -1966,8 +2083,9 @@
       .supplement-item-main { flex-direction: column; gap: 8px; }
       .supplement-item-actions { align-self: flex-end; }
       .supplement-item-meta { gap: 6px; }
-      .stat-card { padding: 14px 4px; }
-      .stat-card .num { font-size: 20px; }
+      .stat-card { padding: 11px 8px; gap: 8px; }
+      .stat-card .num { font-size: 18px; }
+      .stat-card .icon-wrap { width: 30px; height: 30px; font-size: 16px; }
       .nav-item .nav-label { font-size: 8px; }
       .nav-item .nav-icon { font-size: 20px; }
       .habit-card { padding: 14px; }
@@ -2206,12 +2324,10 @@
     }
     header h1 { filter: drop-shadow(0 4px 18px rgba(100,255,218,0.18)); }
     header .date { color: #a8b2d1; }
-    header button {
-      border-radius: 8px;
+    header .net-status {
+      border-radius: 999px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.18);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    header button:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(0,212,255,0.12); }
 
     .stats { gap: 14px; }
     .stat-card {
@@ -2333,10 +2449,10 @@
 
     .bottom-nav {
       background: linear-gradient(180deg, rgba(10,10,26,0.9), rgba(8,8,22,0.96));
-      border-top: 1px solid rgba(100,255,218,0.12);
-      box-shadow: 0 -12px 34px rgba(0,0,0,0.3);
+      border-top: none;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.05);
     }
-    .nav-item { border-radius: 18px; }
+    .nav-item { border-radius: 14px; }
     .nav-item.active {
       background: linear-gradient(180deg, rgba(100,255,218,0.14), rgba(0,212,255,0.05));
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 22px rgba(0,0,0,0.18);
@@ -2348,9 +2464,9 @@
       box-shadow: 0 0 16px rgba(100,255,218,0.12);
     }
     .nav-item.active .nav-indicator {
-      width: 26px;
-      background: linear-gradient(90deg, #64ffda, #00d4ff);
-      box-shadow: 0 0 14px rgba(100,255,218,0.6);
+      width: 18px;
+      background: var(--nav-color, #64ffda);
+      box-shadow: 0 0 14px var(--nav-color, rgba(100,255,218,0.6));
     }
 
     .overlay { background: rgba(4,4,14,0.72); backdrop-filter: blur(12px); }
@@ -2359,12 +2475,12 @@
       display: flex;
       align-items: center;
       gap: 16px;
-      padding: 18px 16px;
-      margin-bottom: 16px;
-      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 12px;
+      border-radius: var(--radius);
       background: linear-gradient(150deg, rgba(100,255,218,0.12), rgba(0,212,255,0.05) 45%, rgba(189,52,254,0.08));
       border: 1px solid rgba(100,255,218,0.16);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 36px rgba(0,0,0,0.28), 0 0 28px rgba(100,255,218,0.05);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 28px rgba(0,0,0,0.22);
       position: relative;
       overflow: hidden;
     }
@@ -2379,22 +2495,25 @@
     }
     .daily-hero-main { flex: 1; min-width: 0; }
     .daily-greeting {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       color: #fff;
       letter-spacing: 0.5px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
     .daily-quote {
-      font-size: 12px;
-      line-height: 1.55;
+      font-size: 11px;
+      line-height: 1.4;
       color: #b7c2df;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .daily-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px 14px;
+      gap: 6px 10px;
       font-size: 12px;
       color: #a8b2d1;
     }
@@ -2406,15 +2525,15 @@
       font-size: 13px;
     }
     .daily-hero-ring {
-      width: 66px;
-      height: 66px;
+      width: 54px;
+      height: 54px;
       flex-shrink: 0;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       background: conic-gradient(#64ffda 0deg, rgba(255,255,255,0.08) 0deg);
-      box-shadow: 0 0 22px rgba(100,255,218,0.16);
+      box-shadow: 0 0 18px rgba(100,255,218,0.12);
       position: relative;
     }
     .daily-hero-ring::before {
@@ -2432,16 +2551,16 @@
       color: #fff;
     }
     @media (max-width: 480px) {
-      .daily-hero { padding: 15px 13px; gap: 12px; }
-      .daily-hero-ring { width: 58px; height: 58px; }
-      .daily-greeting { font-size: 18px; }
+      .daily-hero { padding: 12px; gap: 10px; }
+      .daily-hero-ring { width: 48px; height: 48px; }
+      .daily-greeting { font-size: 17px; }
     }
 
     .daily-tips {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 16px;
+      gap: 6px;
+      margin-bottom: 12px;
     }
     .tip-chip {
       padding: 7px 11px;
@@ -2502,12 +2621,12 @@
     ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, rgba(100,255,218,0.28), rgba(0,212,255,0.18)); border-radius: 99px; }
 
     @media (max-width: 480px) {
-      .stat-card { padding: 16px 4px; }
-      .nav-item.active .nav-icon { padding: 5px; }
-      .modal { padding: 20px 16px; }
+      .stat-card { padding: 11px 8px; gap: 8px; }
+      .nav-item.active .nav-icon { padding: 4px; }
+      .modal { padding: 20px 18px calc(20px + env(safe-area-inset-bottom, 0px)); }
     }
 
-    /* ========== v23 精细交互 ========== */
+    /* ========== v30 底部导航加入学习/游戏 ========== */
     html { -webkit-text-size-adjust: 100%; }
     body {
       -webkit-font-smoothing: antialiased;
@@ -2542,7 +2661,7 @@
 
     .daily-hero { transition: transform 0.25s ease, box-shadow 0.25s ease; }
     .daily-hero:active { transform: scale(0.995); }
-    .daily-hero-ring { animation: ringBreath 3s ease-in-out infinite; }
+    .daily-hero-ring { animation: none; }
     @keyframes ringBreath {
       0%, 100% { box-shadow: 0 0 18px rgba(100,255,218,0.12); }
       50% { box-shadow: 0 0 30px rgba(100,255,218,0.26); }
@@ -2587,6 +2706,25 @@
     .body-add-btn:hover::after,
     .reading-add-btn:hover::after { left: 120%; }
 
+    @media (max-width: 600px) {
+      .overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .modal {
+        width: 100%;
+        max-width: 100%;
+        max-height: 88vh;
+        margin: 0;
+        border-radius: 18px 18px 0 0;
+        padding: 22px 18px calc(22px + env(safe-area-inset-bottom, 0px));
+        animation: sheetUp 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .modal.wide {
+        max-width: 100%;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -2606,18 +2744,10 @@
   <header>
     <h1>成长</h1>
     <div class="date" id="todayDate"></div>
-    <div style="display:flex;gap:6px;justify-content:center;margin-top:4px;flex-wrap:wrap">
-      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v23</span>
+    <div class="header-actions">
+      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v30</span>
       <span id="netStatus" class="net-status">•••</span>
-      <button onclick="forceRefresh()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔄 刷新</button>
-      <button onclick="openBackupModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">💾 备份</button>
-      <button onclick="openStatsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📊 统计</button>
-      <button onclick="openWeeklyReport()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📅 周报</button>
-      <button onclick="openCalendarOverviewModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">📅 总览</button>
-      <button onclick="openReminderModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔔 提醒</button>
-      <button onclick="openAchievementsModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🏆 成就</button>
-      <button onclick="openPinModal()" style="font-size:10px;color:var(--primary);background:transparent;border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔒 锁</button>
-      <button onclick="showDiagnostics()" style="font-size:10px;color:var(--warning);background:transparent;border:1px solid rgba(255,215,64,0.2);border-radius:6px;padding:2px 8px;cursor:pointer">🔍 诊断</button>
+      <button class="header-menu-btn" onclick="openHeaderMenu()" title="更多工具">☰</button>
     </div>
   </header>
 
@@ -2681,6 +2811,36 @@
   <nav class="bottom-nav">
     <div class="nav-items" id="navItems"></div>
   </nav>
+
+  <div class="overlay" id="navMoreOverlay" onclick="closeNavMore(event)">
+    <div class="modal nav-more-modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>全部模块</h3>
+        <button class="close" onclick="closeNavMore()">&times;</button>
+      </div>
+      <div class="nav-more-grid" id="navMoreGrid"></div>
+    </div>
+  </div>
+
+  <div class="overlay" id="headerMenuOverlay" onclick="closeHeaderMenu(event)">
+    <div class="modal header-menu-modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>工具菜单</h3>
+        <button class="close" onclick="closeHeaderMenu()">&times;</button>
+      </div>
+      <div class="header-menu-grid">
+        <button class="header-menu-item" onclick="closeHeaderMenu(); forceRefresh()"><span class="header-menu-icon">🔄</span><span>刷新</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openBackupModal()"><span class="header-menu-icon">💾</span><span>备份</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openStatsModal()"><span class="header-menu-icon">📊</span><span>统计</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openWeeklyReport()"><span class="header-menu-icon">📅</span><span>周报</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openCalendarOverviewModal()"><span class="header-menu-icon">📅</span><span>总览</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openReminderModal()"><span class="header-menu-icon">🔔</span><span>提醒</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openAchievementsModal()"><span class="header-menu-icon">🏆</span><span>成就</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openPinModal()"><span class="header-menu-icon">🔒</span><span>锁</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); showDiagnostics()"><span class="header-menu-icon">🔍</span><span>诊断</span></button>
+      </div>
+    </div>
+  </div>
 
   <div class="overlay" id="overlay" onclick="closeModal(event)">
     <div class="modal" onclick="event.stopPropagation()">
@@ -3215,6 +3375,7 @@
     };
 
     const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','reading','study','game','fitness'];
+    const NAV_PRIMARY_IDS = ['daily','study','game','finance','supplements','fitness'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
     const DAILY_QUOTES = [
       '今天也是值得认真过的一天。',
@@ -3239,8 +3400,10 @@
     let activeModule = localStorage.getItem(LS_KEY + '_active') || 'daily';
     let pendingNoteId = null;
     let pendingNoteModule = null;
-    let marketAutoFetchDone = false;
+    let marketFetching = false;
     let marketRefreshTimer = null;
+    let marketHistoryLoading = false;
+    let marketHistoryLastAttemptAt = 0;
     let skipCardEntryAnim = false;
     const REMINDER_KEY = LS_KEY + '_reminders';
     const PIN_KEY = LS_KEY + '_pin';
@@ -3331,7 +3494,7 @@
     }
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
-    document.getElementById('versionTag').textContent = 'v23';
+    document.getElementById('versionTag').textContent = 'v30';
 
     renderNav();
     renderModule(activeModule);
@@ -3424,6 +3587,7 @@
           if (fin.monthlyBudget === undefined) fin.monthlyBudget = 0;
           if (!fin.transactions) fin.transactions = [];
           if (!fin.marketData) fin.marketData = {};
+          if (!fin.marketHistory || typeof fin.marketHistory !== 'object') fin.marketHistory = {};
           if (!fin.funds) fin.funds = [];
           if (!fin.habits) fin.habits = [];
           if (!saved.modules.manifestation || !saved.modules.manifestation.goals) {
@@ -3520,6 +3684,7 @@
         if (typeof fin.monthlyBudget !== 'number' || isNaN(fin.monthlyBudget)) { fin.monthlyBudget = 0; repaired = true; }
         if (!Array.isArray(fin.transactions)) { fin.transactions = []; repaired = true; }
         if (!fin.marketData || typeof fin.marketData !== 'object') { fin.marketData = {}; repaired = true; }
+        if (!fin.marketHistory || typeof fin.marketHistory !== 'object') { fin.marketHistory = {}; repaired = true; }
         if (!Array.isArray(fin.funds)) { fin.funds = []; repaired = true; }
         if (!Array.isArray(fin.habits)) { fin.habits = []; repaired = true; }
       }
@@ -3963,6 +4128,8 @@
     function switchModule(moduleId) {
       activeModule = moduleId;
       localStorage.setItem(LS_KEY + '_active', moduleId);
+      const navMoreOverlay = document.getElementById('navMoreOverlay');
+      if (navMoreOverlay) navMoreOverlay.classList.remove('show');
       renderNav();
       renderModule(moduleId);
       if (moduleId === 'finance') {
@@ -3971,32 +4138,97 @@
       }
     }
 
+    function moduleHasPending(id) {
+      const mod = data.modules[id];
+      if (!mod) return false;
+      if (id === 'supplements' && mod.items) {
+        return mod.items.some(i => !i.taken);
+      }
+      if (mod.habits) {
+        for (const h of mod.habits) {
+          if (h.type === 'daily' && !h.records.includes(today)) return true;
+          if (h.type === 'period' && isPeriodDay(h, today) && !h.records.includes(today)) return true;
+        }
+      }
+      return false;
+    }
+
+    function openHeaderMenu() {
+      const overlay = document.getElementById('headerMenuOverlay');
+      if (overlay) overlay.classList.add('show');
+    }
+
+    function closeHeaderMenu(e) {
+      const overlay = document.getElementById('headerMenuOverlay');
+      if (!overlay) return;
+      if (e && e.target !== overlay) return;
+      overlay.classList.remove('show');
+    }
+
+    function openNavMore() {
+      const grid = document.getElementById('navMoreGrid');
+      if (grid) {
+        grid.innerHTML = MODULE_ORDER.map(id => {
+          const cfg = MODULE_CONFIG[id];
+          const isActive = activeModule === id;
+          return `
+            <button class="nav-more-item ${isActive ? 'active' : ''} ${moduleHasPending(id) ? 'has-pending' : ''}" style="--nav-color:${cfg.color}" onclick="switchModule('${id}')">
+              <span class="nav-icon">${cfg.icon}</span>
+              <span>${cfg.name}</span>
+            </button>
+          `;
+        }).join('');
+      }
+      const overlay = document.getElementById('navMoreOverlay');
+      if (overlay) overlay.classList.add('show');
+    }
+
+    function closeNavMore(e) {
+      const overlay = document.getElementById('navMoreOverlay');
+      if (!overlay) return;
+      if (e && e.target !== overlay) return;
+      overlay.classList.remove('show');
+    }
+
+    function scrollActiveNavIntoView() {
+      const container = document.getElementById('navItems');
+      const active = container && container.querySelector('.nav-item.active');
+      if (!container || !active) return;
+      const target = active.offsetLeft - (container.clientWidth - active.offsetWidth) / 2;
+      const maxLeft = Math.max(0, container.scrollWidth - container.clientWidth);
+      const left = Math.min(Math.max(0, target), maxLeft);
+      try {
+        container.scrollTo({ left: left, behavior: 'smooth' });
+      } catch(e) {
+        container.scrollLeft = left;
+      }
+    }
+
     function renderNav() {
       const nav = document.getElementById('navItems');
-      nav.innerHTML = MODULE_ORDER.map(id => {
+      const moreIds = MODULE_ORDER.filter(id => NAV_PRIMARY_IDS.indexOf(id) === -1);
+      const moreHasPending = moreIds.some(id => moduleHasPending(id));
+      nav.innerHTML = NAV_PRIMARY_IDS.map(id => {
         const cfg = MODULE_CONFIG[id];
-        const mod = data.modules[id];
         const isActive = id === activeModule;
-
-        let hasPending = false;
-        if (id === 'supplements' && mod && mod.items) {
-          hasPending = mod.items.some(i => !i.taken);
-        } else if (mod && mod.habits) {
-          for (const h of mod.habits) {
-            if (h.type === 'daily' && !h.records.includes(today)) { hasPending = true; break; }
-            if (h.type === 'period' && isPeriodDay(h, today) && !h.records.includes(today)) { hasPending = true; break; }
-          }
-        }
-
+        const hasPending = moduleHasPending(id);
         return `
-          <button class="nav-item ${isActive ? 'active' : ''} ${hasPending ? 'has-pending' : ''}" onclick="switchModule('${id}')">
+          <button class="nav-item ${isActive ? 'active' : ''} ${hasPending ? 'has-pending' : ''}" style="--nav-color:${cfg.color}" onclick="switchModule('${id}')">
             <span class="nav-icon">${cfg.icon}</span>
             <span class="nav-label">${cfg.name}</span>
             <span class="nav-indicator"></span>
             <span class="nav-dot"></span>
           </button>
         `;
-      }).join('');
+      }).join('') + `
+        <button class="nav-item nav-more-btn ${NAV_PRIMARY_IDS.indexOf(activeModule) === -1 ? 'active' : ''} ${moreHasPending ? 'has-pending' : ''}" style="--nav-color:#64ffda" onclick="openNavMore()" title="更多模块">
+          <span class="nav-icon">•••</span>
+          <span class="nav-label">更多</span>
+          <span class="nav-indicator"></span>
+          <span class="nav-dot"></span>
+        </button>
+      `;
+      setTimeout(() => scrollActiveNavIntoView(), 0);
     }
 
     function addHabit() {
@@ -4355,7 +4587,7 @@
             <div class="m-name">${cfg.name}</div>
             <div class="m-desc">${cfg.desc}</div>
           </div>
-          <div class="m-progress">${stats.pct}%</div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${stats.pct}%</div>
         </div>
 
         <!-- 财务总览卡片 -->
@@ -4436,7 +4668,8 @@
 
     // ========== 股市大盘数据 ==========
     function refreshMarketData(silent) {
-      if (marketAutoFetchDone && !silent) return;
+      if (marketFetching) return;
+      marketFetching = true;
       const btn = document.querySelector('.market-refresh-btn');
       const timeLabel = document.querySelector('.market-time');
       if (btn && !silent) { btn.style.animation = 'spin 1s linear infinite'; btn.style.opacity = '0.5'; }
@@ -4444,6 +4677,7 @@
 
       fetchMarketData().then(records => {
         processMarketData(records);
+        refreshMarketHistory();
         if (btn && !silent) { btn.style.animation = ''; btn.style.opacity = ''; }
         if (timeLabel && !silent) { timeLabel.textContent = '更新于 ' + new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}); timeLabel.style.color = 'var(--text2)'; }
       }).catch(err => {
@@ -4454,12 +4688,14 @@
         if (!silent) {
           alert('自动获取失败，原因：' + err.message + '\n\n请尝试：\n1. 检查网络连接\n2. 点击 ✏️ 手动录入');
         }
+      }).finally(() => {
+        marketFetching = false;
       });
     }
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v23');
+      info.push('版本: v30');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -4542,7 +4778,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v23',
+        version: 'v30',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -5052,14 +5288,26 @@
         const y = pad.top + ch * i / 3;
         ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
       }
+      ctx.fillStyle = '#5a5a7a';
+      ctx.font = '8px sans-serif';
+      ctx.textAlign = 'left';
+      [0, max / 2, max].forEach(v => {
+        const y = pad.top + ch * (1 - v / max);
+        ctx.fillText(String(Math.round(v)), 2, y + 3);
+      });
       const isMany = points.length > 10;
       const barW = isMany ? Math.max(2, cw / points.length * 0.55) : Math.max(4, cw / points.length * 0.45);
+      const barGrad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
+      barGrad.addColorStop(0, 'rgba(100,255,218,0.7)');
+      barGrad.addColorStop(1, 'rgba(0,212,255,0.2)');
+      const barPoints = [];
       points.forEach((p, i) => {
         const x = pad.left + cw * i / (points.length - 1);
         const y = pad.top + ch * (1 - p.value / max);
         const barH = ch * (p.value / max);
+        barPoints.push({ x: x, y: y });
         if (barH > 0) {
-          ctx.fillStyle = 'rgba(100,255,218,0.45)';
+          ctx.fillStyle = barGrad;
           ctx.fillRect(x - barW / 2, y, barW, barH);
         }
         if (!isMany) {
@@ -5067,6 +5315,20 @@
           ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
         }
       });
+      if (barPoints.length > 1) {
+        ctx.strokeStyle = 'rgba(100,255,218,0.75)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        barPoints.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.stroke();
+      }
+      if (barPoints.length > 0) {
+        const last = barPoints[barPoints.length - 1];
+        ctx.fillStyle = '#ffd740';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(points[points.length - 1].value.toFixed(0), last.x, last.y - 6);
+      }
       const step = Math.max(1, Math.ceil(points.length / 6));
       ctx.fillStyle = '#8892b0';
       ctx.font = '9px sans-serif';
@@ -5153,14 +5415,16 @@
     }
 
     function autoFetchMarketData() {
+      if (marketFetching) return;
       const fin = data.modules.finance;
       const today = getTodayStr();
-      // 如果今天已有数据，不再自动获取
-      if (fin.marketData && fin.marketData[today] && fin.marketData[today].length > 0) {
-        marketAutoFetchDone = true;
+      const todayData = fin.marketData && fin.marketData[today];
+      const updatedAt = fin.marketUpdatedAt || 0;
+      // 刚获取过且数据很新时跳过，避免反复请求
+      if (todayData && todayData.length > 0 && Date.now() - updatedAt < 5 * 60 * 1000) {
+        refreshMarketHistory();
         return;
       }
-      // 静默获取，不弹错误提示
       refreshMarketData(true);
     }
 
@@ -5248,22 +5512,106 @@
       });
     }
 
+    function fetchIndexHistoryRows(tencentCode) {
+      if (typeof fetch !== 'function') return Promise.resolve([]);
+      const url = `https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=${tencentCode},day,,,7,qfq&_=${Date.now()}`;
+      return fetch(url).then(r => r.json()).then(data => {
+        const rows = data && data.data && data.data[tencentCode] && data.data[tencentCode].day;
+        if (!Array.isArray(rows)) return [];
+        return rows.map((row, i) => {
+          const price = parseFloat(row[2]);
+          const prevClose = i > 0 ? parseFloat(rows[i - 1][2]) : price;
+          const change = prevClose > 0 ? price - prevClose : 0;
+          return {
+            date: row[0],
+            price: price,
+            prevClose: prevClose,
+            change: change,
+            changePct: prevClose > 0 ? change / prevClose * 100 : 0
+          };
+        }).filter(r => !isNaN(r.price) && r.price > 0);
+      }).catch(() => []);
+    }
+
+    function fetchMarketHistory() {
+      return Promise.all(INDEX_CONFIG.map(cfg => {
+        const tc = TENCENT_INDEX_MAP[cfg.marketCode];
+        const tencentCode = tc && tc.tencent;
+        if (!tencentCode) return Promise.resolve([]);
+        return fetchIndexHistoryRows(tencentCode);
+      })).then(results => {
+        const history = {};
+        results.forEach((rows, idx) => {
+          const cfg = INDEX_CONFIG[idx];
+          rows.forEach(r => {
+            if (!history[r.date]) history[r.date] = [];
+            history[r.date].push({
+              name: cfg.name,
+              code: cfg.marketCode,
+              price: r.price,
+              change: r.change,
+              changePct: r.changePct,
+              prevClose: r.prevClose,
+              source: 'history'
+            });
+          });
+        });
+        return history;
+      });
+    }
+
+    function refreshMarketHistory() {
+      if (marketHistoryLoading) return;
+      if (Date.now() - marketHistoryLastAttemptAt < 10 * 60 * 1000) return;
+      marketHistoryLoading = true;
+      marketHistoryLastAttemptAt = Date.now();
+      fetchMarketHistory().then(history => {
+        if (Object.keys(history).length > 0) {
+          if (!data.modules.finance.marketHistory) data.modules.finance.marketHistory = {};
+          data.modules.finance.marketHistory = history;
+          saveData();
+          drawMarketCharts();
+        }
+      }).catch(err => {
+        console.log('获取近7日走势失败:', err);
+      }).finally(() => {
+        marketHistoryLoading = false;
+      });
+    }
+
     function processMarketData(records) {
       const today = getTodayStr();
       if (!data.modules.finance.marketData) data.modules.finance.marketData = {};
-      marketAutoFetchDone = true;
+      data.modules.finance.marketUpdatedAt = Date.now();
       data.modules.finance.marketData[today] = records;
       saveData();
-      renderModule('finance');
+      if (activeModule === 'finance') renderModule('finance');
+    }
+
+    function getMarketChartDates(fin) {
+      const history = (fin && fin.marketHistory) || {};
+      const local = (fin && fin.marketData) || {};
+      const historyDates = Object.keys(history).sort();
+      const localDates = Object.keys(local).sort();
+      const dates = historyDates.length >= 2 ? historyDates : localDates;
+      return dates.slice(-7);
+    }
+
+    function getTodayMarketRecords(fin) {
+      const today = getTodayStr();
+      return ((fin.marketData || {})[today] || (fin.marketHistory || {})[today] || []);
     }
 
     function renderMarketSection() {
       const fin = data.modules.finance;
-      const marketData = fin.marketData || {};
       const today = getTodayStr();
-      const todayData = marketData[today];
-      const dates = Object.keys(marketData).sort().slice(-7);
-      let html = `<div class="market-section"><div class="market-header"><span class="market-title">📊 市场概览</span><div class="market-actions"><span class="market-time">${todayData ? '更新于 ' + new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}) : '暂无今日数据'}</span><button class="market-refresh-btn" onclick="refreshMarketData(false)" title="刷新数据">🔄</button><button class="market-refresh-btn" onclick="openMarketInputModal()" title="手动录入">✏️</button></div></div>`;
+      const todayData = getTodayMarketRecords(fin);
+      const dates = getMarketChartDates(fin);
+      const updatedAt = fin.marketUpdatedAt || 0;
+      const timeText = todayData && todayData.length > 0
+        ? '更新于 ' + (updatedAt ? new Date(updatedAt).toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}) : new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}))
+        : '暂无今日数据';
+      let html = `<div class="market-section"><div class="market-header"><span class="market-title">📊 市场概览</span><div class="market-actions"><span class="market-time">${timeText}</span><button class="market-refresh-btn" onclick="refreshMarketData(false)" title="刷新数据">🔄</button><button class="market-refresh-btn" onclick="openMarketInputModal()" title="手动录入">✏️</button></div></div>`;
       if (todayData && todayData.length > 0) {
         html += '<div class="market-grid">';
         todayData.forEach(item => {
@@ -5290,7 +5638,8 @@
     function drawMarketCharts() {
       const fin = data.modules.finance;
       const marketData = fin.marketData || {};
-      const dates = Object.keys(marketData).sort().slice(-7);
+      const marketHistory = fin.marketHistory || {};
+      const dates = getMarketChartDates(fin);
       if (dates.length < 2) return;
       INDEX_CONFIG.forEach((cfg, idx) => {
         const canvas = document.getElementById(`marketChart_${idx}`);
@@ -5303,7 +5652,7 @@
         ctx.scale(dpr, dpr);
         const prices = [];
         dates.forEach(date => {
-          const dayData = marketData[date];
+          const dayData = (marketHistory[date] && marketHistory[date].length ? marketHistory[date] : marketData[date]) || [];
           const item = dayData.find(d => d.code === cfg.marketCode);
           if (item && !isNaN(item.price)) prices.push(item.price);
         });
@@ -5315,7 +5664,18 @@
         const min = Math.min(...prices);
         const max = Math.max(...prices);
         const range = max - min || 1;
+        const baseY = pad.top + ch * (1 - (prices[0] - min) / range);
         ctx.clearRect(0, 0, w, h);
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pad.left, baseY); ctx.lineTo(w - pad.right, baseY); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#5a5a7a';
+        ctx.font = '8px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(max.toFixed(0), 1, pad.top + 8);
+        ctx.fillText(min.toFixed(0), 1, pad.top + ch);
         ctx.strokeStyle = 'rgba(100,255,218,0.06)';
         ctx.lineWidth = 1;
         for (let i = 0; i <= 3; i++) {
@@ -5358,12 +5718,22 @@
         ctx.font = 'bold 10px -apple-system, BlinkMacSystemFont, sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText(lastPrice.toFixed(0), w - pad.right, lastY - 6);
+        ctx.fillStyle = '#8892b0';
+        ctx.font = '8px sans-serif';
+        ctx.textAlign = 'center';
+        const dateStep = Math.max(1, Math.ceil((dates.length - 1) / 4));
+        dates.forEach((date, i) => {
+          if (i % dateStep === 0 || i === dates.length - 1) {
+            const x = pad.left + cw * i / (prices.length - 1);
+            ctx.fillText(date.slice(5).replace('-', '/'), x, h - 5);
+          }
+        });
       });
     }
 
     function openMarketInputModal() {
       const list = document.getElementById('marketInputList');
-      const todayData = (data.modules.finance.marketData || {})[getTodayStr()] || [];
+      const todayData = getTodayMarketRecords(data.modules.finance);
       list.innerHTML = INDEX_CONFIG.map((cfg, i) => {
         const existing = todayData.find(d => d.code === cfg.marketCode);
         return `<div class="market-input-row"><label>${cfg.name}</label><input type="number" class="market-input-price" id="marketPrice_${i}" placeholder="点位" step="0.01" value="${existing ? existing.price : ''}"><input type="number" class="market-input-pct" id="marketPct_${i}" placeholder="涨跌幅%" step="0.01" value="${existing ? existing.changePct : ''}"></div>`;
@@ -5389,6 +5759,7 @@
       });
       if (records.length > 0) {
         data.modules.finance.marketData[today] = records;
+        data.modules.finance.marketUpdatedAt = Date.now();
         saveData();
         closeMarketInputModal();
         renderModule('finance');
@@ -5862,7 +6233,7 @@
             <div class="m-name">${cfg.name}</div>
             <div class="m-desc">${cfg.desc}</div>
           </div>
-          <div class="m-progress">${goals.length}</div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${goals.length}</div>
         </div>
 
         <div class="stats manifest-stats">
@@ -6182,7 +6553,7 @@
             <div class="m-name">${cfg.name}</div>
             <div class="m-desc">${cfg.desc}</div>
           </div>
-          <div class="m-progress">${pct}%</div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${pct}%</div>
         </div>
 
         <div class="module-progress-bar">
@@ -6397,7 +6768,7 @@
             <div class="m-name">${cfg.name}</div>
             <div class="m-desc">${cfg.desc}</div>
           </div>
-          <div class="m-progress">${total}</div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${total}</div>
         </div>
 
         <div class="stats body-record-stats">
@@ -6593,7 +6964,7 @@
             <div class="m-name">${cfg.name}</div>
             <div class="m-desc">${cfg.desc}</div>
           </div>
-          <div class="m-progress">${totalSessions}</div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${totalSessions}</div>
         </div>
 
         <div class="reading-stats">
@@ -6901,6 +7272,8 @@
       const mod = data.modules[moduleId];
       const cfg = MODULE_CONFIG[moduleId];
       if (!mod) return;
+      container.setAttribute('data-module', moduleId);
+      container.style.setProperty('--module-color', cfg.color);
 
       if (moduleId === 'finance') {
         renderFinanceModule(container);
@@ -6952,7 +7325,7 @@
             <div class="m-name">${cfg.name}</div>
             <div class="m-desc">${cfg.desc}</div>
           </div>
-          <div class="m-progress">${pct}%</div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${pct}%</div>
         </div>
 
         <div class="add-box">
