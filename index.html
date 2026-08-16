@@ -40,21 +40,6 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-    @keyframes bgShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    @keyframes meshFlow {
-      0% { background-position: 0% 50%; transform: translate3d(-1%, -1%, 0) scale(1); }
-      50% { background-position: 100% 50%; transform: translate3d(1%, 1%, 0) scale(1.05); }
-      100% { background-position: 0% 50%; transform: translate3d(-1%, -1%, 0) scale(1); }
-    }
-    @keyframes meshFlowReverse {
-      0% { background-position: 100% 50%; }
-      50% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
     @keyframes heroSweep {
       0%, 55% { left: -45%; }
       100% { left: 125%; }
@@ -75,10 +60,6 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes bgHue {
-      0%, 100% { filter: blur(56px) hue-rotate(0deg); }
-      50% { filter: blur(56px) hue-rotate(18deg); }
-    }
     @keyframes progressFlow {
       0% { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
@@ -86,9 +67,6 @@
     @keyframes titleFlow {
       0% { background-position: 0% 50%; }
       100% { background-position: 200% 50%; }
-    }
-    @keyframes swirlRotate {
-      to { transform: rotate(360deg); }
     }
     @keyframes iconWiggle {
       0%, 100% { transform: rotate(0deg); }
@@ -171,9 +149,7 @@
         radial-gradient(1000px 520px at 15% -10%, rgba(100,255,218,0.07), transparent 60%),
         radial-gradient(900px 520px at 105% 108%, rgba(0,212,255,0.06), transparent 60%),
         linear-gradient(160deg, #0b0b1c, #101024 55%, #0d0d20);
-      background-attachment: fixed;
       background-size: 160% 160%;
-      animation: bgShift 26s ease-in-out infinite alternate;
       color: var(--text);
       min-height: 100vh;
       padding-bottom: 90px;
@@ -211,9 +187,6 @@
         transparent 72%,
         rgba(189,52,254,0.05) 100%);
       background-size: 280% 280%;
-      filter: blur(56px);
-      animation: meshFlow 18s ease-in-out infinite, bgHue 24s ease-in-out infinite;
-      will-change: transform, background-position;
     }
     .bg-mesh::before {
       content: '';
@@ -226,7 +199,6 @@
         transparent 76%,
         rgba(100,255,218,0.06) 100%);
       background-size: 240% 240%;
-      animation: meshFlowReverse 22s ease-in-out infinite;
       pointer-events: none;
     }
     .bg-swirl {
@@ -242,10 +214,7 @@
         transparent 300deg,
         rgba(0,212,255,0.05) 350deg,
         transparent 360deg);
-      filter: blur(70px);
-      opacity: 0.75;
-      animation: swirlRotate 36s linear infinite;
-      will-change: transform;
+      opacity: 0.35;
     }
     .bg-particles {
       position: fixed;
@@ -1922,7 +1891,7 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    body { animation: fadeInBody 0.3s ease, bgShift 26s ease-in-out infinite alternate; }
+    body { animation: fadeInBody 0.3s ease; }
 
 
     /* ========== 显化记录样式 ========== */
@@ -2634,7 +2603,6 @@
         linear-gradient(160deg, rgba(100,255,218,0.045), transparent 34%),
         linear-gradient(210deg, rgba(0,212,255,0.05), transparent 42%),
         linear-gradient(135deg, #080818 0%, #0d1029 42%, #15102c 68%, #0b1024 100%);
-      background-attachment: fixed;
     }
     .orb { display: none; }
     .grid-bg {
