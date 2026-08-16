@@ -256,6 +256,29 @@
       height: 100%;
       opacity: 1;
     }
+    .bg-particle {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--size);
+      height: var(--size);
+      border-radius: 50%;
+      background: var(--color);
+      box-shadow: 0 0 6px var(--color);
+      opacity: 0.55;
+      will-change: transform, opacity;
+      animation:
+        starDrift var(--drift-duration) ease-in-out var(--twinkle-delay) infinite alternate,
+        starTwinkle var(--twinkle-duration) ease-in-out var(--twinkle-delay) infinite alternate;
+    }
+    @keyframes starDrift {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(var(--dx), var(--dy), 0); }
+    }
+    @keyframes starTwinkle {
+      from { opacity: 0.25; }
+      to { opacity: 0.9; }
+    }
 
     .stat-card .num,
     .finance-card-value,
@@ -3540,7 +3563,7 @@
   <div class="grid-bg"></div>
   <div class="bg-mesh"></div>
   <div class="bg-swirl"></div>
-  <canvas class="bg-particles" id="starDustCanvas" aria-hidden="true"></canvas>
+  <div class="bg-particles" id="starDustWrap" aria-hidden="true"></div>
 
   <header>
     <div class="header-brand">
@@ -4162,92 +4185,37 @@
 
     // ========== 星尘背景 ==========
     const STARDUST_COLORS = [
-      'rgba(255,255,255,1)',
-      'rgba(100,255,218,1)',
-      'rgba(0,212,255,1)',
-      'rgba(189,52,254,1)',
-      'rgba(255,215,64,1)'
+      'rgba(255,255,255,0.95)',
+      'rgba(100,255,218,0.9)',
+      'rgba(0,212,255,0.9)',
+      'rgba(189,52,254,0.85)',
+      'rgba(255,215,64,0.9)'
     ];
-    let starDustCtx = null;
-    let starDustStars = [];
-    let starDustW = 0;
-    let starDustH = 0;
-    const starDustReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function resizeStarDust() {
-      const canvas = document.getElementById('starDustCanvas');
-      if (!canvas || !starDustCtx) return;
-      starDustW = window.innerWidth;
-      starDustH = window.innerHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.round(starDustW * dpr);
-      canvas.height = Math.round(starDustH * dpr);
-      canvas.style.width = starDustW + 'px';
-      canvas.style.height = starDustH + 'px';
-      starDustCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
 
     function buildStarDust() {
-      starDustStars = [];
-      const count = starDustW < 600 ? 50 : 80;
+      const wrap = document.getElementById('starDustWrap');
+      if (!wrap) return;
+      wrap.innerHTML = '';
+      const count = window.innerWidth < 600 ? 16 : 26;
       for (let i = 0; i < count; i++) {
-        starDustStars.push({
-          x: Math.random() * starDustW,
-          y: Math.random() * starDustH,
-          r: 1 + Math.random() * 1.5,
-          baseAlpha: 0.25 + Math.random() * 0.4,
-          speed: 0.45 + Math.random() * 0.9,
-          phase: Math.random() * Math.PI * 2,
-          dx: (0.04 + Math.random() * 0.16) * (Math.random() < 0.5 ? -1 : 1),
-          dy: (0.02 + Math.random() * 0.1) * (Math.random() < 0.5 ? -1 : 1),
-          color: STARDUST_COLORS[i % STARDUST_COLORS.length]
-        });
+        const star = document.createElement('span');
+        star.className = 'bg-particle';
+        star.style.setProperty('--x', (Math.random() * 100).toFixed(2) + '%');
+        star.style.setProperty('--y', (Math.random() * 100).toFixed(2) + '%');
+        star.style.setProperty('--size', (1.5 + Math.random() * 2.2).toFixed(2) + 'px');
+        star.style.setProperty('--color', STARDUST_COLORS[i % STARDUST_COLORS.length]);
+        star.style.setProperty('--dx', (Math.random() * 28 - 14).toFixed(1) + 'px');
+        star.style.setProperty('--dy', (Math.random() * 18 - 9).toFixed(1) + 'px');
+        star.style.setProperty('--drift-duration', (8 + Math.random() * 8).toFixed(1) + 's');
+        star.style.setProperty('--twinkle-duration', (2 + Math.random() * 3).toFixed(1) + 's');
+        star.style.setProperty('--twinkle-delay', (Math.random() * 4).toFixed(2) + 's');
+        wrap.appendChild(star);
       }
-    }
-
-    function drawStarDust(t) {
-      const ctx = starDustCtx;
-      if (!ctx) return;
-      const time = (t || 0) / 1000;
-      ctx.clearRect(0, 0, starDustW, starDustH);
-      for (const s of starDustStars) {
-        s.x += s.dx;
-        s.y += s.dy;
-        if (s.x < -8) s.x = starDustW + 8;
-        else if (s.x > starDustW + 8) s.x = -8;
-        if (s.y < -8) s.y = starDustH + 8;
-        else if (s.y > starDustH + 8) s.y = -8;
-        const twinkle = 0.55 + 0.45 * Math.sin(time * s.speed + s.phase);
-        ctx.globalAlpha = Math.min(1, s.baseAlpha * (0.5 + 0.8 * twinkle));
-        ctx.fillStyle = s.color;
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    function animateStarDust(t) {
-      drawStarDust(t);
-      if (!document.hidden) requestAnimationFrame(animateStarDust);
-    }
-
-    function rebuildStarDust() {
-      resizeStarDust();
-      buildStarDust();
-      if (starDustReduced) drawStarDust(0);
     }
 
     function initStarDust() {
-      const canvas = document.getElementById('starDustCanvas');
-      if (!canvas || !canvas.getContext) return;
-      starDustCtx = canvas.getContext('2d');
-      rebuildStarDust();
-      window.addEventListener('resize', rebuildStarDust);
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && !starDustReduced) requestAnimationFrame(animateStarDust);
-      });
-      if (!starDustReduced) requestAnimationFrame(animateStarDust);
+      buildStarDust();
+      window.addEventListener('resize', buildStarDust);
     }
 
     const LS_KEY = 'myCheckinApp_v10';
