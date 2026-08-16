@@ -107,14 +107,6 @@
       0%, 100% { filter: drop-shadow(0 0 0 rgba(100,255,218,0)); }
       50% { filter: drop-shadow(0 0 14px rgba(100,255,218,0.35)); }
     }
-    @keyframes particleDrift {
-      from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
-      to { background-position: 360px 0, -360px 0, 0 360px, 0 -360px, 180px 180px, -180px -180px, 360px -180px, -360px 180px; }
-    }
-    @keyframes particleTwinkle {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
     @keyframes iconGlow {
       0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 rgba(100,255,218,0); }
       50% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 20px rgba(100,255,218,0.28); }
@@ -260,18 +252,9 @@
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      opacity: 0.85;
-      background-image:
-        radial-gradient(2.5px 2.5px at 12% 28%, rgba(255,255,255,0.95), rgba(100,255,218,0.35) 55%, transparent 78%),
-        radial-gradient(2.5px 2.5px at 68% 18%, rgba(100,255,218,0.95), rgba(0,212,255,0.35) 55%, transparent 78%),
-        radial-gradient(2.5px 2.5px at 85% 55%, rgba(0,212,255,0.95), rgba(189,52,254,0.3) 55%, transparent 78%),
-        radial-gradient(2.5px 2.5px at 32% 72%, rgba(189,52,254,0.9), rgba(100,255,218,0.3) 55%, transparent 78%),
-        radial-gradient(2.5px 2.5px at 52% 88%, rgba(255,255,255,0.85), rgba(0,212,255,0.3) 55%, transparent 78%),
-        radial-gradient(2.5px 2.5px at 8% 52%, rgba(100,255,218,0.85), rgba(255,255,255,0.3) 55%, transparent 78%),
-        radial-gradient(2.5px 2.5px at 72% 82%, rgba(255,215,64,0.9), rgba(255,159,67,0.3) 55%, transparent 78%),
-        radial-gradient(2.5px 2.5px at 44% 8%, rgba(0,212,255,0.9), rgba(100,255,218,0.3) 55%, transparent 78%);
-      background-size: 260px 260px;
-      animation: particleDrift 28s linear infinite, particleTwinkle 5s ease-in-out infinite;
+      width: 100%;
+      height: 100%;
+      opacity: 1;
     }
 
     .stat-card .num,
@@ -3557,7 +3540,7 @@
   <div class="grid-bg"></div>
   <div class="bg-mesh"></div>
   <div class="bg-swirl"></div>
-  <div class="bg-particles"></div>
+  <canvas class="bg-particles" id="starDustCanvas" aria-hidden="true"></canvas>
 
   <header>
     <div class="header-brand">
@@ -4177,6 +4160,96 @@
       }
     })();
 
+    // ========== 星尘背景 ==========
+    const STARDUST_COLORS = [
+      'rgba(255,255,255,1)',
+      'rgba(100,255,218,1)',
+      'rgba(0,212,255,1)',
+      'rgba(189,52,254,1)',
+      'rgba(255,215,64,1)'
+    ];
+    let starDustCtx = null;
+    let starDustStars = [];
+    let starDustW = 0;
+    let starDustH = 0;
+    const starDustReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function resizeStarDust() {
+      const canvas = document.getElementById('starDustCanvas');
+      if (!canvas || !starDustCtx) return;
+      starDustW = window.innerWidth;
+      starDustH = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(starDustW * dpr);
+      canvas.height = Math.round(starDustH * dpr);
+      canvas.style.width = starDustW + 'px';
+      canvas.style.height = starDustH + 'px';
+      starDustCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function buildStarDust() {
+      starDustStars = [];
+      const count = starDustW < 600 ? 50 : 80;
+      for (let i = 0; i < count; i++) {
+        starDustStars.push({
+          x: Math.random() * starDustW,
+          y: Math.random() * starDustH,
+          r: 1 + Math.random() * 1.5,
+          baseAlpha: 0.25 + Math.random() * 0.4,
+          speed: 0.45 + Math.random() * 0.9,
+          phase: Math.random() * Math.PI * 2,
+          dx: (0.04 + Math.random() * 0.16) * (Math.random() < 0.5 ? -1 : 1),
+          dy: (0.02 + Math.random() * 0.1) * (Math.random() < 0.5 ? -1 : 1),
+          color: STARDUST_COLORS[i % STARDUST_COLORS.length]
+        });
+      }
+    }
+
+    function drawStarDust(t) {
+      const ctx = starDustCtx;
+      if (!ctx) return;
+      const time = (t || 0) / 1000;
+      ctx.clearRect(0, 0, starDustW, starDustH);
+      for (const s of starDustStars) {
+        s.x += s.dx;
+        s.y += s.dy;
+        if (s.x < -8) s.x = starDustW + 8;
+        else if (s.x > starDustW + 8) s.x = -8;
+        if (s.y < -8) s.y = starDustH + 8;
+        else if (s.y > starDustH + 8) s.y = -8;
+        const twinkle = 0.55 + 0.45 * Math.sin(time * s.speed + s.phase);
+        ctx.globalAlpha = Math.min(1, s.baseAlpha * (0.5 + 0.8 * twinkle));
+        ctx.fillStyle = s.color;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function animateStarDust(t) {
+      drawStarDust(t);
+      if (!document.hidden) requestAnimationFrame(animateStarDust);
+    }
+
+    function rebuildStarDust() {
+      resizeStarDust();
+      buildStarDust();
+      if (starDustReduced) drawStarDust(0);
+    }
+
+    function initStarDust() {
+      const canvas = document.getElementById('starDustCanvas');
+      if (!canvas || !canvas.getContext) return;
+      starDustCtx = canvas.getContext('2d');
+      rebuildStarDust();
+      window.addEventListener('resize', rebuildStarDust);
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden && !starDustReduced) requestAnimationFrame(animateStarDust);
+      });
+      if (!starDustReduced) requestAnimationFrame(animateStarDust);
+    }
+
     const LS_KEY = 'myCheckinApp_v10';
     const ICONS = ['🌅','🏃','📖','💧','🧘','🎸','💻','🥗','✍️','🧹','🌙','💪','🎯','🎨','🎧','🚴','🏊','🧠','🌳','🔥'];
 
@@ -4330,6 +4403,7 @@
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
 
+    initStarDust();
     renderNav();
     renderModule(activeModule);
     updateTotalStats();
