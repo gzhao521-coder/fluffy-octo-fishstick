@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#0f0f23">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -34,9 +34,9 @@
       --success: #00e676;
       --danger: #ff5252;
       --warning: #ffd740;
-      --radius-sm: 10px;
-      --radius: 14px;
-      --radius-lg: 18px;
+      --radius-sm: 8px;
+      --radius: 10px;
+      --radius-lg: 12px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -44,6 +44,80 @@
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
+    }
+    @keyframes meshFlow {
+      0% { background-position: 0% 50%; transform: translate3d(-1%, -1%, 0) scale(1); }
+      50% { background-position: 100% 50%; transform: translate3d(1%, 1%, 0) scale(1.05); }
+      100% { background-position: 0% 50%; transform: translate3d(-1%, -1%, 0) scale(1); }
+    }
+    @keyframes meshFlowReverse {
+      0% { background-position: 100% 50%; }
+      50% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+    @keyframes heroSweep {
+      0%, 55% { left: -45%; }
+      100% { left: 125%; }
+    }
+    @keyframes cardGlow {
+      0%, 100% { border-color: rgba(100,255,218,0.16); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 28px rgba(0,0,0,0.22), 0 0 0 rgba(100,255,218,0); }
+      50% { border-color: rgba(100,255,218,0.34); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 34px rgba(0,0,0,0.26), 0 0 26px rgba(100,255,218,0.18); }
+    }
+    @keyframes weatherGlow {
+      0%, 100% { box-shadow: 0 0 0 rgba(255,215,64,0); }
+      50% { box-shadow: 0 0 16px rgba(255,215,64,0.28); }
+    }
+    @keyframes btnSweep {
+      0%, 55% { left: -60%; }
+      100% { left: 140%; }
+    }
+    @keyframes moduleEnter {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bgHue {
+      0%, 100% { filter: blur(56px) hue-rotate(0deg); }
+      50% { filter: blur(56px) hue-rotate(18deg); }
+    }
+    @keyframes progressFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes titleFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes swirlRotate {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes iconWiggle {
+      0%, 100% { transform: rotate(0deg); }
+      30% { transform: rotate(-7deg); }
+      70% { transform: rotate(7deg); }
+    }
+    @keyframes bigGlow {
+      0%, 100% { filter: drop-shadow(0 10px 28px rgba(100,255,218,0.12)); }
+      50% { filter: drop-shadow(0 16px 40px rgba(100,255,218,0.28)); }
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.25; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.15); }
+    }
+    @keyframes progressGlow {
+      0%, 100% { filter: drop-shadow(0 0 0 rgba(100,255,218,0)); }
+      50% { filter: drop-shadow(0 0 14px rgba(100,255,218,0.35)); }
+    }
+    @keyframes particleDrift {
+      from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+      to { background-position: 360px 0, -360px 0, 0 360px, 0 -360px, 180px 180px, -180px -180px, 360px -180px, -360px 180px; }
+    }
+    @keyframes particleTwinkle {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    @keyframes iconGlow {
+      0%, 100% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 rgba(100,255,218,0); }
+      50% { box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 20px rgba(100,255,218,0.28); }
     }
     @keyframes float {
       0%, 100% { transform: translateY(0px); }
@@ -106,6 +180,8 @@
         radial-gradient(900px 520px at 105% 108%, rgba(0,212,255,0.06), transparent 60%),
         linear-gradient(160deg, #0b0b1c, #101024 55%, #0d0d20);
       background-attachment: fixed;
+      background-size: 160% 160%;
+      animation: bgShift 26s ease-in-out infinite alternate;
       color: var(--text);
       min-height: 100vh;
       padding-bottom: 90px;
@@ -127,7 +203,75 @@
         linear-gradient(90deg, rgba(100,255,218,0.02) 1px, transparent 1px);
       background-size: 50px 50px;
       pointer-events: none;
+      z-index: 1;
+    }
+
+    /* 流动光幕背景 */
+    .bg-mesh {
+      position: fixed;
+      inset: -15%;
       z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(115deg,
+        rgba(100,255,218,0.05) 0%,
+        transparent 30%,
+        rgba(0,212,255,0.08) 50%,
+        transparent 72%,
+        rgba(189,52,254,0.05) 100%);
+      background-size: 280% 280%;
+      filter: blur(56px);
+      animation: meshFlow 18s ease-in-out infinite, bgHue 24s ease-in-out infinite;
+      will-change: transform, background-position;
+    }
+    .bg-mesh::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(215deg,
+        rgba(255,159,67,0.04) 0%,
+        transparent 34%,
+        rgba(189,52,254,0.07) 55%,
+        transparent 76%,
+        rgba(100,255,218,0.06) 100%);
+      background-size: 240% 240%;
+      animation: meshFlowReverse 22s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .bg-swirl {
+      position: fixed;
+      inset: -40%;
+      z-index: 0;
+      pointer-events: none;
+      background: conic-gradient(from 0deg at 50% 50%,
+        transparent 0deg,
+        rgba(100,255,218,0.05) 70deg,
+        transparent 140deg,
+        rgba(189,52,254,0.05) 220deg,
+        transparent 300deg,
+        rgba(0,212,255,0.05) 350deg,
+        transparent 360deg);
+      filter: blur(70px);
+      opacity: 0.75;
+      animation: swirlRotate 36s linear infinite;
+      will-change: transform;
+    }
+    .bg-particles {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.85;
+      background-image:
+        radial-gradient(2.5px 2.5px at 12% 28%, rgba(255,255,255,0.95), rgba(100,255,218,0.35) 55%, transparent 78%),
+        radial-gradient(2.5px 2.5px at 68% 18%, rgba(100,255,218,0.95), rgba(0,212,255,0.35) 55%, transparent 78%),
+        radial-gradient(2.5px 2.5px at 85% 55%, rgba(0,212,255,0.95), rgba(189,52,254,0.3) 55%, transparent 78%),
+        radial-gradient(2.5px 2.5px at 32% 72%, rgba(189,52,254,0.9), rgba(100,255,218,0.3) 55%, transparent 78%),
+        radial-gradient(2.5px 2.5px at 52% 88%, rgba(255,255,255,0.85), rgba(0,212,255,0.3) 55%, transparent 78%),
+        radial-gradient(2.5px 2.5px at 8% 52%, rgba(100,255,218,0.85), rgba(255,255,255,0.3) 55%, transparent 78%),
+        radial-gradient(2.5px 2.5px at 72% 82%, rgba(255,215,64,0.9), rgba(255,159,67,0.3) 55%, transparent 78%),
+        radial-gradient(2.5px 2.5px at 44% 8%, rgba(0,212,255,0.9), rgba(100,255,218,0.3) 55%, transparent 78%);
+      background-size: 260px 260px;
+      animation: particleDrift 28s linear infinite, particleTwinkle 5s ease-in-out infinite;
     }
 
     .stat-card .num,
@@ -143,17 +287,35 @@
     }
 
     header {
+      display: block;
+      text-align: center;
       background: rgba(15,15,35,0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      padding: 20px 20px 16px;
-      text-align: center;
+      padding: 18px 20px 14px;
       position: sticky;
       top: 0;
       z-index: 10;
       border-bottom: 1px solid rgba(100,255,218,0.08);
     }
+    header::after {
+      content: '';
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: -1px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0,212,255,0.3), transparent);
+      pointer-events: none;
+    }
+    .header-brand {
+      display: block;
+      width: 100%;
+    }
     header h1 {
+      position: relative;
+      width: fit-content;
+      margin: 0 auto;
       font-size: 26px;
       font-weight: 800;
       background: linear-gradient(90deg, #64ffda, #bd34fe, #00d4ff, #64ffda);
@@ -161,23 +323,60 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      letter-spacing: 3px;
-      animation: none;
+      letter-spacing: 0;
+      text-shadow: 0 3px 24px rgba(100,255,218,0.28);
+      animation: gradientText 8s ease-in-out infinite;
     }
+    header h1::before,
+    header h1::after {
+      content: '✦';
+      position: absolute;
+      top: 4px;
+      font-size: 14px;
+      color: #64ffda;
+      text-shadow: 0 0 12px rgba(100,255,218,0.6);
+      animation: twinkle 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    header h1::before { left: -26px; }
+    header h1::after { right: -26px; animation-delay: 1.5s; }
     header .date {
       font-size: 12px;
       color: var(--text2);
       margin-top: 4px;
       font-weight: 500;
-      letter-spacing: 1px;
+      letter-spacing: 0;
     }
     .header-actions {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      margin-top: 6px;
+      margin-top: 8px;
       padding: 0;
+      flex-shrink: 0;
+    }
+    .weather-widget {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 30px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(255,215,64,0.1);
+      border: 1px solid rgba(255,215,64,0.22);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      animation: weatherGlow 5s ease-in-out infinite;
+    }
+    .weather-widget:hover {
+      background: rgba(255,215,64,0.16);
+      border-color: rgba(255,215,64,0.4);
+      transform: translateY(-1px);
     }
     .header-menu-btn {
       width: 30px;
@@ -229,6 +428,7 @@
       line-height: 1;
     }
     .container { max-width: 680px; margin: 0 auto; padding: 20px 16px; position: relative; z-index: 1; }
+    #moduleContent { animation: moduleEnter 0.3s ease both; }
 
     /* 统计卡片 - 玻璃拟态 */
     .stats {
@@ -258,7 +458,8 @@
     .stat-card:nth-child(3) { animation-delay: 0.3s; }
     .stat-card:hover {
       border-color: rgba(100,255,218,0.2);
-      box-shadow: 0 6px 22px rgba(100,255,218,0.08);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 26px rgba(100,255,218,0.12), 0 0 0 1px rgba(100,255,218,0.06);
     }
     .stat-card::before {
       content: '';
@@ -309,7 +510,9 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      animation: iconGlow 5s ease-in-out infinite;
     }
+    .module-title-bar .m-icon:hover { animation: iconWiggle 0.5s ease; }
     .module-title-bar .m-icon::after {
       content: '';
       position: absolute;
@@ -318,7 +521,16 @@
       border-radius: inherit;
     }
     .module-title-bar .m-text { flex: 1; }
-    .module-title-bar .m-text .m-name { font-size: 18px; font-weight: 700; color: var(--text); }
+    .module-title-bar .m-text .m-name {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #f0f0f5, #00d4ff 30%, #64ffda 50%, #f0f0f5 70%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: titleFlow 9s linear infinite;
+    }
     .module-title-bar .m-text .m-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
     .module-title-bar .m-progress {
       font-size: 22px;
@@ -327,6 +539,7 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      animation: progressGlow 4s ease-in-out infinite;
     }
 
     /* 添加框 */
@@ -379,10 +592,14 @@
     .add-box button::after {
       content: '';
       position: absolute;
-      top: -50%; left: -50%; width: 200%; height: 200%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transform: rotate(30deg);
-      transition: all 0.5s ease;
+      top: 0;
+      left: -60%;
+      width: 35%;
+      height: 100%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.16), transparent);
+      transform: skewX(-20deg);
+      animation: btnSweep 4.5s ease-in-out infinite;
+      pointer-events: none;
     }
     .add-box button:hover::after { left: 100%; }
     .add-box button:hover {
@@ -417,16 +634,26 @@
       inset: 0;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
       background-size: 200% 100%;
-      animation: shimmer 2s infinite;
+      opacity: 0.4;
+      animation: shimmer 3.5s linear infinite;
     }
-    .module-progress-bar .pf { height: 100%; border-radius: 5px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+    .module-progress-bar .pf {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      background-size: 200% 100%;
+      animation: progressFlow 3s linear infinite;
+    }
     .module-progress-bar .pf::after {
       content: '';
       position: absolute;
       top: 0; left: 0; right: 0; bottom: 0;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       background-size: 200% 100%;
-      animation: shimmer 2s infinite;
+      opacity: 0.5;
+      animation: shimmer 3s linear infinite;
     }
 
     /* 打卡卡片 */
@@ -514,10 +741,10 @@
       flex-wrap: wrap;
     }
     .habit-info .streak { color: var(--warning); font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
-    .habit-info .streak::before { content: '🔥'; font-size: 10px; }
+    .habit-info .streak::before { content: '🔥'; font-size: 11px; }
     .achievement-badges { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 4px; vertical-align: middle; }
     .achievement-badge {
-      font-size: 9px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--warning);
       background: rgba(255,215,64,0.1);
@@ -673,7 +900,7 @@
       left: 10px;
       right: 10px;
       bottom: max(10px, env(safe-area-inset-bottom));
-      border-radius: 18px;
+      border-radius: 14px;
       background: rgba(12,12,28,0.94);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
@@ -681,6 +908,16 @@
       border: 1px solid rgba(100,255,218,0.12);
       box-shadow: 0 14px 40px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.05);
       padding: 6px;
+    }
+    .bottom-nav::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(100,255,218,0.3), transparent);
+      pointer-events: none;
     }
     .undo-bar {
       position: fixed;
@@ -770,7 +1007,11 @@
       position: relative;
     }
     .nav-item:hover { color: var(--text2); background: rgba(100,255,218,0.05); }
-    .nav-item.active { color: var(--nav-color, var(--primary)); }
+    .nav-item:hover .nav-icon { transform: translateY(-1px) scale(1.08); }
+    .nav-item.active {
+      color: var(--nav-color, var(--primary));
+      text-shadow: 0 0 12px var(--nav-color, rgba(100,255,218,0.35));
+    }
     .nav-item .nav-icon {
       font-size: 20px;
       line-height: 1;
@@ -780,7 +1021,7 @@
     }
     .nav-item.active .nav-icon { transform: translateY(-2px) scale(1.1); filter: drop-shadow(0 4px 8px rgba(100,255,218,0.4)); }
     .nav-item .nav-label {
-      font-size: 8px;
+      font-size: 10px;
       font-weight: 600;
       white-space: nowrap;
       max-width: 100%;
@@ -1008,7 +1249,7 @@
       color: var(--text2);
       animation: slideUp 0.5s ease;
     }
-    .empty-state .big { font-size: 52px; margin-bottom: 12px; animation: float 3s ease-in-out infinite; }
+    .empty-state .big { font-size: 52px; margin-bottom: 12px; animation: float 3s ease-in-out infinite, bigGlow 4s ease-in-out infinite; }
     .empty-state p { font-size: 14px; font-weight: 500; }
 
     /* 备份与恢复 */
@@ -1207,7 +1448,8 @@
       inset: 0;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
       background-size: 200% 100%;
-      animation: shimmer 2s infinite;
+      opacity: 0.4;
+      animation: shimmer 3.5s linear infinite;
     }
     .finance-progress-fill {
       height: 100%;
@@ -1216,6 +1458,8 @@
       transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
+      background-size: 200% 100%;
+      animation: progressFlow 3s linear infinite;
     }
     .finance-progress-fill::after {
       content: '';
@@ -1223,7 +1467,8 @@
       inset: 0;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
       background-size: 200% 100%;
-      animation: shimmer 2s infinite;
+      opacity: 0.5;
+      animation: shimmer 3s linear infinite;
     }
     .finance-progress-text {
       font-size: 12px;
@@ -1598,7 +1843,7 @@
       margin-bottom: 10px;
     }
     .fund-card-stat { text-align: center; }
-    .fund-card-stat-label { font-size: 10px; color: var(--text2); font-weight: 500; margin-bottom: 3px; }
+    .fund-card-stat-label { font-size: 11px; color: var(--text2); font-weight: 500; margin-bottom: 3px; }
     .fund-card-stat-value { font-size: 14px; font-weight: 700; color: var(--text); }
     .fund-card-footer {
       display: flex;
@@ -1671,7 +1916,7 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
-    body { animation: fadeInBody 0.3s ease; }
+    body { animation: fadeInBody 0.3s ease, bgShift 26s ease-in-out infinite alternate; }
 
 
     /* ========== 显化记录样式 ========== */
@@ -1906,7 +2151,7 @@
       background: rgba(255,215,64,0.12);
       border: 1px solid rgba(255,215,64,0.25);
       color: var(--warning);
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
     }
     .supplement-low-badge.empty {
@@ -1921,7 +2166,7 @@
       width: fit-content;
       padding: 2px 8px;
       border-radius: 6px;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       border: 1px solid;
     }
@@ -1949,7 +2194,7 @@
     .supplement-interaction-text { font-size: 11px; color: var(--text2); line-height: 1.5; }
     .supplement-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
     .supplement-tag {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--accent2);
       background: rgba(0,212,255,0.08);
       border: 1px solid rgba(0,212,255,0.15);
@@ -2028,7 +2273,7 @@
     .supplement-day-picker input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.75); }
     .supplement-day-tag {
       flex-shrink: 0;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 700;
       color: var(--accent2);
       background: rgba(0,212,255,0.1);
@@ -2163,7 +2408,7 @@
       .stat-card { padding: 11px 8px; gap: 8px; }
       .stat-card .num { font-size: 18px; }
       .stat-card .icon-wrap { width: 30px; height: 30px; font-size: 16px; }
-      .nav-item .nav-label { font-size: 8px; }
+      .nav-item .nav-label { font-size: 10px; }
       .nav-item .nav-icon { font-size: 20px; }
       .habit-card { padding: 14px; }
       .habit-card .icon { width: 42px; height: 42px; font-size: 18px; }
@@ -2175,7 +2420,7 @@
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text2);
       background: rgba(0,212,255,0.08);
       border: 1px solid rgba(0,212,255,0.18);
@@ -2317,7 +2562,7 @@
     }
     .trend-bar-fill.expense { background: linear-gradient(180deg, #ff6b6b, #ff9f43); }
     .trend-bar-label {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--text2);
       text-align: center;
       white-space: nowrap;
@@ -2533,6 +2778,7 @@
     .nav-item.active {
       background: linear-gradient(180deg, rgba(100,255,218,0.14), rgba(0,212,255,0.05));
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 22px rgba(0,0,0,0.18);
+      text-shadow: 0 0 12px var(--nav-color, rgba(100,255,218,0.35));
     }
     .nav-item.active .nav-icon {
       background: linear-gradient(135deg, rgba(100,255,218,0.16), rgba(0,212,255,0.1));
@@ -2558,6 +2804,7 @@
       background: linear-gradient(150deg, rgba(100,255,218,0.12), rgba(0,212,255,0.05) 45%, rgba(189,52,254,0.08));
       border: 1px solid rgba(100,255,218,0.16);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 28px rgba(0,0,0,0.22);
+      animation: cardGlow 6s ease-in-out infinite;
       position: relative;
       overflow: hidden;
     }
@@ -2570,6 +2817,17 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
     }
+    .daily-hero::after {
+      content: '';
+      position: absolute;
+      top: -40%;
+      width: 32%;
+      height: 180%;
+      background: linear-gradient(100deg, transparent, rgba(255,255,255,0.09), transparent);
+      transform: rotate(18deg);
+      animation: heroSweep 8s ease-in-out infinite;
+      pointer-events: none;
+    }
     .daily-hero-main { flex: 1; min-width: 0; }
     .daily-greeting {
       font-size: 18px;
@@ -2577,6 +2835,7 @@
       color: #fff;
       letter-spacing: 0.5px;
       margin-bottom: 4px;
+      text-shadow: 0 0 18px rgba(100,255,218,0.22);
     }
     .daily-quote {
       font-size: 11px;
@@ -2729,7 +2988,8 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(100,255,218,0.25), rgba(0,212,255,0.16), transparent);
       background-size: 200% 100%;
-      animation: moduleShine 5s linear infinite;
+      opacity: 0.5;
+      animation: moduleShine 6s linear infinite;
     }
     @keyframes moduleShine {
       0% { background-position: 200% 0; }
@@ -2738,7 +2998,7 @@
 
     .daily-hero { transition: transform 0.25s ease, box-shadow 0.25s ease; }
     .daily-hero:active { transform: scale(0.995); }
-    .daily-hero-ring { animation: none; }
+    .daily-hero-ring { animation: ringBreath 4s ease-in-out infinite; }
     @keyframes ringBreath {
       0%, 100% { box-shadow: 0 0 18px rgba(100,255,218,0.12); }
       50% { box-shadow: 0 0 30px rgba(100,255,218,0.26); }
@@ -2765,16 +3025,7 @@
     .stats-range-btn::after,
     .body-add-btn::after,
     .reading-add-btn::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent);
-      transform: skewX(-20deg);
-      transition: left 0.5s ease;
-      pointer-events: none;
+      display: none;
     }
     .finance-btn:hover::after,
     .backup-btn:hover::after,
@@ -2793,7 +3044,7 @@
         max-width: 100%;
         max-height: 88vh;
         margin: 0;
-        border-radius: 18px 18px 0 0;
+        border-radius: 12px 12px 0 0;
         padding: 22px 18px calc(22px + env(safe-area-inset-bottom, 0px));
         animation: sheetUp 0.32s cubic-bezier(0.22, 1, 0.36, 1);
       }
@@ -2935,6 +3186,368 @@
       font-size: 14px;
     }
     .qa-status .big { font-size: 40px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
+
+    /* ========== 睡眠流程样式 ========== */
+    .sleep-day-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0 12px;
+    }
+    .sleep-day-arrow {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(0,212,255,0.08);
+      color: var(--text);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .sleep-day-arrow:hover:not(:disabled) { border-color: var(--primary); transform: scale(1.08); }
+    .sleep-day-arrow:disabled { opacity: 0.35; cursor: default; }
+    .sleep-day-picker {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .sleep-day-picker input {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,212,255,0.16);
+      background: rgba(0,0,0,0.2);
+      color: var(--text);
+      font-size: 13px;
+      padding: 0 10px;
+      outline: none;
+    }
+    .sleep-day-tag {
+      flex: 0 0 auto;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text2);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.15);
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+    .sleep-day-tag.today { color: var(--primary); }
+    .sleep-day-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .sleep-day-done { color: var(--success); font-size: 11px; }
+    .sleep-day-left { color: var(--warning); font-size: 11px; }
+    .sleep-plan-stats { margin-bottom: 14px; }
+    .sleep-plan-stats .stat-card .num { font-size: 16px; }
+    .sleep-window-picker {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      padding: 12px;
+      background: rgba(0,212,255,0.05);
+      border: 1px solid rgba(0,212,255,0.14);
+      border-radius: var(--radius-sm);
+    }
+    .sleep-window-label {
+      flex: 1 1 100%;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text2);
+    }
+    .sleep-window-btn {
+      flex: 1 1 130px;
+      min-width: 0;
+      padding: 10px 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,212,255,0.16);
+      background: rgba(0,0,0,0.2);
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sleep-window-btn.active {
+      background: linear-gradient(135deg, #00d4ff, #4d96ff);
+      border-color: transparent;
+      color: #0a0a1a;
+    }
+    .sleep-step-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .sleep-step {
+      background: var(--card);
+      border: 1px solid rgba(0,212,255,0.08);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.25s ease;
+    }
+    .sleep-step:hover {
+      border-color: rgba(0,212,255,0.24);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 30px rgba(0,212,255,0.12);
+    }
+    .sleep-step.done { border-color: rgba(0,230,118,0.2); background: rgba(0,230,118,0.03); }
+    .sleep-step-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.15);
+    }
+    .sleep-step.done .sleep-step-icon { background: rgba(0,230,118,0.1); border-color: rgba(0,230,118,0.2); }
+    .sleep-step-info { flex: 1; min-width: 0; }
+    .sleep-step-time {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.14);
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+    .sleep-step-text { font-size: 13px; color: var(--text); line-height: 1.45; }
+    .sleep-step.done .sleep-step-text { text-decoration: line-through; opacity: 0.65; }
+    .sleep-check-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2.5px solid rgba(0,212,255,0.18);
+      background: rgba(0,0,0,0.2);
+      color: transparent;
+      font-size: 18px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .sleep-check-btn:hover:not(:disabled) { border-color: var(--primary); transform: scale(1.08); }
+    .sleep-check-btn.done {
+      background: linear-gradient(135deg, #00e676, #00d4ff);
+      border-color: transparent;
+      color: #0a0a1a;
+      box-shadow: 0 4px 18px rgba(0,230,118,0.35);
+    }
+    .sleep-check-btn:disabled { opacity: 0.35; cursor: default; }
+    .sleep-train-card, .sleep-supp-note {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .sleep-train-card {
+      background: rgba(107,203,119,0.07);
+      border: 1px solid rgba(107,203,119,0.16);
+      color: var(--text2);
+    }
+    .sleep-supp-note {
+      background: rgba(189,52,254,0.06);
+      border: 1px solid rgba(189,52,254,0.14);
+      color: var(--text2);
+    }
+    .sleep-record-card {
+      background: var(--card);
+      border: 1px solid rgba(0,212,255,0.14);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .sleep-record-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .sleep-record-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .sleep-record-status {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .sleep-record-status.ok {
+      color: var(--success);
+      background: rgba(0,230,118,0.1);
+      border: 1px solid rgba(0,230,118,0.25);
+    }
+    .sleep-record-status.low {
+      color: var(--warning);
+      background: rgba(255,215,64,0.1);
+      border: 1px solid rgba(255,215,64,0.25);
+    }
+    .sleep-record-status.empty {
+      color: var(--text2);
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.14);
+    }
+    .sleep-record-row { display: flex; gap: 8px; }
+    .sleep-record-row input {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      padding: 0 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(0,0,0,0.2);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+    }
+    .sleep-record-row input:focus { border-color: var(--primary); }
+    .sleep-record-row button {
+      height: 40px;
+      padding: 0 16px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #00d4ff, #4d96ff);
+      color: #0a0a1a;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .sleep-record-row button:disabled { opacity: 0.35; cursor: default; }
+    .sleep-record-hint { font-size: 11px; color: var(--text2); margin-top: 8px; }
+    .sleep-trend-section { margin-bottom: 14px; }
+    .sleep-trend-empty {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(0,212,255,0.05);
+      border: 1px dashed rgba(0,212,255,0.16);
+      color: var(--text2);
+      font-size: 12px;
+      margin-bottom: 14px;
+    }
+    .trend-bar-fill.good { background: linear-gradient(180deg, #00e676, #64ffda) !important; }
+    .sleep-train-week {
+      background: var(--card);
+      border: 1px solid rgba(107,203,119,0.14);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .sleep-train-week .sleep-record-head { margin-bottom: 10px; }
+    .sleep-train-week-list { display: flex; flex-direction: column; gap: 8px; }
+    .sleep-train-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(107,203,119,0.1);
+      transition: all 0.2s ease;
+    }
+    .sleep-train-row.done { background: rgba(0,230,118,0.05); border-color: rgba(0,230,118,0.22); }
+    .sleep-train-row-date { flex: 0 0 54px; font-size: 12px; font-weight: 700; color: var(--text); }
+    .sleep-train-row-badge {
+      flex: 0 0 auto;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent2);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.16);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .sleep-train-row-text { flex: 1; min-width: 0; font-size: 11px; color: var(--text2); line-height: 1.4; }
+    .sleep-train-check {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(107,203,119,0.2);
+      background: rgba(0,0,0,0.2);
+      color: transparent;
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+    }
+    .sleep-train-check.done {
+      background: linear-gradient(135deg, #00e676, #00d4ff);
+      border-color: transparent;
+      color: #0a0a1a;
+    }
+    .sleep-food-card {
+      background: var(--card);
+      border: 1px solid rgba(255,159,67,0.14);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+    .sleep-food-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .sleep-food-list { display: flex; flex-direction: column; gap: 5px; }
+    .sleep-food-item { font-size: 12px; color: var(--text2); line-height: 1.5; }
+    .sleep-week-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .sleep-week-list { display: flex; flex-direction: column; gap: 8px; }
+    .sleep-preview-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      padding: 12px;
+      background: var(--card);
+      border: 1px solid rgba(0,212,255,0.08);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sleep-preview-row.active { border-color: rgba(0,212,255,0.35); background: rgba(0,212,255,0.08); }
+    .sleep-preview-date { flex: 0 0 76px; font-size: 12px; font-weight: 700; }
+    .sleep-preview-badge {
+      flex: 0 0 auto;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.16);
+      color: var(--primary);
+    }
+    .sleep-preview-badge.night { color: #bd34fe; border-color: rgba(189,52,254,0.25); background: rgba(189,52,254,0.08); }
+    .sleep-preview-meta { flex: 1; min-width: 0; font-size: 11px; color: var(--text2); line-height: 1.5; }
   </style>
 </head>
 <body>
@@ -2942,12 +3555,17 @@
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
   <div class="grid-bg"></div>
+  <div class="bg-mesh"></div>
+  <div class="bg-swirl"></div>
+  <div class="bg-particles"></div>
 
   <header>
-    <h1>成长</h1>
-    <div class="date" id="todayDate"></div>
+    <div class="header-brand">
+      <h1>成长，升级，快乐。</h1>
+      <div class="date" id="todayDate"></div>
+    </div>
     <div class="header-actions">
-      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v32</span>
+      <span id="weatherWidget" class="weather-widget" onclick="updateWeather()" title="点击刷新天气">🌤 --°</span>
       <span id="netStatus" class="net-status">•••</span>
       <button class="header-menu-btn" onclick="openHeaderMenu()" title="更多工具">☰</button>
     </div>
@@ -3564,9 +4182,10 @@
 
     const MODULE_CONFIG = {
       daily:   { name: '每日打卡', icon: '🔥', color: '#64ffda', bg: 'linear-gradient(135deg, rgba(100,255,218,0.15), rgba(0,212,255,0.1))', desc: '每日必做 · 基础习惯' },
+      sleepPlan: { name: '睡眠流程', icon: '😴', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(189,52,254,0.1))', desc: '班次睡眠 · 每日执行' },
       study:   { name: '每日学习', icon: '📚', color: '#4d96ff', bg: 'linear-gradient(135deg, rgba(77,150,255,0.15), rgba(100,255,218,0.1))', desc: '学习提升 · 知识积累' },
       game:    { name: '游戏娱乐', icon: '🎮', color: '#bd34fe', bg: 'linear-gradient(135deg, rgba(189,52,254,0.15), rgba(255,107,107,0.1))', desc: '休闲娱乐 · 放松身心' },
-      fitness: { name: '健身记录', icon: '💪', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '运动健身 · 身体管理' },
+      fitness: { name: '健身记录', icon: '💪', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '训练打卡 · 身体管理' },
       finance: { name: '财务管理', icon: '💰', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '理财记账 · 财富积累' },
       cycle:   { name: '周期打卡', icon: '⏰', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(100,255,218,0.1))', desc: '周期性任务 · 定时提醒' },
       free:    { name: '自由打卡', icon: '🌟', color: '#ff6b6b', bg: 'linear-gradient(135deg, rgba(255,107,107,0.15), rgba(189,52,254,0.1))', desc: '自由安排 · 灵活记录' },
@@ -3577,8 +4196,8 @@
       qa: { name: '问题档案', icon: '❓', color: '#ff9f43', bg: 'linear-gradient(135deg, rgba(255,159,67,0.15), rgba(255,107,107,0.1))', desc: '日常疑问 · 答案沉淀' }
     };
 
-    const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','reading','qa','study','game','fitness'];
-    const NAV_PRIMARY_IDS = ['daily','study','game','finance','supplements','fitness'];
+    const MODULE_ORDER = ['daily','game','cycle','free','finance','manifestation','supplements','body','reading','qa','study','sleepPlan','fitness'];
+    const NAV_PRIMARY_IDS = ['daily','study','sleepPlan','finance','supplements','fitness'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
     const DAILY_QUOTES = [
       '今天也是值得认真过的一天。',
@@ -3617,6 +4236,7 @@
     let manifestPendingGoalId = null;
     let supplementTagFilter = 'all';
     let supplementViewDate = getTodayStr();
+    let sleepViewDate = getTodayStr();
     let bodyEditId = null;
     let bodyRating = 4;
     let readingEditId = null;
@@ -3638,6 +4258,13 @@
       { code: '0.399006', name: '创业板指', short: '创业板', marketCode: '399006' },
       { code: '1.000300', name: '沪深300', short: '沪深300', marketCode: '000300' }
     ];
+
+    const TENCENT_INDEX_MAP = {
+      '000001': { name: '上证指数', code: '000001', tencent: 'sh000001' },
+      '399001': { name: '深证成指', code: '399001', tencent: 'sz399001' },
+      '399006': { name: '创业板指', code: '399006', tencent: 'sz399006' },
+      '000300': { name: '沪深300', code: '000300', tencent: 'sh000300' }
+    };
 
     const JSONP_ACTIVE = {};
 
@@ -3702,7 +4329,6 @@
     }
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
-    document.getElementById('versionTag').textContent = 'v31';
 
     renderNav();
     renderModule(activeModule);
@@ -3713,9 +4339,17 @@
     startReminderLoop();
     maybePromptBackup();
     updateNetworkStatus();
+    updateWeather();
     checkPinLock();
-    window.addEventListener('online', updateNetworkStatus);
-    window.addEventListener('offline', updateNetworkStatus);
+    window.addEventListener('online', () => { updateNetworkStatus(); updateWeather(); });
+    window.addEventListener('offline', () => {
+      updateNetworkStatus();
+      const weatherEl = document.getElementById('weatherWidget');
+      if (weatherEl) {
+        weatherEl.textContent = '--°';
+        weatherEl.title = '离线，联网后自动刷新';
+      }
+    });
 
     function updateNetworkStatus() {
       const el = document.getElementById('netStatus');
@@ -3723,6 +4357,105 @@
       const online = navigator.onLine;
       el.textContent = online ? '在线' : '离线';
       el.classList.toggle('offline', !online);
+    }
+
+    const WEATHER_CODE_MAP = {
+      0: { icon: '☀️', text: '晴' },
+      1: { icon: '🌤️', text: '大致晴朗' },
+      2: { icon: '⛅', text: '多云' },
+      3: { icon: '☁️', text: '阴' },
+      45: { icon: '🌫️', text: '雾' },
+      48: { icon: '🌫️', text: '雾凇' },
+      51: { icon: '🌦️', text: '毛毛雨' },
+      53: { icon: '🌦️', text: '毛毛雨' },
+      55: { icon: '🌦️', text: '毛毛雨' },
+      56: { icon: '🌦️', text: '冻毛毛雨' },
+      57: { icon: '🌦️', text: '冻毛毛雨' },
+      61: { icon: '🌧️', text: '小雨' },
+      63: { icon: '🌧️', text: '中雨' },
+      65: { icon: '🌧️', text: '大雨' },
+      66: { icon: '🌧️', text: '冻雨' },
+      67: { icon: '🌧️', text: '冻雨' },
+      71: { icon: '🌨️', text: '小雪' },
+      73: { icon: '🌨️', text: '中雪' },
+      75: { icon: '🌨️', text: '大雪' },
+      77: { icon: '🌨️', text: '雪粒' },
+      80: { icon: '🌦️', text: '阵雨' },
+      81: { icon: '🌦️', text: '阵雨' },
+      82: { icon: '⛈️', text: '强阵雨' },
+      85: { icon: '🌨️', text: '阵雪' },
+      86: { icon: '🌨️', text: '阵雪' },
+      95: { icon: '⛈️', text: '雷雨' },
+      96: { icon: '⛈️', text: '雷暴伴冰雹' },
+      99: { icon: '⛈️', text: '雷暴伴冰雹' }
+    };
+
+    let weatherRefreshTimer = null;
+
+    async function weatherFetchJson(url) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function resolveWeatherLocation() {
+      if (navigator.geolocation) {
+        try {
+          const pos = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 6000, maximumAge: 600000 });
+          });
+          return { city: '当前位置', lat: pos.coords.latitude, lon: pos.coords.longitude };
+        } catch(e) {}
+      }
+      return { city: '兰州', lat: 36.057, lon: 103.839, fallback: true };
+    }
+
+    function scheduleWeatherRefresh() {
+      if (weatherRefreshTimer) clearTimeout(weatherRefreshTimer);
+      weatherRefreshTimer = setTimeout(() => updateWeather(), 30 * 60 * 1000);
+    }
+
+    async function updateWeather() {
+      const el = document.getElementById('weatherWidget');
+      if (!el) return;
+      if (!navigator.onLine) {
+        el.textContent = '--°';
+        el.title = '离线，联网后自动刷新';
+        return;
+      }
+      el.textContent = '🌤 --°';
+      el.title = '正在获取天气...';
+      try {
+        const loc = await resolveWeatherLocation();
+        const url = 'https://api.open-meteo.com/v1/forecast?latitude=' + loc.lat +
+          '&longitude=' + loc.lon +
+          '&current=temperature_2m,weather_code' +
+          '&daily=temperature_2m_max,temperature_2m_min' +
+          '&timezone=Asia%2FShanghai';
+        const data = await weatherFetchJson(url);
+        const current = data && data.current;
+        const temp = current && typeof current.temperature_2m === 'number' ? Math.round(current.temperature_2m) : null;
+        const code = current && typeof current.weather_code === 'number' ? current.weather_code : null;
+        const info = WEATHER_CODE_MAP[code] || { icon: '🌤️', text: '天气' };
+        const daily = data && data.daily;
+        const max = daily && daily.temperature_2m_max && typeof daily.temperature_2m_max[0] === 'number' ? Math.round(daily.temperature_2m_max[0]) : null;
+        const min = daily && daily.temperature_2m_min && typeof daily.temperature_2m_min[0] === 'number' ? Math.round(daily.temperature_2m_min[0]) : null;
+        el.textContent = info.icon + ' ' + (temp !== null ? temp + '°' : '--°');
+        el.title = loc.city + ' · ' + info.text +
+          (temp !== null ? ' · ' + temp + '°C' : '') +
+          (min !== null && max !== null ? ' · ' + min + '°~' + max + '°' : '') +
+          (loc.fallback ? '（定位未开启）' : '');
+        scheduleWeatherRefresh();
+      } catch(e) {
+        el.textContent = '🌤 --°';
+        el.title = '天气获取失败，点击重试';
+      }
     }
 
     function normalizeSupplementItem(item) {
@@ -3935,6 +4668,31 @@
           data.modules.reading.records = validReadingRecords;
           repaired = true;
         }
+      }
+      if (!data.modules.sleepPlan || typeof data.modules.sleepPlan !== 'object') {
+        data.modules.sleepPlan = { records: {}, nightWindows: {} };
+        repaired = true;
+      } else {
+        if (!data.modules.sleepPlan.records || typeof data.modules.sleepPlan.records !== 'object') {
+          data.modules.sleepPlan.records = {};
+          repaired = true;
+        }
+        if (!data.modules.sleepPlan.nightWindows || typeof data.modules.sleepPlan.nightWindows !== 'object') {
+          data.modules.sleepPlan.nightWindows = {};
+          repaired = true;
+        }
+        if (!data.modules.sleepPlan.sleepHours || typeof data.modules.sleepPlan.sleepHours !== 'object') {
+          data.modules.sleepPlan.sleepHours = {};
+          repaired = true;
+        }
+        if (!data.modules.sleepPlan.trainingDone || typeof data.modules.sleepPlan.trainingDone !== 'object') {
+          data.modules.sleepPlan.trainingDone = {};
+          repaired = true;
+        }
+      }
+      if (data.modules.water) {
+        delete data.modules.water;
+        repaired = true;
       }
       if (repaired) {
         saveData();
@@ -4309,6 +5067,12 @@
           },
           qa: {
             expanded: []
+          },
+          sleepPlan: {
+            records: {},
+            nightWindows: {},
+            sleepHours: {},
+            trainingDone: {}
           }
         }
       };
@@ -4361,6 +5125,14 @@
       if (!mod) return false;
       if (id === 'supplements' && mod.items) {
         return mod.items.some(i => !isSupplementTakenOn(i, today));
+      }
+      if (id === 'sleepPlan') {
+        const steps = getSleepStepsForDate(today);
+        const done = getSleepPlan().records[today] || [];
+        return steps.some(s => done.indexOf(s.id) === -1);
+      }
+      if (id === 'fitness') {
+        return !getSleepPlan().trainingDone[today];
       }
       if (mod.habits) {
         for (const h of mod.habits) {
@@ -4913,7 +5685,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v31');
+      info.push('版本: v54');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -4996,7 +5768,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v31',
+        version: 'v54',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -5659,14 +6431,6 @@
         }
       }, 300000); // 每5分钟检查一次
     }
-
-    // 腾讯财经接口作为备选
-    const TENCENT_INDEX_MAP = {
-      '000001': { name: '上证指数', code: '000001', tencent: 'sh000001' },
-      '399001': { name: '深证成指', code: '399001', tencent: 'sz399001' },
-      '399006': { name: '创业板指', code: '399006', tencent: 'sz399006' },
-      '000300': { name: '沪深300', code: '000300', tencent: 'sh000300' }
-    };
 
     function fetchMarketData() {
       return new Promise((resolve, reject) => {
@@ -6888,6 +7652,454 @@
       `;
     }
 
+    // ========== 睡眠流程 ==========
+    function getSleepStepDefs() {
+      return {
+      normal: [
+        { id: 'dinner', icon: '🍽️', time: '20:00前', text: '吃完晚饭，之后不再吃大餐' },
+        { id: 'caffeine', icon: '☕', time: '16:00后', text: '不喝咖啡、茶和酒精' },
+        { id: 'wind', icon: '📵', time: '21:30', text: '放下手机，洗漱准备' },
+        { id: 'bed', icon: '🌙', time: '22:30', text: '关灯上床' },
+        { id: 'wake', icon: '⏰', time: '明早06:30', text: '按时起床，不赖床' }
+      ],
+      nightA: [
+        { id: 'train', icon: '💪', time: '09:30-11:00', text: '中等强度训练' },
+        { id: 'lunch', icon: '🍚', time: '12:00前', text: '吃完午饭' },
+        { id: 'preSleep', icon: '😴', time: '14:00-16:00', text: '班前觉 2 小时' },
+        { id: 'wake', icon: '⏰', time: '16:00', text: '起床，不再碰床' },
+        { id: 'prep', icon: '🧴', time: '16:00-19:00', text: '洗漱吃饭准备上班' },
+        { id: 'caffeine', icon: '☕', time: '20:00后', text: '停止咖啡因' },
+        { id: 'nightSleep', icon: '🌙', time: '22:00-04:00', text: '班内睡 5.5-6 小时' },
+        { id: 'alarm', icon: '⏰', time: '04:00', text: '闹钟必设，不睡过交班' }
+      ],
+      nightB: [
+        { id: 'train', icon: '💪', time: '09:30-11:00', text: '中等强度训练' },
+        { id: 'lunch', icon: '🍚', time: '12:00-12:30', text: '吃午饭：蛋白质+复合碳水+蔬菜' },
+        { id: 'preSleep', icon: '😴', time: '13:00-17:00', text: '班前觉 3-4 小时' },
+        { id: 'wake', icon: '⏰', time: '17:00', text: '起床，不再碰床' },
+        { id: 'prep', icon: '🧴', time: '17:00-19:00', text: '洗漱吃饭准备上班' },
+        { id: 'caffeine', icon: '☕', time: '03:00后', text: '停止咖啡因' },
+        { id: 'nightSleep', icon: '🌙', time: '04:00-07:00', text: '班内睡满 3 小时' },
+        { id: 'alarm', icon: '⏰', time: '07:00', text: '闹钟必设，不睡过交班' }
+      ],
+      offA: [
+        { id: 'back', icon: '🕶️', time: '下班后', text: '戴墨镜回家，拉窗帘' },
+        { id: 'sleep', icon: '😴', time: '到家后', text: '立刻补觉 2.5-3.5 小时' },
+        { id: 'wake', icon: '⏰', time: '12:30-13:30', text: '起床' },
+        { id: 'train', icon: '💪', time: '16:00-17:30', text: '训练' },
+        { id: 'bed', icon: '🌙', time: '22:30-23:00', text: '上床，恢复夜觉' }
+      ],
+      offB: [
+        { id: 'back', icon: '🕶️', time: '下班后', text: '戴墨镜回家，拉窗帘' },
+        { id: 'sleep', icon: '😴', time: '到家后', text: '立刻补觉 4 小时' },
+        { id: 'wake', icon: '⏰', time: '14:00前', text: '起床' },
+        { id: 'train', icon: '💪', time: '16:00-17:30', text: '训练' },
+        { id: 'bed', icon: '🌙', time: '22:30-23:00', text: '上床，恢复夜觉' }
+      ]
+      };
+    }
+
+    function getSleepPlan() {
+      if (!data.modules.sleepPlan) data.modules.sleepPlan = { records: {}, nightWindows: {} };
+      if (!data.modules.sleepPlan.records) data.modules.sleepPlan.records = {};
+      if (!data.modules.sleepPlan.nightWindows) data.modules.sleepPlan.nightWindows = {};
+      if (!data.modules.sleepPlan.sleepHours) data.modules.sleepPlan.sleepHours = {};
+      if (!data.modules.sleepPlan.trainingDone) data.modules.sleepPlan.trainingDone = {};
+      return data.modules.sleepPlan;
+    }
+
+    function getShiftStateForDate(dateStr) {
+      const cycleHabit = (data.modules.cycle && data.modules.cycle.habits || []).find(h => h.id === 16 && h.type === 'cycle');
+      if (cycleHabit) return getCycleState(cycleHabit, dateStr);
+      return '休息';
+    }
+
+    function getSleepNightWindow(dateStr) {
+      const w = getSleepPlan().nightWindows[dateStr];
+      return w === 'A' ? 'A' : 'B';
+    }
+
+    function getPreviousNightWindow(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      d.setDate(d.getDate() - 1);
+      return getSleepNightWindow(getDateStr(d));
+    }
+
+    function getSleepStepsForDate(dateStr) {
+      const defs = getSleepStepDefs();
+      const state = getShiftStateForDate(dateStr);
+      if (state === '夜班') {
+        return getSleepNightWindow(dateStr) === 'A' ? defs.nightA : defs.nightB;
+      }
+      if (state === '下夜班') {
+        return getPreviousNightWindow(dateStr) === 'A' ? defs.offA : defs.offB;
+      }
+      return defs.normal;
+    }
+
+    function getSleepTargetText(dateStr) {
+      const state = getShiftStateForDate(dateStr);
+      if (state === '夜班') return getSleepNightWindow(dateStr) === 'A' ? '约9-11小时' : '约10-11小时';
+      if (state === '下夜班') return getPreviousNightWindow(dateStr) === 'A' ? '约10-11小时' : '约11小时';
+      return '约8小时';
+    }
+
+    function getSleepTargetHours(dateStr) {
+      const state = getShiftStateForDate(dateStr);
+      if (state === '夜班') return getSleepNightWindow(dateStr) === 'A' ? 10 : 10.5;
+      if (state === '下夜班') return getPreviousNightWindow(dateStr) === 'A' ? 10.5 : 11;
+      return 8;
+    }
+
+    function getSleepActualHours(dateStr) {
+      const plan = getSleepPlan();
+      const v = plan.sleepHours && plan.sleepHours[dateStr];
+      return (typeof v === 'number' && isFinite(v)) ? v : null;
+    }
+
+    function saveSleepHours() {
+      const input = document.getElementById('sleepHoursInput');
+      if (!input) return;
+      if (sleepViewDate > getTodayStr()) {
+        alert('不能记录未来的日期');
+        return;
+      }
+      const raw = parseFloat(input.value);
+      if (isNaN(raw) || raw < 0 || raw > 24) {
+        alert('请输入 0-24 之间的小时数');
+        return;
+      }
+      const plan = getSleepPlan();
+      if (!plan.sleepHours) plan.sleepHours = {};
+      plan.sleepHours[sleepViewDate] = Math.round(raw * 2) / 2;
+      saveData();
+      renderModule('sleepPlan');
+      updateTotalStats();
+    }
+
+    function renderSleepHoursCard(dateStr, isFuture) {
+      const actual = getSleepActualHours(dateStr);
+      const target = getSleepTargetHours(dateStr);
+      const status = actual !== null
+        ? (actual >= target ? '达标' : '还差 ' + (target - actual).toFixed(1) + ' 小时')
+        : '未记录';
+      const statusCls = actual !== null ? (actual >= target ? 'ok' : 'low') : 'empty';
+      return `
+        <div class="sleep-record-card">
+          <div class="sleep-record-head">
+            <span class="sleep-record-title">💤 实际睡眠记录</span>
+            <span class="sleep-record-status ${statusCls}">${status}</span>
+          </div>
+          <div class="sleep-record-row">
+            <input type="number" id="sleepHoursInput" min="0" max="24" step="0.5" placeholder="小时" value="${actual !== null ? actual : ''}" ${isFuture ? 'disabled' : ''}>
+            <button onclick="saveSleepHours()" ${isFuture ? 'disabled' : ''}>保存</button>
+          </div>
+          <div class="sleep-record-hint">计划目标约 ${target} 小时${actual !== null ? ' · 已记录 ' + actual + ' 小时' : ' · 记录后用于近 7 天趋势'}</div>
+        </div>
+      `;
+    }
+
+    function renderSleepTrendHtml() {
+      const days = [];
+      const todayStr = getTodayStr();
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(todayStr + 'T00:00:00');
+        d.setDate(d.getDate() - i);
+        const ds = getDateStr(d);
+        days.push({ date: ds, label: (d.getMonth() + 1) + '/' + d.getDate(), hours: getSleepActualHours(ds) });
+      }
+      const hasData = days.some(d => d.hours !== null);
+      if (!hasData) {
+        return '<div class="sleep-trend-empty">记录睡眠后，这里会显示近 7 天实际睡眠趋势</div>';
+      }
+      const bars = days.map(d => {
+        const pct = d.hours !== null ? Math.min(100, Math.round(d.hours / 12 * 100)) : 0;
+        const good = d.hours !== null && d.hours >= getSleepTargetHours(d.date);
+        return `
+          <div class="trend-bar-item">
+            <div class="trend-pair">
+              <div class="trend-bar-track"><div class="trend-bar-fill ${good ? 'good' : ''}" style="height:${Math.max(4, pct)}%" title="${d.date} · ${d.hours !== null ? d.hours + ' 小时' : '未记录'}"></div></div>
+            </div>
+            <div class="trend-bar-label">${d.label}</div>
+          </div>
+        `;
+      }).join('');
+      return `
+        <div class="sleep-trend-section">
+          <div class="sleep-week-title">近 7 天实际睡眠</div>
+          <div class="trend-bars">${bars}</div>
+        </div>
+      `;
+    }
+
+    function toggleTrainingDone(dateStr) {
+      const plan = getSleepPlan();
+      if (!plan.trainingDone) plan.trainingDone = {};
+      plan.trainingDone[dateStr] = !plan.trainingDone[dateStr];
+      saveData();
+      renderModule('sleepPlan');
+    }
+
+    function renderSleepTrainingHtml() {
+      const plan = getSleepPlan();
+      const days = [];
+      const todayStr = getTodayStr();
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(todayStr + 'T00:00:00');
+        d.setDate(d.getDate() + i);
+        days.push({
+          date: getDateStr(d),
+          label: i === 0 ? '今天' : i === 1 ? '明天' : formatSleepDate(getDateStr(d)),
+          state: getShiftStateForDate(getDateStr(d)),
+          train: getSleepTrainText(getDateStr(d)),
+          done: !!plan.trainingDone[getDateStr(d)]
+        });
+      }
+      const doneCount = days.filter(d => d.done).length;
+      const rows = days.map(d => `
+        <div class="sleep-train-row ${d.done ? 'done' : ''}">
+          <span class="sleep-train-row-date">${d.label}</span>
+          <span class="sleep-train-row-badge">${d.state}</span>
+          <span class="sleep-train-row-text">${d.train}</span>
+          <button class="sleep-train-check ${d.done ? 'done' : ''}" onclick="toggleTrainingDone('${d.date}')" title="${d.done ? '取消完成' : '标记完成'}">${d.done ? '✓' : ''}</button>
+        </div>
+      `).join('');
+      return `
+        <div class="sleep-train-week">
+          <div class="sleep-record-head">
+            <span class="sleep-record-title">💪 本周训练打卡</span>
+            <span class="sleep-record-status ${doneCount >= 3 ? 'ok' : 'low'}">${doneCount}/4 次</span>
+          </div>
+          <div class="sleep-train-week-list">${rows}</div>
+        </div>
+      `;
+    }
+
+    function getSleepTrainText(dateStr) {
+      const state = getShiftStateForDate(dateStr);
+      if (state === '夜班') return '09:30-11:00 中等强度训练';
+      if (state === '下夜班') return '16:00-17:30 训练';
+      return '09:00-11:00 或 17:30-19:00（本周练 3-4 次）';
+    }
+
+    function renderSleepFoodCard(dateStr) {
+      const state = getShiftStateForDate(dateStr);
+      let title = '今日饮食提醒';
+      let items = [
+        '三餐规律，晚餐 20:00 前吃完',
+        '咖啡因不跨过睡前 2 小时',
+        '睡前不吃大餐'
+      ];
+      if (state === '夜班') {
+        const windowA = getSleepNightWindow(dateStr) === 'A';
+        title = '夜班饮食提醒';
+        items = [
+          '班前正常吃：蛋白质 + 复合碳水 + 蔬菜',
+          '后半夜饿：无糖酸奶、坚果、香蕉、水煮蛋',
+          '04:00 后不再吃大餐',
+          windowA ? '20:00 后停咖啡因' : '03:00 后停咖啡因'
+        ];
+      } else if (state === '下夜班') {
+        title = '下夜班饮食提醒';
+        items = [
+          '下班回家先喝温水',
+          '补觉前吃清淡早餐，别暴食',
+          '白天少喝浓茶咖啡，别影响补觉'
+        ];
+      }
+      return `
+        <div class="sleep-food-card">
+          <div class="sleep-food-title">🍽️ ${title}</div>
+          <div class="sleep-food-list">${items.map(item => `<div class="sleep-food-item">· ${item}</div>`).join('')}</div>
+        </div>
+      `;
+    }
+
+    function formatSleepDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      const week = ['周日','周一','周二','周三','周四','周五','周六'];
+      return (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + week[d.getDay()];
+    }
+
+    function setSleepDate(dateStr) {
+      if (!dateStr) return;
+      sleepViewDate = dateStr;
+      renderModule('sleepPlan');
+    }
+
+    function shiftSleepDate(offset) {
+      const d = new Date(sleepViewDate + 'T00:00:00');
+      d.setDate(d.getDate() + offset);
+      setSleepDate(getDateStr(d));
+    }
+
+    function setSleepNightWindow(windowKey) {
+      getSleepPlan().nightWindows[sleepViewDate] = windowKey;
+      saveData();
+      renderModule('sleepPlan');
+    }
+
+    function toggleSleepStep(stepId) {
+      if (sleepViewDate > getTodayStr()) {
+        alert('不能勾选未来的日期');
+        return;
+      }
+      const plan = getSleepPlan();
+      if (!plan.records[sleepViewDate]) plan.records[sleepViewDate] = [];
+      const arr = plan.records[sleepViewDate];
+      const idx = arr.indexOf(stepId);
+      let isDone = false;
+      if (idx >= 0) {
+        arr.splice(idx, 1);
+      } else {
+        arr.push(stepId);
+        isDone = true;
+      }
+      saveData();
+      vibrate(isDone ? 25 : 12);
+      renderModule('sleepPlan');
+      updateTotalStats();
+      renderNav();
+      celebrateIfComplete();
+    }
+
+    function renderSleepWeekPreviewHtml(selectedDate) {
+      const rows = [];
+      const todayStr = getTodayStr();
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(todayStr + 'T00:00:00');
+        d.setDate(d.getDate() + i);
+        const ds = getDateStr(d);
+        const state = getShiftStateForDate(ds);
+        const badge = state === '夜班'
+          ? `<span class="sleep-preview-badge night">夜班 ${getSleepNightWindow(ds) === 'A' ? '22:00-04:00' : '04:00-07:00'}</span>`
+          : `<span class="sleep-preview-badge">${state}</span>`;
+        const label = i === 0 ? '今天' : i === 1 ? '明天' : formatSleepDate(ds);
+        rows.push(`
+          <button class="sleep-preview-row ${ds === selectedDate ? 'active' : ''}" onclick="setSleepDate('${ds}')">
+            <span class="sleep-preview-date">${label}</span>
+            ${badge}
+            <span class="sleep-preview-meta">${getSleepTrainText(ds)}</span>
+          </button>
+        `);
+      }
+      return `<div class="sleep-week-list">${rows.join('')}</div>`;
+    }
+
+    function renderSleepPlanModule(container) {
+      const cfg = MODULE_CONFIG.sleepPlan;
+      const dateStr = sleepViewDate;
+      const todayStr = getTodayStr();
+      const isToday = dateStr === todayStr;
+      const isFuture = dateStr > todayStr;
+      const state = getShiftStateForDate(dateStr);
+      const isNight = state === '夜班';
+      const nightWindow = isNight ? getSleepNightWindow(dateStr) : (state === '下夜班' ? getPreviousNightWindow(dateStr) : null);
+      const steps = getSleepStepsForDate(dateStr);
+      const doneArr = getSleepPlan().records[dateStr] || [];
+      const doneCount = steps.filter(s => doneArr.indexOf(s.id) !== -1).length;
+      const pct = steps.length ? Math.round(doneCount / steps.length * 100) : 0;
+
+      const stepHtml = steps.map(step => {
+        const isDone = doneArr.indexOf(step.id) !== -1;
+        return `
+          <div class="sleep-step ${isDone ? 'done' : ''}">
+            <div class="sleep-step-icon">${step.icon}</div>
+            <div class="sleep-step-info">
+              <span class="sleep-step-time">${step.time}</span>
+              <div class="sleep-step-text">${step.text}</div>
+            </div>
+            <button class="sleep-check-btn ${isDone ? 'done' : ''}" ${isFuture ? 'disabled' : ''} onclick="toggleSleepStep('${step.id}')" title="${isDone ? '取消完成' : '标记完成'}">${isDone ? '✓' : ''}</button>
+          </div>
+        `;
+      }).join('');
+
+      const nightPicker = isNight ? `
+        <div class="sleep-window-picker">
+          <span class="sleep-window-label">夜班睡眠窗口</span>
+          <button class="sleep-window-btn ${nightWindow === 'A' ? 'active' : ''}" onclick="setSleepNightWindow('A')">A · 22:00-04:00</button>
+          <button class="sleep-window-btn ${nightWindow === 'B' ? 'active' : ''}" onclick="setSleepNightWindow('B')">B · 04:00-07:00</button>
+        </div>
+      ` : '';
+
+      const dateTag = isFuture ? '计划' : isToday ? '今天' : '历史';
+      const summaryText = isFuture
+        ? '尚未到执行时间'
+        : doneCount === steps.length
+          ? '流程已全部完成'
+          : '还有 ' + (steps.length - doneCount) + ' 项未完成';
+
+      container.innerHTML = `
+        <div class="module-title-bar">
+          <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
+          <div class="m-text">
+            <div class="m-name">${cfg.name}</div>
+            <div class="m-desc">${cfg.desc}</div>
+          </div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${pct}%</div>
+        </div>
+
+        <div class="sleep-day-nav">
+          <button class="sleep-day-arrow" onclick="shiftSleepDate(-1)" title="前一天">‹</button>
+          <div class="sleep-day-picker">
+            <input type="date" id="sleepDateInput" value="${dateStr}" onchange="setSleepDate(this.value)">
+            <span class="sleep-day-tag ${isToday ? 'today' : ''}">${dateTag}</span>
+          </div>
+          <button class="sleep-day-arrow" onclick="shiftSleepDate(1)" title="后一天">›</button>
+        </div>
+
+        <div class="sleep-day-summary">
+          <span>${formatSleepDate(dateStr)} · ${state}</span>
+          <span class="${doneCount === steps.length ? 'sleep-day-done' : 'sleep-day-left'}">${summaryText}</span>
+        </div>
+
+        <div class="stats sleep-plan-stats">
+          <div class="stat-card">
+            <div class="icon-wrap">💼</div>
+            <div class="num">${state}</div>
+            <div class="label">今日班次</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon-wrap">😴</div>
+            <div class="num">${getSleepTargetText(dateStr)}</div>
+            <div class="label">睡眠目标</div>
+          </div>
+          <div class="stat-card">
+            <div class="icon-wrap">✅</div>
+            <div class="num">${doneCount}/${steps.length}</div>
+            <div class="label">流程完成</div>
+          </div>
+        </div>
+
+        ${nightPicker}
+
+        <div class="module-progress-bar">
+          <div class="ph"><span>${isToday ? '今日流程进度' : '当日流程进度'}</span><span class="pp" style="color:${cfg.color}">${doneCount}/${steps.length}</span></div>
+          <div class="pb"><div class="pf" style="width:${pct}%;background:linear-gradient(90deg,${cfg.color},${cfg.color}66)"></div></div>
+        </div>
+
+        ${renderSleepHoursCard(dateStr, isFuture)}
+        ${renderSleepTrendHtml()}
+
+        <div class="sleep-train-card">💪 今日训练窗口：${getSleepTrainText(dateStr)}</div>
+        ${renderSleepFoodCard(dateStr)}
+
+        ${steps.length ? `
+          <div class="sleep-step-list">${stepHtml}</div>
+        ` : `
+          <div class="empty-state">
+            <div class="big">😴</div>
+            <p>今天还没有可执行的流程</p>
+          </div>
+        `}
+
+        <div class="sleep-supp-note">💊 补剂照常：肌酸软糖每天 2 颗固定早餐后；镁片睡前 30-60 分钟。</div>
+
+        <div class="sleep-week-title">未来 7 天排班</div>
+        ${renderSleepWeekPreviewHtml(dateStr)}
+      `;
+    }
+
     // ========== 身体记录 ==========
     const BODY_CATEGORY_META = {
       '健身': { icon: '💪', cls: 'fit' },
@@ -7713,6 +8925,10 @@
         renderQaModule(container);
         return;
       }
+      if (moduleId === 'sleepPlan') {
+        renderSleepPlanModule(container);
+        return;
+      }
 
       let modNeed = 0, modDone = 0;
       const habitHtml = mod.habits.map(h => {
@@ -7750,6 +8966,8 @@
             onkeypress="if(event.key==='Enter') addHabit()">
           <button onclick="addHabit()">添加</button>
         </div>
+
+        ${moduleId === 'fitness' ? renderSleepTrainingHtml() : ''}
 
         ${hasHabits ? `
           ${renderWeeklyRateHtml(moduleId)}
@@ -7868,6 +9086,14 @@
           }
           continue;
         }
+        if (modId === 'sleepPlan') {
+          const steps = getSleepStepsForDate(today);
+          const doneSteps = getSleepPlan().records[today] || [];
+          totalHabits += steps.length;
+          totalNeed += steps.length;
+          totalDone += steps.filter(s => doneSteps.indexOf(s.id) !== -1).length;
+          continue;
+        }
         if (!mod.habits) continue;
         totalHabits += mod.habits.length;
         for (const h of mod.habits) {
@@ -7954,10 +9180,14 @@
       }
       const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
       const pendingSupps = suppItems.filter(i => shouldTakeSupplement(i, todayStr) && !isSupplementTakenOn(i, todayStr));
+      const sleepSteps = getSleepStepsForDate(todayStr);
+      const sleepDone = getSleepPlan().records[todayStr] || [];
+      const pendingSleep = sleepSteps.filter(s => sleepDone.indexOf(s.id) === -1);
       const readingToday = getReadingRecords().some(r => r.date === todayStr);
       const finance = getFinanceStats();
       if (pendingHabits) tips.push({ text: '还有 ' + pendingHabits + ' 个打卡未完成', cls: 'warn' });
       if (pendingSupps.length) tips.push({ text: '还有 ' + pendingSupps.length + ' 种补剂未服用', cls: 'warn' });
+      if (pendingSleep.length) tips.push({ text: '睡眠流程还有 ' + pendingSleep.length + ' 项未完成', cls: 'warn' });
       if (!readingToday) tips.push({ text: '今天还没有看书', cls: '' });
       if (finance.budget > 0 && finance.monthSpent > finance.budget) tips.push({ text: '本月预算已超支', cls: 'danger' });
       if (!tips.length) tips.push({ text: '今日目标已全部完成', cls: 'good' });
