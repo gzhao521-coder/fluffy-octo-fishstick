@@ -2810,6 +2810,131 @@
         scroll-behavior: auto !important;
       }
     }
+
+    .qa-filter-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 0 14px;
+      scrollbar-width: none;
+    }
+    .qa-filter-bar::-webkit-scrollbar { display: none; }
+    .qa-filter-btn {
+      flex: 0 0 auto;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: var(--card);
+      color: var(--text2);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .qa-filter-btn.active {
+      color: #0f0f23;
+      background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+      border-color: transparent;
+    }
+    .qa-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-bottom: 12px;
+      animation: slideUp 0.35s ease both;
+    }
+    .qa-card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .qa-cat {
+      flex: 0 0 auto;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f0f23;
+      background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+      border-radius: 6px;
+      padding: 3px 8px;
+      margin-top: 2px;
+    }
+    .qa-cat.sleep {
+      background: linear-gradient(135deg, #64ffda, #00d4ff);
+    }
+    .qa-cat.fitness {
+      background: linear-gradient(135deg, #6bcb77, #00e676);
+    }
+    .qa-cat.supplements {
+      background: linear-gradient(135deg, #bd34fe, #4d96ff);
+    }
+    .qa-q {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.45;
+    }
+    .qa-arrow {
+      flex: 0 0 auto;
+      color: var(--text2);
+      font-size: 12px;
+      transition: transform 0.25s ease;
+    }
+    .qa-card.open .qa-arrow { transform: rotate(180deg); }
+    .qa-body {
+      display: none;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed rgba(255,255,255,0.12);
+    }
+    .qa-card.open .qa-body { display: block; }
+    .qa-answer p {
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 8px;
+    }
+    .qa-answer p:last-child { margin-bottom: 0; }
+    .qa-points {
+      margin-top: 10px;
+      background: rgba(255,159,67,0.07);
+      border-left: 3px solid #ff9f43;
+      border-radius: 6px;
+      padding: 10px 12px;
+    }
+    .qa-points li {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.65;
+      margin-left: 16px;
+      margin-bottom: 4px;
+    }
+    .qa-points li:last-child { margin-bottom: 0; }
+    .qa-sources {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .qa-sources a {
+      font-size: 11px;
+      color: #ff9f43;
+      text-decoration: none;
+      border: 1px solid rgba(255,159,67,0.3);
+      border-radius: 6px;
+      padding: 4px 9px;
+      background: rgba(255,159,67,0.08);
+    }
+    .qa-status {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text2);
+      font-size: 14px;
+    }
+    .qa-status .big { font-size: 40px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
   </style>
 </head>
 <body>
@@ -2822,7 +2947,7 @@
     <h1>成长</h1>
     <div class="date" id="todayDate"></div>
     <div class="header-actions">
-      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v31</span>
+      <span id="versionTag" style="font-size:10px;color:var(--primary);background:rgba(100,255,218,0.1);border:1px solid rgba(100,255,218,0.2);border-radius:6px;padding:2px 8px">v32</span>
       <span id="netStatus" class="net-status">•••</span>
       <button class="header-menu-btn" onclick="openHeaderMenu()" title="更多工具">☰</button>
     </div>
@@ -3448,10 +3573,11 @@
       manifestation: { name: '显化记录', icon: '✨', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '意念显化 · 愿望成真' },
       supplements: { name: '补剂明细', icon: '💊', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '每日补剂 · 科学服用' },
       body: { name: '身体记录', icon: '🧬', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(189,52,254,0.1))', desc: '健身补剂 · 记录身体变化' },
-      reading: { name: '看书记录', icon: '📖', color: '#ff9f43', bg: 'linear-gradient(135deg, rgba(255,159,67,0.15), rgba(255,215,64,0.1))', desc: '阅读书单 · 时间记录' }
+      reading: { name: '看书记录', icon: '📖', color: '#ff9f43', bg: 'linear-gradient(135deg, rgba(255,159,67,0.15), rgba(255,215,64,0.1))', desc: '阅读书单 · 时间记录' },
+      qa: { name: '问题档案', icon: '❓', color: '#ff9f43', bg: 'linear-gradient(135deg, rgba(255,159,67,0.15), rgba(255,107,107,0.1))', desc: '日常疑问 · 答案沉淀' }
     };
 
-    const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','reading','study','game','fitness'];
+    const MODULE_ORDER = ['daily','cycle','free','finance','manifestation','supplements','body','reading','qa','study','game','fitness'];
     const NAV_PRIMARY_IDS = ['daily','study','game','finance','supplements','fitness'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
     const DAILY_QUOTES = [
@@ -3494,6 +3620,10 @@
     let bodyEditId = null;
     let bodyRating = 4;
     let readingEditId = null;
+    let qaData = null;
+    let qaLoading = false;
+    let qaFilter = '全部';
+    const qaExpanded = new Set((data.modules.qa && data.modules.qa.expanded) || []);
 
     const SUPPLEMENT_TIME_SLOTS = {
       morning: { label: '☀️ 早晨', color: '#ffd740', order: 1 },
@@ -4176,6 +4306,9 @@
           },
           reading: {
             records: []
+          },
+          qa: {
+            expanded: []
           }
         }
       };
@@ -7424,6 +7557,129 @@
       renderNav();
     }
 
+    function qaCatClass(cat) {
+      if (cat === '睡眠') return 'sleep';
+      if (cat === '健身') return 'fitness';
+      if (cat === '补剂') return 'supplements';
+      return '';
+    }
+
+    function saveQaExpanded() {
+      if (!data.modules.qa) data.modules.qa = { expanded: [] };
+      data.modules.qa.expanded = Array.from(qaExpanded);
+      saveData();
+    }
+
+    function toggleQaExpanded(id) {
+      if (qaExpanded.has(id)) qaExpanded.delete(id); else qaExpanded.add(id);
+      saveQaExpanded();
+      renderQaModule(document.getElementById('moduleContent'));
+    }
+
+    function setQaFilter(cat) {
+      qaFilter = cat || '全部';
+      renderQaModule(document.getElementById('moduleContent'));
+    }
+
+    function renderQaModule(container) {
+      const cfg = MODULE_CONFIG.qa;
+      if (!qaData) {
+        if (qaLoading) return;
+        qaLoading = true;
+        container.innerHTML = `
+          <div class="module-title-bar">
+            <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
+            <div class="m-text">
+              <div class="m-name">${cfg.name}</div>
+              <div class="m-desc">${cfg.desc}</div>
+            </div>
+          </div>
+          <div class="qa-status">
+            <div class="big">📦</div>
+            <p>正在载入问题档案...</p>
+          </div>
+        `;
+        fetch('questions.json')
+          .then(r => { if (!r.ok) throw new Error('load fail'); return r.json(); })
+          .then(json => { qaData = json; qaLoading = false; renderQaModule(container); })
+          .catch(() => {
+            qaLoading = false;
+            container.innerHTML = `
+              <div class="module-title-bar">
+                <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
+                <div class="m-text">
+                  <div class="m-name">${cfg.name}</div>
+                  <div class="m-desc">${cfg.desc}</div>
+                </div>
+              </div>
+              <div class="qa-status">
+                <div class="big">⚠️</div>
+                <p>问题档案加载失败，请确认 questions.json 已随应用一起部署。</p>
+              </div>
+            `;
+          });
+        return;
+      }
+
+      const cats = ['全部'].concat(Array.from(new Set((qaData.questions || []).map(q => q.category).filter(Boolean))));
+      const filtered = (qaData.questions || []).filter(q => qaFilter === '全部' || q.category === qaFilter);
+      const cardsHtml = filtered.map(q => {
+        const open = qaExpanded.has(q.id);
+        const answerHtml = (q.answer || []).map(p => '<p>' + escapeHtml(p) + '</p>').join('');
+        const pointsHtml = (q.keyPoints && q.keyPoints.length) ? `
+          <div class="qa-points">
+            <ul>
+              ${q.keyPoints.map(p => '<li>' + escapeHtml(p) + '</li>').join('')}
+            </ul>
+          </div>
+        ` : '';
+        const sourcesHtml = (q.sources && q.sources.length) ? `
+          <div class="qa-sources">
+            ${q.sources.map(s => '<a href="' + escapeHtml(s.url) + '" target="_blank" rel="noopener">' + escapeHtml(s.label) + '</a>').join('')}
+          </div>
+        ` : '';
+        return `
+          <div class="qa-card ${open ? 'open' : ''}">
+            <div class="qa-card-head" onclick="toggleQaExpanded(${q.id})">
+              <span class="qa-cat ${qaCatClass(q.category)}">${escapeHtml(q.category)}</span>
+              <div class="qa-q">
+                <div>${escapeHtml(q.title)}</div>
+                <div style="font-size:11px;color:var(--text2);font-weight:500;margin-top:4px">📅 ${escapeHtml(q.date || '')}</div>
+              </div>
+              <span class="qa-arrow">▼</span>
+            </div>
+            <div class="qa-body">
+              <div class="qa-answer">${answerHtml}</div>
+              ${pointsHtml}
+              ${sourcesHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="module-title-bar">
+          <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
+          <div class="m-text">
+            <div class="m-name">${cfg.name}</div>
+            <div class="m-desc">${cfg.desc}</div>
+          </div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${qaData.questions ? qaData.questions.length : 0} 条</div>
+        </div>
+        <div class="qa-filter-bar">
+          ${cats.map(c => `
+            <button class="qa-filter-btn ${qaFilter === c ? 'active' : ''}" data-cat="${escapeHtml(c)}" onclick="setQaFilter(this.dataset.cat)">${escapeHtml(c)}</button>
+          `).join('')}
+        </div>
+        ${cardsHtml || `
+          <div class="qa-status">
+            <div class="big">🌱</div>
+            <p>这个分类还没有问题，换一个看看。</p>
+          </div>
+        `}
+      `;
+    }
+
     function renderModule(moduleId) {
       const container = document.getElementById('moduleContent');
       const mod = data.modules[moduleId];
@@ -7451,6 +7707,10 @@
       }
       if (moduleId === 'reading') {
         renderReadingModule(container);
+        return;
+      }
+      if (moduleId === 'qa') {
+        renderQaModule(container);
         return;
       }
 

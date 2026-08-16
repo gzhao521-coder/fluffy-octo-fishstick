@@ -1,7 +1,8 @@
-const CACHE_NAME = 'growth-checkin-v31';
+const CACHE_NAME = 'growth-checkin-v32';
 const APP_SHELL = [
   './',
   './index.html',
+  './questions.json',
   './recovery.html',
   './manifest.webmanifest',
   './icon-192.png',
