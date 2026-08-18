@@ -40,6 +40,19 @@
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
+    @keyframes bgMeshFlow {
+      0%, 100% { transform: translate3d(-3%, -2.5%, 0) scale(1); }
+      50% { transform: translate3d(3%, 2.5%, 0) scale(1.14); }
+    }
+    @keyframes bgMeshFlowReverse {
+      0%, 100% { transform: translate3d(3%, 2.5%, 0) scale(1.04); }
+      50% { transform: translate3d(-3%, -2.5%, 0) scale(1.16); }
+    }
+    @keyframes bgSwirlRotate {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.12); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
     @keyframes heroSweep {
       0%, 55% { left: -45%; }
       100% { left: 125%; }
@@ -179,6 +192,7 @@
       position: fixed;
       inset: -15%;
       z-index: 0;
+      --bg-duration: 10s;
       pointer-events: none;
       background: linear-gradient(115deg,
         rgba(100,255,218,0.05) 0%,
@@ -187,11 +201,16 @@
         transparent 72%,
         rgba(189,52,254,0.05) 100%);
       background-size: 280% 280%;
+      filter: blur(44px);
+      opacity: 0.95;
+      will-change: transform;
+      animation: bgMeshFlow var(--bg-duration) ease-in-out infinite;
     }
     .bg-mesh::before {
       content: '';
       position: absolute;
       inset: 0;
+      --bg-duration: 12s;
       background: linear-gradient(215deg,
         rgba(255,159,67,0.04) 0%,
         transparent 34%,
@@ -199,12 +218,16 @@
         transparent 76%,
         rgba(100,255,218,0.06) 100%);
       background-size: 240% 240%;
+      filter: blur(34px);
+      will-change: transform;
+      animation: bgMeshFlowReverse var(--bg-duration) ease-in-out infinite;
       pointer-events: none;
     }
     .bg-swirl {
       position: fixed;
       inset: -40%;
       z-index: 0;
+      --bg-duration: 18s;
       pointer-events: none;
       background: conic-gradient(from 0deg at 50% 50%,
         transparent 0deg,
@@ -214,7 +237,10 @@
         transparent 300deg,
         rgba(0,212,255,0.05) 350deg,
         transparent 360deg);
-      opacity: 0.35;
+      filter: blur(42px);
+      opacity: 0.7;
+      will-change: transform;
+      animation: bgSwirlRotate var(--bg-duration) linear infinite;
     }
     .bg-particles {
       position: fixed;
@@ -2591,10 +2617,158 @@
       font-weight: 700;
       cursor: pointer;
     }
+    /* 购物清单 */
+    .shopping-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .shopping-stat-card {
+      padding: 11px 6px;
+      text-align: center;
+      background: rgba(255,107,157,0.07);
+      border: 1px solid rgba(255,107,157,0.16);
+      border-radius: 8px;
+    }
+    .shopping-stat-card .num {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ff7eb6;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+    .shopping-stat-card .label {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+    .shopping-add-btn {
+      width: 100%;
+      padding: 13px;
+      margin: 12px 0;
+      border-radius: 8px;
+      border: 1px solid rgba(255,107,157,0.22);
+      background: rgba(255,107,157,0.08);
+      color: #ff7eb6;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .shopping-add-btn:hover {
+      background: rgba(255,107,157,0.15);
+      border-color: rgba(255,107,157,0.55);
+    }
+    .shopping-list { display: flex; flex-direction: column; gap: 10px; }
+    .shopping-card {
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      border-radius: var(--radius);
+      padding: 14px;
+      border: 1px solid rgba(255,107,157,0.1);
+      transition: all 0.2s ease;
+      animation: slideUp 0.3s ease backwards;
+    }
+    .shopping-card:hover { border-color: rgba(255,107,157,0.22); }
+    .shopping-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .shopping-date { font-size: 11px; color: var(--text2); font-weight: 600; }
+    .shopping-actions { display: flex; gap: 4px; }
+    .shopping-name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 9px;
+    }
+    .shopping-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 0;
+      word-break: break-word;
+    }
+    .shopping-price {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ff7eb6;
+      background: rgba(255,107,157,0.1);
+      border: 1px solid rgba(255,107,157,0.2);
+      padding: 2px 8px;
+      border-radius: 7px;
+      white-space: nowrap;
+    }
+    .shopping-plan-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: #00d4ff;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.25);
+      padding: 2px 8px;
+      border-radius: 7px;
+      white-space: nowrap;
+    }
+    .shopping-verdict {
+      margin-left: auto;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 7px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+    .shopping-verdict.worth { color: #00e676; border-color: rgba(0,230,118,0.3); background: rgba(0,230,118,0.1); }
+    .shopping-verdict.good { color: #00d4ff; border-color: rgba(0,212,255,0.3); background: rgba(0,212,255,0.1); }
+    .shopping-verdict.ok { color: #ffd740; border-color: rgba(255,215,64,0.3); background: rgba(255,215,64,0.1); }
+    .shopping-verdict.waste { color: #ff5252; border-color: rgba(255,82,82,0.3); background: rgba(255,82,82,0.1); }
+    .shopping-field {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.5;
+      word-break: break-word;
+      margin-bottom: 9px;
+    }
+    .shopping-field-label { flex-shrink: 0; color: var(--text2); font-weight: 700; }
+    .shopping-rating-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
+    .shopping-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--text2);
+    }
+    .shopping-rating-stars { color: #ffd740; letter-spacing: 1px; white-space: nowrap; }
+    .shopping-rating-note { font-size: 11px; color: var(--text2); }
+    .shopping-note {
+      font-size: 12px;
+      color: var(--text);
+      background: rgba(255,107,157,0.05);
+      border-left: 2px solid rgba(255,107,157,0.35);
+      padding: 7px 9px;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.55;
+    }
     @media (max-width: 480px) {
       .body-trend-grid { grid-template-columns: 1fr; }
       .weekly-rate { flex-wrap: wrap; }
       .reading-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .shopping-stats { grid-template-columns: repeat(2, 1fr); }
+      .shopping-rating-row { grid-template-columns: 1fr; }
     }
 
     /* ========== v20 视觉升级 ========== */
@@ -3033,6 +3207,16 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+      }
+      body.motion-on .bg-mesh,
+      body.motion-on .bg-mesh::before,
+      body.motion-on .bg-swirl {
+        animation-duration: var(--bg-duration) !important;
+        animation-iteration-count: infinite !important;
+      }
+      body.motion-on .bg-particle {
+        animation-duration: var(--drift-duration), var(--twinkle-duration) !important;
+        animation-iteration-count: infinite !important;
       }
     }
 
@@ -3624,6 +3808,7 @@
       </div>
       <div class="header-menu-grid">
         <button class="header-menu-item" onclick="closeHeaderMenu(); forceRefresh()"><span class="header-menu-icon">🔄</span><span>刷新</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); toggleBgMotion()"><span class="header-menu-icon">🌌</span><span>背景动态</span></button>
         <button class="header-menu-item" onclick="closeHeaderMenu(); openBackupModal()"><span class="header-menu-icon">💾</span><span>备份</span></button>
         <button class="header-menu-item" onclick="closeHeaderMenu(); openStatsModal()"><span class="header-menu-icon">📊</span><span>统计</span></button>
         <button class="header-menu-item" onclick="closeHeaderMenu(); openWeeklyReport()"><span class="header-menu-icon">📅</span><span>周报</span></button>
@@ -4077,6 +4262,52 @@
     </div>
   </div>
 
+  <!-- 购物清单弹窗 -->
+  <div class="overlay" id="shoppingOverlay" onclick="closeShoppingModal(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="shoppingModalTitle">记录购物</h3>
+        <button class="close" onclick="closeShoppingModal()">&times;</button>
+      </div>
+      <div class="body-form-row">
+        <label>物品名称</label>
+        <input type="text" class="fund-form-input" id="shoppingName" placeholder="如：筋膜枪、降噪耳机、护腰靠垫" maxlength="40">
+      </div>
+      <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>价格（元）</label>
+            <input type="number" class="fund-form-input" id="shoppingPrice" placeholder="如：299" min="0" step="0.01">
+          </div>
+          <div>
+            <label>购买日期</label>
+            <input type="date" class="fund-form-input" id="shoppingDate">
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
+        <label>用在哪些地方</label>
+        <input type="text" class="fund-form-input" id="shoppingPlaces" placeholder="如：家里、健身房、夜班休息室、通勤路上" maxlength="80">
+      </div>
+      <div class="body-form-row">
+        <label>实用性</label>
+        <div class="body-rating-options" id="shoppingPracticalityOptions"></div>
+      </div>
+      <div class="body-form-row">
+        <label>买后开心度</label>
+        <div class="body-rating-options" id="shoppingHappinessOptions"></div>
+      </div>
+      <div class="body-form-row">
+        <label>使用感受 / 备注（可选）</label>
+        <textarea class="note-input" id="shoppingNote" placeholder="例如：每周用 3 次，值回票价；再买同类会选更轻的..." style="min-height:90px;margin-bottom:0"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeShoppingModal()">取消</button>
+        <button class="btn-primary" onclick="saveShoppingItem()">保存</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 看书记录弹窗 -->
   <div class="overlay" id="readingOverlay" onclick="closeReadingModal(event)">
     <div class="modal wide" onclick="event.stopPropagation()">
@@ -4189,6 +4420,22 @@
     const LS_KEY = 'myCheckinApp_v10';
     const ICONS = ['🌅','🏃','📖','💧','🧘','🎸','💻','🥗','✍️','🧹','🌙','💪','🎯','🎨','🎧','🚴','🏊','🧠','🌳','🔥'];
 
+    function getBgMotionEnabled() {
+      return localStorage.getItem(LS_KEY + '_motion') !== 'off';
+    }
+
+    function applyBgMotion() {
+      const on = getBgMotionEnabled();
+      document.body.classList.toggle('motion-on', on);
+    }
+
+    function toggleBgMotion() {
+      const on = !getBgMotionEnabled();
+      localStorage.setItem(LS_KEY + '_motion', on ? 'on' : 'off');
+      applyBgMotion();
+      showAchievementToast(on ? '背景动态已开启' : '背景动态已关闭');
+    }
+
     const MODULE_CONFIG = {
       daily:   { name: '每日打卡', icon: '🔥', color: '#64ffda', bg: 'linear-gradient(135deg, rgba(100,255,218,0.15), rgba(0,212,255,0.1))', desc: '每日必做 · 基础习惯' },
       sleepPlan: { name: '睡眠流程', icon: '😴', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(189,52,254,0.1))', desc: '班次睡眠 · 每日执行' },
@@ -4196,6 +4443,7 @@
       game:    { name: '游戏娱乐', icon: '🎮', color: '#bd34fe', bg: 'linear-gradient(135deg, rgba(189,52,254,0.15), rgba(255,107,107,0.1))', desc: '休闲娱乐 · 放松身心' },
       fitness: { name: '健身记录', icon: '💪', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '训练打卡 · 身体管理' },
       finance: { name: '财务管理', icon: '💰', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '理财记账 · 财富积累' },
+      shopping: { name: '购物清单', icon: '🛒', color: '#ff6b9d', bg: 'linear-gradient(135deg, rgba(255,107,157,0.15), rgba(255,215,64,0.1))', desc: '买过什么 · 值不值得' },
       cycle:   { name: '周期打卡', icon: '⏰', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(100,255,218,0.1))', desc: '周期性任务 · 定时提醒' },
       free:    { name: '自由打卡', icon: '🌟', color: '#ff6b6b', bg: 'linear-gradient(135deg, rgba(255,107,107,0.15), rgba(189,52,254,0.1))', desc: '自由安排 · 灵活记录' },
       manifestation: { name: '显化记录', icon: '✨', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '意念显化 · 愿望成真' },
@@ -4205,7 +4453,7 @@
       qa: { name: '问题档案', icon: '❓', color: '#ff9f43', bg: 'linear-gradient(135deg, rgba(255,159,67,0.15), rgba(255,107,107,0.1))', desc: '日常疑问 · 答案沉淀' }
     };
 
-    const MODULE_ORDER = ['daily','game','cycle','free','finance','manifestation','supplements','body','reading','qa','study','sleepPlan','fitness'];
+    const MODULE_ORDER = ['daily','game','cycle','free','finance','shopping','manifestation','supplements','body','reading','qa','study','sleepPlan','fitness'];
     const NAV_PRIMARY_IDS = ['daily','study','sleepPlan','finance','supplements','fitness'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
     const DAILY_QUOTES = [
@@ -4249,6 +4497,9 @@
     let bodyEditId = null;
     let bodyRating = 4;
     let readingEditId = null;
+    let shoppingEditId = null;
+    let shoppingPracticality = 3;
+    let shoppingHappiness = 4;
     let qaData = null;
     let qaLoading = false;
     let qaFilter = '全部';
@@ -4339,6 +4590,7 @@
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
 
+    applyBgMotion();
     initStarDust();
     renderNav();
     renderModule(activeModule);
@@ -4588,6 +4840,12 @@
           if (!saved.modules.reading || !Array.isArray(saved.modules.reading.records)) {
             saved.modules.reading = { records: [] };
           }
+          if (!saved.modules.shopping || !Array.isArray(saved.modules.shopping.items)) {
+            saved.modules.shopping = { planSeeded: true, items: createShoppingPlanItems() };
+          } else if (!saved.modules.shopping.planSeeded) {
+            saved.modules.shopping.planSeeded = true;
+            saved.modules.shopping.items = createShoppingPlanItems().concat(saved.modules.shopping.items);
+          }
           if (!saved.achievements || typeof saved.achievements !== 'object') saved.achievements = {};
           return saved;
         }
@@ -4676,6 +4934,21 @@
         const validReadingRecords = data.modules.reading.records.filter(r => r && r.id && r.bookName);
         if (validReadingRecords.length !== data.modules.reading.records.length) {
           data.modules.reading.records = validReadingRecords;
+          repaired = true;
+        }
+      }
+      if (!data.modules.shopping || !Array.isArray(data.modules.shopping.items)) {
+        data.modules.shopping = { planSeeded: true, items: createShoppingPlanItems() };
+        repaired = true;
+      } else {
+        if (!data.modules.shopping.planSeeded) {
+          data.modules.shopping.planSeeded = true;
+          data.modules.shopping.items = createShoppingPlanItems().concat(data.modules.shopping.items);
+          repaired = true;
+        }
+        const validShoppingItems = data.modules.shopping.items.filter(i => i && i.id && i.name);
+        if (validShoppingItems.length !== data.modules.shopping.items.length) {
+          data.modules.shopping.items = validShoppingItems;
           repaired = true;
         }
       }
@@ -5074,6 +5347,10 @@
           },
           reading: {
             records: []
+          },
+          shopping: {
+            planSeeded: true,
+            items: createShoppingPlanItems()
           },
           qa: {
             expanded: []
@@ -8443,6 +8720,283 @@
       renderNav();
     }
 
+    function getShoppingItems() {
+      return (data.modules.shopping && data.modules.shopping.items) || [];
+    }
+
+    function createShoppingPlanItems() {
+      const now = Date.now();
+      return [
+        {
+          id: now + 1,
+          name: 'ECU 原厂电脑刷写（配万虎中尾段）',
+          price: 4500,
+          date: getTodayStr(),
+          places: '改装店 · 动力匹配',
+          practicality: 5,
+          happiness: 4,
+          note: '按中尾段排气+高流量空滤做标定，优先找带马力机的店；预算3000-6000元。',
+          status: 'plan'
+        },
+        {
+          id: now + 2,
+          name: 'DNA 高流量空滤 R-AG6S13-0R',
+          price: 1000,
+          date: getTodayStr(),
+          places: '进气系统',
+          practicality: 5,
+          happiness: 4,
+          note: '配合 ECU 刷写改善低扭；预算800-1200元。',
+          status: 'plan'
+        },
+        {
+          id: now + 3,
+          name: 'EBC HH 刹车皮 FA447HH + FA266HH',
+          price: 1200,
+          date: getTodayStr(),
+          places: '前/后刹车卡钳',
+          practicality: 5,
+          happiness: 4,
+          note: '前两套+后一套；装好后轻刹磨合几十公里。预算800-1500元。',
+          status: 'plan'
+        },
+        {
+          id: now + 4,
+          name: '全车刹车钢喉 Hel/Galfer/Fren Tubo',
+          price: 1400,
+          date: getTodayStr(),
+          places: '刹车油管',
+          practicality: 5,
+          happiness: 4,
+          note: '下单前确认 ABS/非 ABS 版本；预算900-1800元。',
+          status: 'plan'
+        },
+        {
+          id: now + 5,
+          name: 'Motul RBF 660 刹车油 500ml ×2',
+          price: 300,
+          date: getTodayStr(),
+          places: '刹车系统',
+          practicality: 5,
+          happiness: 4,
+          note: '换钢喉时一起换并排空气；预算200-400元。',
+          status: 'plan'
+        }
+      ];
+    }
+
+    function renderShoppingRatingPicker(kind) {
+      const el = document.getElementById(kind === 'practicality' ? 'shoppingPracticalityOptions' : 'shoppingHappinessOptions');
+      if (!el) return;
+      const value = kind === 'practicality' ? shoppingPracticality : shoppingHappiness;
+      el.innerHTML = [1, 2, 3, 4, 5].map(v => `
+        <button type="button" class="body-rating-btn ${v === value ? 'active' : ''}" onclick="selectShoppingRating(${v}, '${kind}')" title="${v}分">${v}</button>
+      `).join('');
+    }
+
+    function selectShoppingRating(v, kind) {
+      if (kind === 'practicality') shoppingPracticality = v;
+      else shoppingHappiness = v;
+      renderShoppingRatingPicker(kind);
+    }
+
+    function openShoppingModal(id) {
+      const rec = id ? getShoppingItems().find(r => r.id === id) : null;
+      shoppingEditId = rec ? rec.id : null;
+      shoppingPracticality = rec && rec.practicality ? Math.min(5, Math.max(1, rec.practicality)) : 3;
+      shoppingHappiness = rec && rec.happiness ? Math.min(5, Math.max(1, rec.happiness)) : 4;
+      document.getElementById('shoppingModalTitle').textContent = rec ? '编辑购物记录' : '记录购物';
+      document.getElementById('shoppingName').value = rec ? rec.name : '';
+      document.getElementById('shoppingPrice').value = rec && typeof rec.price === 'number' ? rec.price : '';
+      document.getElementById('shoppingDate').value = rec ? rec.date : getTodayStr();
+      document.getElementById('shoppingPlaces').value = rec ? (rec.places || '') : '';
+      document.getElementById('shoppingNote').value = rec ? (rec.note || '') : '';
+      renderShoppingRatingPicker('practicality');
+      renderShoppingRatingPicker('happiness');
+      document.getElementById('shoppingOverlay').classList.add('show');
+      setTimeout(() => document.getElementById('shoppingName').focus(), 100);
+    }
+
+    function closeShoppingModal(e) {
+      if (e && e.target !== document.getElementById('shoppingOverlay')) return;
+      document.getElementById('shoppingOverlay').classList.remove('show');
+      shoppingEditId = null;
+    }
+
+    function saveShoppingItem() {
+      const name = document.getElementById('shoppingName').value.trim();
+      const price = Math.max(0, parseFloat(document.getElementById('shoppingPrice').value) || 0);
+      const date = document.getElementById('shoppingDate').value || getTodayStr();
+      const places = document.getElementById('shoppingPlaces').value.trim();
+      const note = document.getElementById('shoppingNote').value.trim();
+      if (!name) {
+        alert('请输入物品名称');
+        return;
+      }
+      const items = getShoppingItems();
+      if (shoppingEditId) {
+        const rec = items.find(r => r.id === shoppingEditId);
+        if (rec) {
+          rec.name = name;
+          rec.price = price;
+          rec.date = date;
+          rec.places = places;
+          rec.practicality = shoppingPracticality;
+          rec.happiness = shoppingHappiness;
+          rec.note = note;
+        }
+      } else {
+        items.unshift({
+          id: Date.now(),
+          name: name,
+          price: price,
+          date: date,
+          places: places,
+          practicality: shoppingPracticality,
+          happiness: shoppingHappiness,
+          note: note
+        });
+      }
+      data.modules.shopping.items = items;
+      saveData();
+      closeShoppingModal();
+      renderModule('shopping');
+      renderNav();
+    }
+
+    function deleteShoppingItem(id) {
+      if (!confirm('确定删除这条购物记录吗？')) return;
+      createAutoBackup('删除购物记录前');
+      captureUndoSnapshot('已删除购物记录');
+      data.modules.shopping.items = getShoppingItems().filter(r => r.id !== id);
+      saveData();
+      renderModule('shopping');
+      renderNav();
+    }
+
+    function shoppingStars(rating) {
+      const r = Math.min(5, Math.max(0, Number(rating) || 0));
+      return '★'.repeat(r) + '☆'.repeat(5 - r);
+    }
+
+    function shoppingScoreLabel(rating) {
+      const r = Number(rating) || 0;
+      if (r >= 4) return '很好';
+      if (r >= 3) return '还行';
+      if (r >= 1) return '一般';
+      return '';
+    }
+
+    function getShoppingVerdict(rec) {
+      const p = Number(rec.practicality) || 0;
+      const h = Number(rec.happiness) || 0;
+      if (p >= 4 && h >= 4) return { text: '值了', cls: 'worth' };
+      if (p + h >= 7) return { text: '还不错', cls: 'good' };
+      if (p + h >= 5) return { text: '一般般', cls: 'ok' };
+      return { text: '不太值', cls: 'waste' };
+    }
+
+    function formatShoppingMoney(num) {
+      return '¥' + Number(num).toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+    }
+
+    function renderShoppingModule(container) {
+      const records = getShoppingItems().slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || b.id - a.id);
+      const cfg = MODULE_CONFIG.shopping;
+      const totalSpent = records.reduce((sum, r) => sum + (Number(r.price) || 0), 0);
+      const hasPlan = records.some(r => r.status === 'plan');
+      const avg = (key) => {
+        const rated = records.filter(r => Number(r[key]) > 0);
+        if (!rated.length) return '--';
+        return (rated.reduce((sum, r) => sum + (Number(r[key]) || 0), 0) / rated.length).toFixed(1);
+      };
+
+      const recordsHtml = records.map(rec => {
+        const verdict = getShoppingVerdict(rec);
+        const practical = rec.practicality ? shoppingScoreLabel(rec.practicality) : '';
+        const happy = rec.happiness ? shoppingScoreLabel(rec.happiness) : '';
+        const planBadge = rec.status === 'plan' ? '<span class="shopping-plan-badge">计划中</span>' : '';
+        return `
+          <div class="shopping-card">
+            <div class="shopping-head">
+              <span class="shopping-date">📅 ${escapeHtml(rec.date || '未填写日期')}</span>
+              <div class="shopping-actions">
+                <button class="body-record-btn" onclick="openShoppingModal(${rec.id})" title="编辑">✏️</button>
+                <button class="body-record-btn del" onclick="deleteShoppingItem(${rec.id})" title="删除">×</button>
+              </div>
+            </div>
+            <div class="shopping-name-row">
+              <div class="shopping-name">🛍️ ${escapeHtml(rec.name)}</div>
+              ${planBadge}
+              <span class="shopping-price">${formatShoppingMoney(rec.price)}</span>
+              <span class="shopping-verdict ${verdict.cls}">${verdict.text}</span>
+            </div>
+            ${rec.places ? `
+              <div class="shopping-field">
+                <span class="shopping-field-label">📍 用在</span>
+                <span>${escapeHtml(rec.places)}</span>
+              </div>
+            ` : ''}
+            <div class="shopping-rating-row">
+              <div class="shopping-rating">
+                <span class="shopping-field-label">实用度</span>
+                <span class="shopping-rating-stars">${shoppingStars(rec.practicality)}</span>
+                ${practical ? `<span class="shopping-rating-note">${practical}</span>` : ''}
+              </div>
+              <div class="shopping-rating">
+                <span class="shopping-field-label">买后开心</span>
+                <span class="shopping-rating-stars">${shoppingStars(rec.happiness)}</span>
+                ${happy ? `<span class="shopping-rating-note">${happy}</span>` : ''}
+              </div>
+            </div>
+            ${rec.note ? `<div class="shopping-note">💬 ${escapeHtml(rec.note)}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <div class="module-title-bar">
+          <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
+          <div class="m-text">
+            <div class="m-name">${cfg.name}</div>
+            <div class="m-desc">${cfg.desc}</div>
+          </div>
+          <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${records.length}</div>
+        </div>
+
+        <div class="shopping-stats">
+          <div class="shopping-stat-card">
+            <div class="num">${records.length}</div>
+            <div class="label">物品件数</div>
+          </div>
+          <div class="shopping-stat-card">
+            <div class="num">${formatShoppingMoney(totalSpent)}</div>
+            <div class="label">${hasPlan ? '预算合计' : '累计花费'}</div>
+          </div>
+          <div class="shopping-stat-card">
+            <div class="num">${avg('practicality')}</div>
+            <div class="label">平均实用度</div>
+          </div>
+          <div class="shopping-stat-card">
+            <div class="num">${avg('happiness')}</div>
+            <div class="label">平均开心度</div>
+          </div>
+        </div>
+
+        <button class="shopping-add-btn" onclick="openShoppingModal()">＋ 记录购物</button>
+
+        ${records.length ? `
+          <div class="shopping-list">${recordsHtml}</div>
+        ` : `
+          <div class="empty-state">
+            <div class="big">🛒</div>
+            <p>还没有购物记录</p>
+            <p style="font-size:12px;color:var(--text2);margin-top:4px">记下价格、用在哪、实用度和买后开心度</p>
+          </div>
+        `}
+      `;
+    }
+
     function renderReadingModule(container) {
       const records = getReadingRecords().slice().sort((a, b) => String(b.date).localeCompare(String(a.date)) || b.id - a.id);
       const cfg = MODULE_CONFIG.reading;
@@ -8929,6 +9483,10 @@
       }
       if (moduleId === 'reading') {
         renderReadingModule(container);
+        return;
+      }
+      if (moduleId === 'shopping') {
+        renderShoppingModule(container);
         return;
       }
       if (moduleId === 'qa') {
