@@ -2769,6 +2769,8 @@
       .reading-stats { grid-template-columns: repeat(3, 1fr); gap: 6px; }
       .shopping-stats { grid-template-columns: repeat(2, 1fr); }
       .shopping-rating-row { grid-template-columns: 1fr; }
+      .tomorrow-plan-input-row { flex-direction: column; }
+      .tomorrow-plan-input-row button { width: 100%; }
     }
 
     /* ========== v20 视觉升级 ========== */
@@ -3069,6 +3071,132 @@
       border-color: rgba(0,230,118,0.22);
       background: rgba(0,230,118,0.1);
       color: #9df0bd;
+    }
+
+    /* 明日待办 */
+    .tomorrow-plan-card {
+      margin: 12px 0;
+      padding: 14px;
+      background: linear-gradient(160deg, rgba(255,159,67,0.09), rgba(255,107,157,0.04));
+      border: 1px solid rgba(255,159,67,0.16);
+      border-radius: var(--radius);
+    }
+    .tomorrow-plan-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #ffb86b;
+      margin-bottom: 10px;
+    }
+    .tomorrow-plan-input-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .tomorrow-plan-input-row input {
+      flex: 1;
+      min-width: 0;
+      background: rgba(0,0,0,0.24);
+      border: 1px solid rgba(255,159,67,0.18);
+      border-radius: 8px;
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+      padding: 10px 12px;
+      outline: none;
+    }
+    .tomorrow-plan-input-row input:focus {
+      border-color: rgba(255,159,67,0.5);
+      box-shadow: 0 0 15px rgba(255,159,67,0.12);
+    }
+    .tomorrow-plan-input-row input::placeholder { color: #5a5a7a; }
+    .tomorrow-plan-input-row button {
+      flex-shrink: 0;
+      border: 1px solid rgba(255,159,67,0.3);
+      background: rgba(255,159,67,0.12);
+      color: #ffb86b;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tomorrow-plan-input-row button:hover {
+      background: rgba(255,159,67,0.2);
+      border-color: rgba(255,159,67,0.55);
+    }
+    .tomorrow-plan-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text2);
+      margin: 10px 0 6px;
+    }
+    .tomorrow-plan-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 6px;
+    }
+    .tomorrow-plan-item.due {
+      border-color: rgba(255,159,67,0.35);
+      background: rgba(255,159,67,0.08);
+    }
+    .tomorrow-plan-item.done {
+      border-color: rgba(0,230,118,0.25);
+      background: rgba(0,230,118,0.06);
+    }
+    .tomorrow-plan-date {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffb86b;
+    }
+    .tomorrow-plan-item.done .tomorrow-plan-date { color: #9df0bd; }
+    .tomorrow-plan-text {
+      flex: 1;
+      min-width: 0;
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .tomorrow-plan-check,
+    .tomorrow-plan-del {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .tomorrow-plan-check {
+      background: rgba(255,159,67,0.15);
+      color: #ffb86b;
+    }
+    .tomorrow-plan-check:hover { background: rgba(255,159,67,0.28); }
+    .tomorrow-plan-check.done {
+      background: rgba(0,230,118,0.12);
+      color: #9df0bd;
+      cursor: default;
+    }
+    .tomorrow-plan-del {
+      background: transparent;
+      color: #5a5a7a;
+    }
+    .tomorrow-plan-del:hover { color: var(--danger); background: rgba(255,82,82,0.12); }
+    .tomorrow-plan-empty {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
     }
 
     .weekly-report-grid {
@@ -4790,6 +4918,8 @@
         const saved = JSON.parse(localStorage.getItem(LS_KEY));
         if (saved && saved.modules) {
           // 数据迁移：确保 finance 模块有完整结构
+          if (!saved.modules.daily) saved.modules.daily = {};
+          if (!Array.isArray(saved.modules.daily.tomorrowPlans)) saved.modules.daily.tomorrowPlans = [];
           if (!saved.modules.finance) saved.modules.finance = {};
           const fin = saved.modules.finance;
           if (fin.targetAmount === undefined) fin.targetAmount = 10000;
@@ -4890,6 +5020,16 @@
           repaired = true;
         }
       });
+      if (!data.modules.daily || !Array.isArray(data.modules.daily.tomorrowPlans)) {
+        if (data.modules.daily) data.modules.daily.tomorrowPlans = [];
+        repaired = true;
+      } else {
+        const validPlans = data.modules.daily.tomorrowPlans.filter(p => p && p.id && p.text && p.targetDate);
+        if (validPlans.length !== data.modules.daily.tomorrowPlans.length) {
+          data.modules.daily.tomorrowPlans = validPlans;
+          repaired = true;
+        }
+      }
       const fin = data.modules.finance;
       if (!fin) {
         data.modules.finance = base.finance;
@@ -5108,6 +5248,10 @@
         if (!s.smartMode || hasPendingCheckins()) {
           sendReminderNotification('成长打卡', s.smartMode ? '今天还有未完成项目，记得完成打卡' : '到打卡时间了，记得完成今天的习惯');
         }
+        const pendingPlans = getTomorrowPlans().filter(p => p.targetDate <= todayStr && !p.doneDate);
+        if (pendingPlans.length) {
+          sendReminderNotification('昨日待办提醒', '还没记录：' + pendingPlans.slice(0, 2).map(p => p.text).join('、'));
+        }
       }
       const slotTimes = s.slotTimes || {};
       const slotLabels = { morning: '早晨', noon: '中午', evening: '晚上', workout: '运动后' };
@@ -5279,6 +5423,7 @@
         achievements: {},
         modules: {
           daily: {
+            tomorrowPlans: [],
             habits: [
               { id: 1, name: '戒除', icon: '🚫', type: 'daily', records: [] },
               { id: 2, name: '吃早饭', icon: '🍳', type: 'daily', records: [] },
@@ -9535,6 +9680,8 @@
           <button onclick="addHabit()">添加</button>
         </div>
 
+        ${moduleId === 'daily' ? renderTomorrowPlanHtml() : ''}
+
         ${moduleId === 'fitness' ? renderSleepTrainingHtml() : ''}
 
         ${hasHabits ? `
@@ -9639,6 +9786,116 @@
           ${btnHtml}
           <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
           <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
+        </div>
+      `;
+    }
+
+    function getTomorrowPlans() {
+      return (data.modules.daily && data.modules.daily.tomorrowPlans) || [];
+    }
+
+    function getTomorrowDateStr() {
+      const d = new Date();
+      d.setDate(d.getDate() + 1);
+      return getDateStr(d);
+    }
+
+    function getPlanDateLabel(dateStr) {
+      if (dateStr === getTodayStr()) return '今天';
+      if (dateStr === getTomorrowDateStr()) return '明天';
+      const d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d.getTime())) return dateStr;
+      return (d.getMonth() + 1) + '月' + d.getDate() + '日';
+    }
+
+    function addTomorrowPlan() {
+      const input = document.getElementById('tomorrowPlanInput');
+      if (!input) return;
+      const text = input.value.trim();
+      if (!text) {
+        alert('请先写下明天要做的事');
+        return;
+      }
+      const plans = getTomorrowPlans();
+      plans.push({
+        id: Date.now(),
+        text: text,
+        targetDate: getTomorrowDateStr(),
+        createdAt: getTodayStr(),
+        doneDate: ''
+      });
+      data.modules.daily.tomorrowPlans = plans;
+      saveData();
+      input.value = '';
+      renderModule('daily');
+      updateDailyHero();
+      showInfoToast('已写进明天待办');
+    }
+
+    function markTomorrowPlanDone(id) {
+      const plan = getTomorrowPlans().find(p => p.id === id);
+      if (!plan) return;
+      if (plan.targetDate <= getTodayStr() && !plan.doneDate) {
+        plan.doneDate = getTodayStr();
+        saveData();
+        renderModule('daily');
+        updateDailyHero();
+        showInfoToast('已记录完成');
+      }
+    }
+
+    function deleteTomorrowPlan(id) {
+      if (!confirm('确定删除这条待办吗？')) return;
+      data.modules.daily.tomorrowPlans = getTomorrowPlans().filter(p => p.id !== id);
+      saveData();
+      renderModule('daily');
+      updateDailyHero();
+    }
+
+    function renderTomorrowPlanHtml() {
+      const todayStr = getTodayStr();
+      const plans = getTomorrowPlans().slice().sort((a, b) => String(a.targetDate).localeCompare(String(b.targetDate)) || a.id - b.id);
+      const pendingItems = plans.filter(p => p.targetDate <= todayStr && !p.doneDate);
+      const doneTodayItems = plans.filter(p => p.targetDate === todayStr && p.doneDate);
+      const futureItems = plans.filter(p => p.targetDate > todayStr && !p.doneDate);
+      const pendingHtml = pendingItems.map(p => `
+        <div class="tomorrow-plan-item due">
+          <span class="tomorrow-plan-date">⏰ ${getPlanDateLabel(p.targetDate)}</span>
+          <span class="tomorrow-plan-text">${escapeHtml(p.text)}</span>
+          <button class="tomorrow-plan-check" onclick="markTomorrowPlanDone(${p.id})" title="记录完成">✓</button>
+          <button class="tomorrow-plan-del" onclick="deleteTomorrowPlan(${p.id})" title="删除">×</button>
+        </div>
+      `).join('');
+      const doneHtml = doneTodayItems.map(p => `
+        <div class="tomorrow-plan-item done">
+          <span class="tomorrow-plan-date">✅ ${getPlanDateLabel(p.targetDate)}</span>
+          <span class="tomorrow-plan-text">${escapeHtml(p.text)}</span>
+          <button class="tomorrow-plan-check done" title="今天已记录">✓</button>
+          <button class="tomorrow-plan-del" onclick="deleteTomorrowPlan(${p.id})" title="删除">×</button>
+        </div>
+      `).join('');
+      const futureHtml = futureItems.map(p => `
+        <div class="tomorrow-plan-item future">
+          <span class="tomorrow-plan-date">📅 ${getPlanDateLabel(p.targetDate)}</span>
+          <span class="tomorrow-plan-text">${escapeHtml(p.text)}</span>
+          <button class="tomorrow-plan-del" onclick="deleteTomorrowPlan(${p.id})" title="删除">×</button>
+        </div>
+      `).join('');
+      const hasAny = pendingHtml || doneHtml || futureHtml;
+      return `
+        <div class="tomorrow-plan-card">
+          <div class="tomorrow-plan-title">📌 明日待办</div>
+          <div class="tomorrow-plan-input-row">
+            <input type="text" id="tomorrowPlanInput" placeholder="写下明天要做的事..." maxlength="60" onkeypress="if(event.key==='Enter') addTomorrowPlan()">
+            <button onclick="addTomorrowPlan()">写好明天</button>
+          </div>
+          ${pendingHtml ? '<div class="tomorrow-plan-section-title">⏰ 昨天写好的今天待办</div>' : ''}
+          ${pendingHtml}
+          ${doneHtml ? '<div class="tomorrow-plan-section-title">✅ 今天已记录的待办</div>' : ''}
+          ${doneHtml}
+          ${futureHtml ? '<div class="tomorrow-plan-section-title">🗓 已写好的未来待办</div>' : ''}
+          ${futureHtml}
+          ${!hasAny ? '<div class="tomorrow-plan-empty">今天先写一件明天要做的事，明天会自动提醒你记录。</div>' : ''}
         </div>
       `;
     }
@@ -9754,6 +10011,15 @@
       const readingToday = getReadingRecords().some(r => r.date === todayStr);
       const finance = getFinanceStats();
       if (pendingHabits) tips.push({ text: '还有 ' + pendingHabits + ' 个打卡未完成', cls: 'warn' });
+      const planItems = getTomorrowPlans();
+      const pendingPlans = planItems.filter(p => p.targetDate <= todayStr && !p.doneDate);
+      const futurePlans = planItems.filter(p => p.targetDate > todayStr && !p.doneDate);
+      if (pendingPlans.length) {
+        const names = pendingPlans.slice(0, 2).map(p => p.text).join('、');
+        tips.push({ text: '昨天写的待办还没记录：' + names + (pendingPlans.length > 2 ? ' 等' + pendingPlans.length + '项' : ''), cls: 'warn' });
+      } else if (futurePlans.length) {
+        tips.push({ text: '明天有 ' + futurePlans.length + ' 件事，已提前写好', cls: '' });
+      }
       if (pendingSupps.length) tips.push({ text: '还有 ' + pendingSupps.length + ' 种补剂未服用', cls: 'warn' });
       if (pendingSleep.length) tips.push({ text: '睡眠流程还有 ' + pendingSleep.length + ' 项未完成', cls: 'warn' });
       if (!readingToday) tips.push({ text: '今天还没有看书', cls: '' });
