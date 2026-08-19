@@ -266,6 +266,17 @@
         starDrift var(--drift-duration) ease-in-out var(--twinkle-delay) infinite alternate,
         starTwinkle var(--twinkle-duration) ease-in-out var(--twinkle-delay) infinite alternate;
     }
+    body:not(.motion-on) .bg-mesh,
+    body:not(.motion-on) .bg-mesh::before,
+    body:not(.motion-on) .bg-swirl,
+    body:not(.motion-on) .bg-particles {
+      display: none;
+    }
+    @media (max-width: 600px) {
+      .bg-swirl { display: none; }
+      .bg-mesh, .bg-mesh::before { filter: blur(20px); }
+      .bg-particle { box-shadow: none; }
+    }
     @keyframes starDrift {
       from { transform: translate3d(0, 0, 0); }
       to { transform: translate3d(var(--dx), var(--dy), 0); }
@@ -2712,6 +2723,28 @@
       border-radius: 7px;
       white-space: nowrap;
     }
+    .shopping-status-btn {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 7px;
+      border: 1px solid;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: transparent;
+    }
+    .shopping-status-btn.plan {
+      color: #00d4ff;
+      border-color: rgba(0,212,255,0.3);
+      background: rgba(0,212,255,0.1);
+    }
+    .shopping-status-btn.bought {
+      color: #00e676;
+      border-color: rgba(0,230,118,0.3);
+      background: rgba(0,230,118,0.1);
+    }
+    .shopping-status-btn:active { transform: scale(0.96); }
     .shopping-verdict {
       margin-left: auto;
       font-size: 11px;
@@ -3805,6 +3838,29 @@
       color: var(--text);
       margin-bottom: 10px;
     }
+    .sleep-quick-nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .sleep-quick-btn {
+      flex: 1;
+      padding: 9px 0;
+      border-radius: 8px;
+      border: 1px solid rgba(0,212,255,0.16);
+      background: rgba(0,212,255,0.06);
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sleep-quick-btn.active {
+      color: #0a0a1a;
+      background: linear-gradient(135deg, #00d4ff, #4d96ff);
+      border-color: transparent;
+    }
+    .sleep-quick-btn:hover:not(.active) { border-color: rgba(0,212,255,0.4); color: var(--text); }
     .sleep-week-list { display: flex; flex-direction: column; gap: 8px; }
     .sleep-preview-row {
       display: flex;
@@ -3834,6 +3890,19 @@
     }
     .sleep-preview-badge.night { color: #bd34fe; border-color: rgba(189,52,254,0.25); background: rgba(189,52,254,0.08); }
     .sleep-preview-meta { flex: 1; min-width: 0; font-size: 11px; color: var(--text2); line-height: 1.5; }
+
+    @media (max-width: 600px) {
+      :root {
+        --card: rgba(24,26,44,0.94);
+      }
+      * {
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+      }
+      .overlay {
+        background: rgba(4,4,14,0.94);
+      }
+    }
   </style>
 </head>
 <body>
@@ -4402,6 +4471,13 @@
         <input type="text" class="fund-form-input" id="shoppingName" placeholder="如：筋膜枪、降噪耳机、护腰靠垫" maxlength="40">
       </div>
       <div class="body-form-row">
+        <label>状态</label>
+        <select class="fund-form-input" id="shoppingStatus">
+          <option value="plan">📋 计划中</option>
+          <option value="bought">✅ 已购买</option>
+        </select>
+      </div>
+      <div class="body-form-row">
         <div class="form-grid">
           <div>
             <label>价格（元）</label>
@@ -4523,7 +4599,7 @@
       const wrap = document.getElementById('starDustWrap');
       if (!wrap) return;
       wrap.innerHTML = '';
-      const count = window.innerWidth < 600 ? 16 : 26;
+      const count = window.innerWidth < 600 ? 10 : 18;
       for (let i = 0; i < count; i++) {
         const star = document.createElement('span');
         star.className = 'bg-particle';
@@ -4571,7 +4647,7 @@
       game:    { name: '游戏娱乐', icon: '🎮', color: '#bd34fe', bg: 'linear-gradient(135deg, rgba(189,52,254,0.15), rgba(255,107,107,0.1))', desc: '休闲娱乐 · 放松身心' },
       fitness: { name: '健身记录', icon: '💪', color: '#6bcb77', bg: 'linear-gradient(135deg, rgba(107,203,119,0.15), rgba(0,212,255,0.1))', desc: '训练打卡 · 身体管理' },
       finance: { name: '财务管理', icon: '💰', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '理财记账 · 财富积累' },
-      shopping: { name: '购物清单', icon: '🛒', color: '#ff6b9d', bg: 'linear-gradient(135deg, rgba(255,107,157,0.15), rgba(255,215,64,0.1))', desc: '买过什么 · 值不值得' },
+      shopping: { name: '购物清单', icon: '🛒', color: '#ff6b9d', bg: 'linear-gradient(135deg, rgba(255,107,157,0.15), rgba(255,215,64,0.1))', desc: '计划购买 · 值不值得' },
       cycle:   { name: '周期打卡', icon: '⏰', color: '#00d4ff', bg: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(100,255,218,0.1))', desc: '周期性任务 · 定时提醒' },
       free:    { name: '自由打卡', icon: '🌟', color: '#ff6b6b', bg: 'linear-gradient(135deg, rgba(255,107,107,0.15), rgba(189,52,254,0.1))', desc: '自由安排 · 灵活记录' },
       manifestation: { name: '显化记录', icon: '✨', color: '#ffd740', bg: 'linear-gradient(135deg, rgba(255,215,64,0.15), rgba(255,159,67,0.1))', desc: '意念显化 · 愿望成真' },
@@ -4581,8 +4657,8 @@
       qa: { name: '问题档案', icon: '❓', color: '#ff9f43', bg: 'linear-gradient(135deg, rgba(255,159,67,0.15), rgba(255,107,107,0.1))', desc: '日常疑问 · 答案沉淀' }
     };
 
-    const MODULE_ORDER = ['daily','game','cycle','free','finance','shopping','manifestation','supplements','body','reading','qa','study','sleepPlan','fitness'];
-    const NAV_PRIMARY_IDS = ['daily','study','sleepPlan','finance','supplements','fitness'];
+    const MODULE_ORDER = ['daily','game','cycle','free','finance','shopping','fitness','supplements','body','reading','qa','study','sleepPlan','manifestation'];
+    const NAV_PRIMARY_IDS = ['daily','study','sleepPlan','finance','supplements','manifestation'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
     const DAILY_QUOTES = [
       '今天也是值得认真过的一天。',
@@ -4876,7 +4952,7 @@
         { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
         { id: 4, name: 'MegLife 前列腺六合一', icon: '🎯', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '番茄红素、锯棕榈、南瓜籽等，针对前列腺/泌尿支持。', warning: '过量可能胃肠不适；前列腺问题建议先就医' },
         { id: 5, name: 'VORSE 锌镁片', icon: '⚡', dosage: '按说明 1-2片', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '锌随餐减少胃部刺激，镁睡前有助放松。避免和高钙产品同服。', warning: '锌过量影响铜吸收；镁过量致腹泻；不要与其他锌镁产品叠加' },
-        { id: 6, name: '肌酸软糖', icon: '🍬', dosage: '3-5g', time: '运动后', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后或随餐服用，搭配葡萄糖吸收更佳。', warning: '过量可能导致胃肠不适、水肿' },
+        { id: 6, name: '肌酸软糖', icon: '🍬', dosage: '3-5g', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '每天早上随早餐服用，搭配葡萄糖吸收更佳。', warning: '过量可能导致胃肠不适、水肿' },
         { id: 7, name: '鱼油', icon: '🐟', dosage: '1-2粒', time: '午餐/晚餐', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '随餐服用减少鱼腥味，脂肪帮助吸收。', warning: '过量可能影响凝血功能' },
         { id: 8, name: 'Supovita 12合一多维牡蛎片', icon: '💊', dosage: '按说明 1片', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '复合维生素+牡蛎提取物，含锌、硒等，随餐服用。', warning: '含锌，避免与其他锌产品叠加；脂溶性维生素长期过量可能积累' },
         { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '随餐', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '随餐服用减少胃部刺激。', warning: '过量可能加重肝脏负担' },
@@ -4961,6 +5037,11 @@
               if (item.name === '小分子液体钙' && item.time === '晚餐后/睡前' && item.timeSlot === 'evening') {
                 item.time = '午餐后';
                 item.timeSlot = 'noon';
+              }
+              if (item.name === '肌酸软糖') {
+                item.time = '早餐后';
+                item.timeSlot = 'morning';
+                item.note = '每天早上随早餐服用，搭配葡萄糖吸收更佳。';
               }
             });
           }
@@ -5590,7 +5671,7 @@
     function openNavMore() {
       const grid = document.getElementById('navMoreGrid');
       if (grid) {
-        grid.innerHTML = MODULE_ORDER.map(id => {
+        grid.innerHTML = MODULE_ORDER.filter(id => NAV_PRIMARY_IDS.indexOf(id) === -1).map(id => {
           const cfg = MODULE_CONFIG[id];
           const isActive = activeModule === id;
           return `
@@ -6117,7 +6198,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v54');
+      info.push('版本: v67');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -6140,6 +6221,15 @@
     const BACKUP_PROMPT_KEY = LS_KEY + '_backup_prompt';
     const MAX_AUTO_BACKUPS = 20;
 
+    function isBackupReminderDue() {
+      try {
+        const last = parseInt(localStorage.getItem(BACKUP_PROMPT_KEY) || '0', 10);
+        return !last || Date.now() - last > 7 * 24 * 60 * 60 * 1000;
+      } catch(e) {
+        return false;
+      }
+    }
+
     function simpleHash(str) {
       let h = 5381;
       for (let i = 0; i < str.length; i++) {
@@ -6158,13 +6248,9 @@
     }
 
     function maybePromptBackup() {
-      try {
-        const last = parseInt(localStorage.getItem(BACKUP_PROMPT_KEY) || '0', 10);
-        if (!last || Date.now() - last > 7 * 24 * 60 * 60 * 1000) {
-          localStorage.setItem(BACKUP_PROMPT_KEY, String(Date.now()));
-          setTimeout(() => showInfoToast('💾 距上次导出备份已超过 7 天，建议在“备份”里导出一份'), 1200);
-        }
-      } catch(e) {}
+      if (isBackupReminderDue()) {
+        setTimeout(() => showInfoToast('💾 距上次导出备份已超过 7 天，建议在“备份”里导出一份'), 1200);
+      }
     }
 
     function getAutoBackups() {
@@ -6200,7 +6286,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v54',
+        version: 'v67',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -8140,6 +8226,18 @@
       return data.modules.sleepPlan;
     }
 
+    function getSleepRecordDate(dateStr) {
+      const todayStr = getTodayStr();
+      if (dateStr >= todayStr) return dateStr;
+      const d = new Date(dateStr + 'T00:00:00');
+      d.setDate(d.getDate() + 1);
+      const nextDay = getDateStr(d);
+      if (getShiftStateForDate(dateStr) === '夜班' && getShiftStateForDate(nextDay) === '下夜班') {
+        return nextDay;
+      }
+      return dateStr;
+    }
+
     function getShiftStateForDate(dateStr) {
       const cycleHabit = (data.modules.cycle && data.modules.cycle.habits || []).find(h => h.id === 16 && h.type === 'cycle');
       if (cycleHabit) return getCycleState(cycleHabit, dateStr);
@@ -8203,7 +8301,12 @@
       }
       const plan = getSleepPlan();
       if (!plan.sleepHours) plan.sleepHours = {};
-      plan.sleepHours[sleepViewDate] = Math.round(raw * 2) / 2;
+      const recordDate = getSleepRecordDate(sleepViewDate);
+      if (recordDate !== sleepViewDate) {
+        sleepViewDate = recordDate;
+        showAchievementToast('睡眠已按醒来当天记录');
+      }
+      plan.sleepHours[recordDate] = Math.round(raw * 2) / 2;
       saveData();
       renderModule('sleepPlan');
       updateTotalStats();
@@ -8227,6 +8330,7 @@
             <button onclick="saveSleepHours()" ${isFuture ? 'disabled' : ''}>保存</button>
           </div>
           <div class="sleep-record-hint">计划目标约 ${target} 小时${actual !== null ? ' · 已记录 ' + actual + ' 小时' : ' · 记录后用于近 7 天趋势'}</div>
+          <div class="sleep-record-hint">凌晨睡觉也按醒来当天记录，夜班后的睡眠记在今天</div>
         </div>
       `;
     }
@@ -8424,6 +8528,12 @@
       const todayStr = getTodayStr();
       const isToday = dateStr === todayStr;
       const isFuture = dateStr > todayStr;
+      const prevDay = new Date(todayStr + 'T00:00:00');
+      prevDay.setDate(prevDay.getDate() - 1);
+      const yesterdayStr = getDateStr(prevDay);
+      const nextDay = new Date(todayStr + 'T00:00:00');
+      nextDay.setDate(nextDay.getDate() + 1);
+      const tomorrowStr = getDateStr(nextDay);
       const state = getShiftStateForDate(dateStr);
       const isNight = state === '夜班';
       const nightWindow = isNight ? getSleepNightWindow(dateStr) : (state === '下夜班' ? getPreviousNightWindow(dateStr) : null);
@@ -8526,6 +8636,12 @@
         `}
 
         <div class="sleep-supp-note">💊 补剂照常：肌酸软糖每天 2 颗固定早餐后；镁片睡前 30-60 分钟。</div>
+
+        <div class="sleep-quick-nav">
+          <button class="sleep-quick-btn ${dateStr === yesterdayStr ? 'active' : ''}" onclick="setSleepDate('${yesterdayStr}')">昨天</button>
+          <button class="sleep-quick-btn ${isToday ? 'active' : ''}" onclick="setSleepDate('${todayStr}')">今天</button>
+          <button class="sleep-quick-btn ${dateStr === tomorrowStr ? 'active' : ''}" onclick="setSleepDate('${tomorrowStr}')">明天</button>
+        </div>
 
         <div class="sleep-week-title">未来 7 天排班</div>
         ${renderSleepWeekPreviewHtml(dateStr)}
@@ -8950,8 +9066,9 @@
       shoppingEditId = rec ? rec.id : null;
       shoppingPracticality = rec && rec.practicality ? Math.min(5, Math.max(1, rec.practicality)) : 3;
       shoppingHappiness = rec && rec.happiness ? Math.min(5, Math.max(1, rec.happiness)) : 4;
-      document.getElementById('shoppingModalTitle').textContent = rec ? '编辑购物记录' : '记录购物';
+      document.getElementById('shoppingModalTitle').textContent = rec ? '编辑购物项目' : '添加购物项目';
       document.getElementById('shoppingName').value = rec ? rec.name : '';
+      document.getElementById('shoppingStatus').value = rec ? (rec.status === 'plan' ? 'plan' : 'bought') : 'bought';
       document.getElementById('shoppingPrice').value = rec && typeof rec.price === 'number' ? rec.price : '';
       document.getElementById('shoppingDate').value = rec ? rec.date : getTodayStr();
       document.getElementById('shoppingPlaces').value = rec ? (rec.places || '') : '';
@@ -8974,6 +9091,7 @@
       const date = document.getElementById('shoppingDate').value || getTodayStr();
       const places = document.getElementById('shoppingPlaces').value.trim();
       const note = document.getElementById('shoppingNote').value.trim();
+      const status = document.getElementById('shoppingStatus').value === 'plan' ? 'plan' : 'bought';
       if (!name) {
         alert('请输入物品名称');
         return;
@@ -8985,6 +9103,7 @@
           rec.name = name;
           rec.price = price;
           rec.date = date;
+          rec.status = status;
           rec.places = places;
           rec.practicality = shoppingPracticality;
           rec.happiness = shoppingHappiness;
@@ -8996,6 +9115,7 @@
           name: name,
           price: price,
           date: date,
+          status: status,
           places: places,
           practicality: shoppingPracticality,
           happiness: shoppingHappiness,
@@ -9005,6 +9125,15 @@
       data.modules.shopping.items = items;
       saveData();
       closeShoppingModal();
+      renderModule('shopping');
+      renderNav();
+    }
+
+    function toggleShoppingStatus(id) {
+      const rec = getShoppingItems().find(r => r.id === id);
+      if (!rec) return;
+      rec.status = rec.status === 'plan' ? 'bought' : 'plan';
+      saveData();
       renderModule('shopping');
       renderNav();
     }
@@ -9048,19 +9177,22 @@
     function renderShoppingModule(container) {
       const records = getShoppingItems().slice().sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')) || b.id - a.id);
       const cfg = MODULE_CONFIG.shopping;
-      const totalSpent = records.reduce((sum, r) => sum + (Number(r.price) || 0), 0);
-      const hasPlan = records.some(r => r.status === 'plan');
-      const avg = (key) => {
-        const rated = records.filter(r => Number(r[key]) > 0);
+      const boughtItems = records.filter(r => r.status !== 'plan');
+      const planItems = records.filter(r => r.status === 'plan');
+      const totalSpent = boughtItems.reduce((sum, r) => sum + (Number(r.price) || 0), 0);
+      const planBudget = planItems.reduce((sum, r) => sum + (Number(r.price) || 0), 0);
+      const avgScore = (() => {
+        const rated = boughtItems.filter(r => (Number(r.practicality) || 0) > 0 && (Number(r.happiness) || 0) > 0);
         if (!rated.length) return '--';
-        return (rated.reduce((sum, r) => sum + (Number(r[key]) || 0), 0) / rated.length).toFixed(1);
-      };
+        return (rated.reduce((sum, r) => sum + ((Number(r.practicality) || 0) + (Number(r.happiness) || 0)) / 2, 0) / rated.length).toFixed(1);
+      })();
 
       const recordsHtml = records.map(rec => {
         const verdict = getShoppingVerdict(rec);
         const practical = rec.practicality ? shoppingScoreLabel(rec.practicality) : '';
         const happy = rec.happiness ? shoppingScoreLabel(rec.happiness) : '';
-        const planBadge = rec.status === 'plan' ? '<span class="shopping-plan-badge">计划中</span>' : '';
+        const isPlan = rec.status === 'plan';
+        const statusBtn = `<button class="shopping-status-btn ${isPlan ? 'plan' : 'bought'}" onclick="toggleShoppingStatus(${rec.id})" title="点击切换状态">${isPlan ? '📋 计划中' : '✅ 已购买'}</button>`;
         return `
           <div class="shopping-card">
             <div class="shopping-head">
@@ -9072,7 +9204,7 @@
             </div>
             <div class="shopping-name-row">
               <div class="shopping-name">🛍️ ${escapeHtml(rec.name)}</div>
-              ${planBadge}
+              ${statusBtn}
               <span class="shopping-price">${formatShoppingMoney(rec.price)}</span>
               <span class="shopping-verdict ${verdict.cls}">${verdict.text}</span>
             </div>
@@ -9111,32 +9243,32 @@
 
         <div class="shopping-stats">
           <div class="shopping-stat-card">
-            <div class="num">${records.length}</div>
-            <div class="label">物品件数</div>
+            <div class="num">${boughtItems.length}/${records.length}</div>
+            <div class="label">已购买</div>
           </div>
           <div class="shopping-stat-card">
             <div class="num">${formatShoppingMoney(totalSpent)}</div>
-            <div class="label">${hasPlan ? '预算合计' : '累计花费'}</div>
+            <div class="label">已购花费</div>
           </div>
           <div class="shopping-stat-card">
-            <div class="num">${avg('practicality')}</div>
-            <div class="label">平均实用度</div>
+            <div class="num">${formatShoppingMoney(planBudget)}</div>
+            <div class="label">计划预算</div>
           </div>
           <div class="shopping-stat-card">
-            <div class="num">${avg('happiness')}</div>
-            <div class="label">平均开心度</div>
+            <div class="num">${avgScore}</div>
+            <div class="label">已购平均评分</div>
           </div>
         </div>
 
-        <button class="shopping-add-btn" onclick="openShoppingModal()">＋ 记录购物</button>
+        <button class="shopping-add-btn" onclick="openShoppingModal()">＋ 添加项目</button>
 
         ${records.length ? `
           <div class="shopping-list">${recordsHtml}</div>
         ` : `
           <div class="empty-state">
             <div class="big">🛒</div>
-            <p>还没有购物记录</p>
-            <p style="font-size:12px;color:var(--text2);margin-top:4px">记下价格、用在哪、实用度和买后开心度</p>
+            <p>还没有购物项目</p>
+            <p style="font-size:12px;color:var(--text2);margin-top:4px">可以添加计划中的项目，或记录已经买过的物品</p>
           </div>
         `}
       `;
@@ -10010,6 +10142,7 @@
       const pendingSleep = sleepSteps.filter(s => sleepDone.indexOf(s.id) === -1);
       const readingToday = getReadingRecords().some(r => r.date === todayStr);
       const finance = getFinanceStats();
+      if (isBackupReminderDue()) tips.push({ text: '超过 7 天未导出备份，建议尽快备份', cls: 'warn' });
       if (pendingHabits) tips.push({ text: '还有 ' + pendingHabits + ' 个打卡未完成', cls: 'warn' });
       const planItems = getTomorrowPlans();
       const pendingPlans = planItems.filter(p => p.targetDate <= todayStr && !p.doneDate);
