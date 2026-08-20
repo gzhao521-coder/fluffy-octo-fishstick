@@ -931,6 +931,12 @@
       background: linear-gradient(90deg, transparent, rgba(100,255,218,0.3), transparent);
       pointer-events: none;
     }
+    body.nav-more-open .bottom-nav {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(12px);
+      pointer-events: none;
+    }
     .undo-bar {
       position: fixed;
       left: 50%;
@@ -1071,6 +1077,18 @@
       z-index: 3;
     }
     .nav-item.has-pending .nav-dot { display: block; }
+    .nav-item.nav-more-btn .nav-dot { display: none; }
+    .nav-item.nav-more-btn.active {
+      background: transparent;
+      box-shadow: none;
+    }
+    .nav-item.nav-more-btn.active .nav-icon {
+      background: transparent;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
+      filter: none;
+    }
     .nav-more-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1093,8 +1111,22 @@
       cursor: pointer;
       transition: all 0.2s ease;
       position: relative;
+      -webkit-user-select: none;
+      user-select: none;
     }
-    .nav-more-item .nav-icon { font-size: 22px; line-height: 1; }
+    .nav-more-item .nav-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.05);
+      font-size: 22px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
     .nav-more-item:hover {
       color: var(--text);
       border-color: rgba(100,255,218,0.2);
@@ -5099,6 +5131,13 @@
         if (!mod || !Array.isArray(mod.habits)) {
           if (mod) mod.habits = [];
           repaired = true;
+        } else {
+          mod.habits.forEach(h => {
+            if (!Array.isArray(h.records)) {
+              h.records = [];
+              repaired = true;
+            }
+          });
         }
       });
       if (!data.modules.daily || !Array.isArray(data.modules.daily.tomorrowPlans)) {
@@ -5312,6 +5351,7 @@
         for (const h of mod.habits) {
           if (h.type === 'daily' && !h.records.includes(todayStr)) return true;
           if (h.type === 'period' && isPeriodDay(h, todayStr) && !h.records.includes(todayStr)) return true;
+          if (h.type === 'cycle' && isCycleCheckable(h, getCycleState(h, todayStr)) && !h.records.includes(todayStr)) return true;
         }
       }
       return false;
@@ -5464,6 +5504,10 @@
       const diff = daysBetween(habit.cycleStart, dateStr);
       const idx = ((diff % habit.cycleLength) + habit.cycleLength) % habit.cycleLength;
       return habit.cycleStates[idx];
+    }
+
+    function isCycleCheckable(habit, state) {
+      return !!state && /喂/.test(state);
     }
 
     function isPeriodDay(habit, dateStr) {
@@ -5625,6 +5669,7 @@
       localStorage.setItem(LS_KEY + '_active', moduleId);
       const navMoreOverlay = document.getElementById('navMoreOverlay');
       if (navMoreOverlay) navMoreOverlay.classList.remove('show');
+      document.body.classList.remove('nav-more-open');
       renderNav();
       renderModule(moduleId);
       if (moduleId === 'finance') {
@@ -5651,6 +5696,7 @@
         for (const h of mod.habits) {
           if (h.type === 'daily' && !h.records.includes(today)) return true;
           if (h.type === 'period' && isPeriodDay(h, today) && !h.records.includes(today)) return true;
+          if (h.type === 'cycle' && isCycleCheckable(h, getCycleState(h, today)) && !h.records.includes(today)) return true;
         }
       }
       return false;
@@ -5684,6 +5730,7 @@
       }
       const overlay = document.getElementById('navMoreOverlay');
       if (overlay) overlay.classList.add('show');
+      document.body.classList.add('nav-more-open');
     }
 
     function closeNavMore(e) {
@@ -5691,6 +5738,7 @@
       if (!overlay) return;
       if (e && e.target !== overlay) return;
       overlay.classList.remove('show');
+      document.body.classList.remove('nav-more-open');
     }
 
     function scrollActiveNavIntoView() {
@@ -6198,7 +6246,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v67');
+      info.push('版本: v70');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -6286,7 +6334,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v67',
+        version: 'v70',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -7856,7 +7904,17 @@
         curcumin: /姜黄/.test(text),
         arginine: /精氨酸|瓜氨酸/.test(text),
         beetroot: /甜菜根/.test(text),
-        fenugreek: /葫芦巴/.test(text)
+        fenugreek: /葫芦巴/.test(text),
+        coq10: /辅酶Q10|辅酶 q10|CoQ10/.test(text),
+        sawPalmetto: /锯棕榈|前列腺六合一/.test(text),
+        creatine: /肌酸/.test(text),
+        milkThistle: /水飞蓟/.test(text),
+        cordyceps: /蛹虫草/.test(text),
+        maca: /玛咖/.test(text),
+        multi: /多维|复合维生素/.test(text),
+        whey: /增肌粉/.test(text),
+        collagen: /胶原蛋白/.test(text),
+        rice: /营养米粉/.test(text)
       };
     }
 
@@ -7867,8 +7925,47 @@
       if (count('zinc') >= 2) warnings.push({ title: '多个产品含锌', text: '检测到 ' + count('zinc') + ' 个含锌产品，注意每天锌总量不宜长期超过 40mg。' });
       if (count('magnesium') >= 2) warnings.push({ title: '多个产品含镁', text: '检测到 ' + count('magnesium') + ' 个含镁产品，补充剂镁建议每天 200-400mg，过量易腹泻。' });
       if (count('zinc') >= 1 && count('calcium') >= 1) warnings.push({ title: '锌与钙建议错开', text: '锌和钙会互相影响吸收，建议间隔 2 小时以上服用。' });
-      const bloodCount = ['fishOil', 'curcumin', 'arginine', 'beetroot'].filter(key => count(key) > 0).length;
-      if (bloodCount >= 2) warnings.push({ title: '凝血/血压类叠加', text: '鱼油、姜黄素、精氨酸/瓜氨酸、甜菜根同时使用可能增强抗凝或降压效果，用药期间需谨慎。' });
+      const mineralKeys = ['zinc', 'magnesium', 'calcium'].filter(key => count(key) > 0);
+      if (mineralKeys.length >= 2) {
+        const labels = { zinc: '锌', magnesium: '镁', calcium: '钙' };
+        warnings.push({ title: '矿物质吸收竞争', text: '同时服用 ' + mineralKeys.map(k => labels[k]).join('、') + '，这些矿物质会互相影响吸收，也可能降低四环素、喹诺酮等抗生素吸收，建议间隔 2 小时以上。' });
+      }
+      const bleedKeys = ['fishOil', 'sawPalmetto', 'fenugreek', 'cordyceps'].filter(key => count(key) > 0);
+      if (bleedKeys.length >= 2) {
+        warnings.push({ title: '凝血影响叠加', text: '鱼油、锯棕榈、葫芦巴、蛹虫草中的 ' + bleedKeys.length + ' 类可能同时影响凝血，正在服用抗凝药/抗血小板药或准备手术时需提前咨询医生。' });
+      }
+      const bpKeys = ['coq10', 'beetroot', 'fishOil', 'arginine', 'cordyceps'].filter(key => count(key) > 0);
+      if (bpKeys.length >= 2) {
+        warnings.push({ title: '降压/扩血管叠加', text: '辅酶Q10、甜菜根、鱼油、精氨酸/瓜氨酸、蛹虫草中的 ' + bpKeys.length + ' 类可能叠加降压或扩血管作用，低血压或服用降压药时注意头晕乏力。' });
+      }
+      const sugarKeys = ['fenugreek', 'milkThistle', 'cordyceps'].filter(key => count(key) > 0);
+      if (sugarKeys.length >= 2) {
+        warnings.push({ title: '血糖影响叠加', text: '葫芦巴、水飞蓟、蛹虫草中的 ' + sugarKeys.length + ' 类可能降低血糖，糖尿病或服用降糖药时注意监测。' });
+      }
+      if (count('creatine') >= 1 && count('whey') >= 1) {
+        warnings.push({ title: '肾脏代谢负担', text: '肌酸与水解增肌粉同时使用会增加蛋白质和肌酸代谢负担，肾功能异常或服用影响肾功能的药物时建议避免。' });
+      }
+      if (count('beetroot') >= 1 && count('calcium') >= 1) {
+        warnings.push({ title: '甜菜根与钙', text: '甜菜根含草酸盐，与钙同服可能增加草酸钙结石风险，建议错开时间；有结石史先咨询医生。' });
+      }
+      if (count('sawPalmetto') >= 1) {
+        warnings.push({ title: '锯棕榈注意事项', text: '前列腺六合一中的锯棕榈可能影响凝血并干扰前列腺相关检查，服用抗凝药或做检查前先告知医生。' });
+      }
+      if (count('milkThistle') >= 1) {
+        warnings.push({ title: '水飞蓟与药物', text: '水飞蓟可能影响经肝脏代谢的药物（如他汀、部分抗过敏药），服药期间建议咨询医生是否需要调整。' });
+      }
+      if (count('maca') >= 1) {
+        warnings.push({ title: '玛咖注意事项', text: '蛹虫草玛咖片中的玛咖与甲状腺/激素类药物同用的证据有限，服用相关药物或激素检查前先咨询医生。' });
+      }
+      if (count('multi') >= 1 && (count('zinc') >= 1 || count('magnesium') >= 1 || count('calcium') >= 1)) {
+        warnings.push({ title: '多维片与矿物质间隔', text: '复合维生素/牡蛎片同时含锌、硒、碘等，与其他锌、镁、钙产品同服时建议错开 2 小时，甲状腺用药也需间隔。' });
+      }
+      if (count('collagen') >= 1 && (count('whey') >= 1 || count('creatine') >= 1)) {
+        warnings.push({ title: '蛋白与肌酸叠加', text: '胶原蛋白与增肌粉/肌酸叠加会增加蛋白和代谢负担，肾功能异常时建议减少或分开使用。' });
+      }
+      if (count('rice') >= 1 && mineralKeys.length >= 1) {
+        warnings.push({ title: '营养米粉与矿物质', text: '营养米粉若添加铁、钙或锌，会参与矿物质吸收竞争，建议与其他矿物质产品错开 2 小时。' });
+      }
       return warnings;
     }
 
@@ -8151,6 +8248,10 @@
                 <span class="supplement-interaction-text">${w.text}</span>
               </div>
             `).join('')}
+            <div class="supplement-interaction-item">
+              <span class="supplement-interaction-name">参考提示</span>
+              <span class="supplement-interaction-text">以上为常见相互作用参考，不替代医生或药师建议；正在服药或准备手术前请咨询专业人士。</span>
+            </div>
           </div>
         ` : ''}
 
@@ -9379,7 +9480,11 @@
       const container = document.getElementById('moduleContent');
       let modNeed = 0, modDone = 0;
       for (const x of data.modules[moduleId].habits) {
-        if (x.type === 'cycle') { modNeed++; modDone++; }
+        if (x.type === 'cycle') {
+          modNeed++;
+          const state = getCycleState(x, today);
+          if (!isCycleCheckable(x, state) || x.records.includes(today)) modDone++;
+        }
         else if (x.type === 'period') {
           if (isPeriodDay(x, today)) { modNeed++; if (x.records.includes(today)) modDone++; }
         } else { modNeed++; if (x.records.includes(today)) modDone++; }
@@ -9537,7 +9642,13 @@
       for (let d = new Date(monday); d <= now; d.setDate(d.getDate() + 1)) {
         const ds = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
         habits.forEach(h => {
-          if (h.type === 'cycle') return;
+          if (h.type === 'cycle') {
+            if (isCycleCheckable(h, getCycleState(h, ds))) {
+              need++;
+              if (h.records.includes(ds)) done++;
+            }
+            return;
+          }
           if (h.type === 'period' && !isPeriodDay(h, ds)) return;
           need++;
           if (h.records.includes(ds)) done++;
@@ -9778,7 +9889,9 @@
       let modNeed = 0, modDone = 0;
       const habitHtml = mod.habits.map(h => {
         if (h.type === 'cycle') {
-          modNeed++; modDone++;
+          modNeed++;
+          const state = getCycleState(h, today);
+          if (!isCycleCheckable(h, state) || h.records.includes(today)) modDone++;
           return renderCycleItem(moduleId, h);
         } else if (h.type === 'period') {
           const isDue = isPeriodDay(h, today);
@@ -9859,6 +9972,11 @@
     function renderCycleItem(moduleId, h) {
       const state = getCycleState(h, today);
       const stateClass = getCycleStateClass(state);
+      const canCheck = isCycleCheckable(h, state);
+      const isDone = h.records.includes(today);
+      const checkBtn = canCheck
+        ? `<button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="${isDone ? '取消打卡' : '点击打卡'}">${isDone ? '✓' : ''}</button>`
+        : '';
       const previews = [];
       const d = new Date();
       for (let i = 1; i <= 3; i++) {
@@ -9880,6 +9998,7 @@
             </div>
             <div class="meta">${previews.join(' · ')}</div>
           </div>
+          ${checkBtn}
           <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
           <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
         </div>
@@ -10054,7 +10173,11 @@
         if (!mod.habits) continue;
         totalHabits += mod.habits.length;
         for (const h of mod.habits) {
-          if (h.type === 'cycle') { totalNeed++; totalDone++; }
+          if (h.type === 'cycle') {
+            totalNeed++;
+            const state = getCycleState(h, today);
+            if (!isCycleCheckable(h, state) || h.records.includes(today)) totalDone++;
+          }
           else if (h.type === 'period') {
             if (isPeriodDay(h, today)) {
               totalNeed++;
@@ -10133,6 +10256,7 @@
         for (const h of mod.habits) {
           if (h.type === 'daily' && !h.records.includes(todayStr)) pendingHabits++;
           if (h.type === 'period' && isPeriodDay(h, todayStr) && !h.records.includes(todayStr)) pendingHabits++;
+          if (h.type === 'cycle' && isCycleCheckable(h, getCycleState(h, todayStr)) && !h.records.includes(todayStr)) pendingHabits++;
         }
       }
       const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
@@ -10222,7 +10346,8 @@
         const isToday = ds === today;
         const state = getCycleState(h, ds);
         const cls = getCycleStateClass(state);
-        html += `<div class="cal-day cycle-${cls} ${isToday ? 'today' : ''}">${d}</div>`;
+        const checked = h.records.includes(ds);
+        html += `<div class="cal-day cycle-${cls} ${checked ? 'ok' : ''} ${isToday ? 'today' : ''}">${d}</div>`;
       }
       document.getElementById('calendar').innerHTML = html;
       document.getElementById('overlay').classList.add('show');
