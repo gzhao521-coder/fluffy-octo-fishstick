@@ -4980,14 +4980,14 @@
     function createDefaultSupplementItems() {
       return [
         { id: 1, name: '辅酶Q10 (澳世康)', icon: '❤️', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '脂溶性，随餐吸收更佳。避免晚上服用以免影响睡眠。', warning: '过量可能导致胃肠不适、失眠' },
-        { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后/早餐', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后30分钟内或早餐时服用，搭配碳水更佳。', warning: '过量增加肾脏负担' },
+        { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后30分钟内', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后30分钟内服用；无训练日改为早餐后，与肌酸错开。', warning: '过量增加肾脏负担' },
         { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
         { id: 4, name: 'MegLife 前列腺六合一', icon: '🎯', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '番茄红素、锯棕榈、南瓜籽等，针对前列腺/泌尿支持。', warning: '过量可能胃肠不适；前列腺问题建议先就医' },
         { id: 5, name: 'VORSE 锌镁片', icon: '⚡', dosage: '按说明 1-2片', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '锌随餐减少胃部刺激，镁睡前有助放松。避免和高钙产品同服。', warning: '锌过量影响铜吸收；镁过量致腹泻；不要与其他锌镁产品叠加' },
         { id: 6, name: '肌酸软糖', icon: '🍬', dosage: '3-5g', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '每天早上随早餐服用，搭配葡萄糖吸收更佳。', warning: '过量可能导致胃肠不适、水肿' },
-        { id: 7, name: '鱼油', icon: '🐟', dosage: '1-2粒', time: '午餐/晚餐', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '随餐服用减少鱼腥味，脂肪帮助吸收。', warning: '过量可能影响凝血功能' },
+        { id: 7, name: '鱼油', icon: '🐟', dosage: '1-2粒', time: '晚餐后', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '晚餐随餐服用减少鱼腥味，脂肪帮助吸收；与蛹虫草、锯棕榈错开。', warning: '过量可能影响凝血功能' },
         { id: 8, name: 'Supovita 12合一多维牡蛎片', icon: '💊', dosage: '按说明 1片', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '复合维生素+牡蛎提取物，含锌、硒等，随餐服用。', warning: '含锌，避免与其他锌产品叠加；脂溶性维生素长期过量可能积累' },
-        { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '随餐', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '随餐服用减少胃部刺激。', warning: '过量可能加重肝脏负担' },
+        { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '晚餐后', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '晚餐随餐服用减少胃部刺激，与葫芦巴错开。', warning: '过量可能加重肝脏负担' },
         { id: 10, name: 'RAINBOWBAR 葫芦巴', icon: '🌱', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '葫芦巴提取物，常用于健身促睾/血糖支持。', warning: '可能影响血糖；糖尿病或服降糖药慎用' },
         { id: 11, name: 'VITAS 瓜氨酸精氨酸粉', icon: '💥', dosage: '按说明 约5g', time: '运动前30分钟', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '瓜氨酸+精氨酸，提升血流与耐力，运动前服用。', warning: '过量可能胃肠不适、低血压；与降压药同用需谨慎' },
         { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '午餐后随餐服用，与铁锌间隔2小时以上。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
@@ -5074,6 +5074,21 @@
                 item.time = '早餐后';
                 item.timeSlot = 'morning';
                 item.note = '每天早上随早餐服用，搭配葡萄糖吸收更佳。';
+              }
+              if (item.name === '水解增肌粉') {
+                item.time = '运动后30分钟内';
+                item.timeSlot = 'workout';
+                item.note = '运动后30分钟内服用；无训练日改为早餐后，与肌酸错开。';
+              }
+              if (item.name === '鱼油') {
+                item.time = '晚餐后';
+                item.timeSlot = 'evening';
+                item.note = '晚餐随餐服用减少鱼腥味，脂肪帮助吸收；与蛹虫草、锯棕榈错开。';
+              }
+              if (item.name === '水飞蓟护肝片') {
+                item.time = '晚餐后';
+                item.timeSlot = 'evening';
+                item.note = '晚餐随餐服用减少胃部刺激，与葫芦巴错开。';
               }
             });
           }
@@ -6246,7 +6261,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v70');
+      info.push('版本: v71');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -6334,7 +6349,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v70',
+        version: 'v71',
         exportedAt: new Date().toISOString(),
         data: data
       };
