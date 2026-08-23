@@ -822,6 +822,22 @@
       padding: 2px 8px; border-radius: 6px; margin-top: 3px; display: inline-block;
       border: 1px solid rgba(100,255,218,0.15);
     }
+    .fuel-summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text2);
+    }
+    .fuel-summary span {
+      background: rgba(255,159,67,0.08);
+      border: 1px solid rgba(255,159,67,0.18);
+      padding: 2px 8px;
+      border-radius: 6px;
+      color: #ffb86b;
+      font-weight: 600;
+    }
 
     /* 打卡按钮 */
     .check-btn {
@@ -3935,9 +3951,302 @@
         background: rgba(4,4,14,0.94);
       }
     }
+
+    .splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      overflow: hidden;
+      isolation: isolate;
+      background: linear-gradient(165deg, #0b0b1c, #101024 55%, #0d0d20);
+      opacity: 1;
+      transition: opacity 0.55s ease, visibility 0.55s ease;
+    }
+    .splash-screen::before {
+      content: '';
+      position: absolute;
+      inset: -20%;
+      z-index: -2;
+      background:
+        linear-gradient(115deg,
+          rgba(100,255,218,0.06) 0%,
+          transparent 28%,
+          rgba(0,212,255,0.09) 48%,
+          transparent 68%,
+          rgba(189,52,254,0.07) 100%),
+        linear-gradient(210deg,
+          rgba(77,150,255,0.05) 0%,
+          transparent 36%,
+          rgba(100,255,218,0.06) 58%,
+          transparent 100%);
+      background-size: 220% 220%;
+      animation: splashBgFlow 5s ease-in-out infinite;
+    }
+    .splash-screen::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(100,255,218,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(100,255,218,0.035) 1px, transparent 1px);
+      background-size: 46px 46px;
+      -webkit-mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 72%);
+      mask-image: radial-gradient(circle at 50% 42%, #000 0%, transparent 72%);
+      opacity: 0.8;
+    }
+    .splash-screen.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-screen > *:not(.splash-backdrop) {
+      position: relative;
+      z-index: 1;
+    }
+    .splash-backdrop {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .splash-sweep {
+      position: absolute;
+      top: -12%;
+      bottom: -12%;
+      left: -20%;
+      width: 38%;
+      background: linear-gradient(105deg, transparent, rgba(255,255,255,0.055), transparent);
+      transform: skewX(-16deg);
+      will-change: transform;
+      animation: splashSweep 2.8s ease-in-out infinite;
+    }
+    .splash-stars span {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.75);
+      box-shadow: 0 0 7px rgba(142,231,255,0.55);
+      animation: splashStarFloat 2.4s ease-in-out infinite;
+    }
+    .splash-stars span:nth-child(2n) { animation-delay: 0.5s; animation-duration: 3s; }
+    .splash-stars span:nth-child(3n) { animation-delay: 1s; animation-duration: 2.2s; }
+    .splash-mark {
+      position: relative;
+      width: 122px;
+      height: 122px;
+      opacity: 0;
+      transform: scale(0.88);
+      animation: splashMarkIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .splash-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      border-top-color: var(--primary);
+      animation: splashSpin 1.1s linear infinite;
+    }
+    .splash-ring.second {
+      inset: 11px;
+      border-top-color: transparent;
+      border-right-color: var(--accent2);
+      animation-direction: reverse;
+    }
+    .splash-ring.third {
+      inset: 22px;
+      border-top-color: transparent;
+      border-left-color: var(--accent6);
+      border-right-color: transparent;
+      animation-duration: 2.1s;
+      animation-direction: alternate;
+    }
+    .splash-orbit {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #8ee7ff;
+      box-shadow: 0 0 12px rgba(0,212,255,0.9);
+      top: 0;
+      left: 50%;
+      margin: 0 0 0 -3px;
+      transform-origin: 3px 58px;
+      animation: splashOrbit 3.2s linear infinite;
+    }
+    .splash-orbit.two {
+      width: 5px;
+      height: 5px;
+      top: 17px;
+      margin: 0 0 0 -2px;
+      background: #ffd93d;
+      box-shadow: 0 0 10px rgba(255,217,61,0.9);
+      transform-origin: 2px 42px;
+      animation-duration: 2.4s;
+      animation-direction: reverse;
+    }
+    .splash-core {
+      position: absolute;
+      inset: 31px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(100,255,218,0.2), rgba(0,212,255,0.09));
+      border: 1px solid rgba(100,255,218,0.28);
+      box-shadow:
+        0 0 38px rgba(100,255,218,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--primary);
+      animation: splashCore 1.4s ease-in-out infinite;
+    }
+    .splash-spark {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #8ee7ff;
+      box-shadow: 0 0 10px rgba(0,212,255,0.8);
+      animation: splashSpark 1.3s ease-in-out infinite;
+    }
+    .splash-spark.one { left: 5px; top: 24px; }
+    .splash-spark.two { right: 2px; top: 48px; animation-delay: 0.2s; background: #ffd93d; box-shadow: 0 0 10px rgba(255,217,61,0.8); }
+    .splash-spark.three { left: 12px; bottom: 14px; animation-delay: 0.4s; background: #bd34fe; box-shadow: 0 0 10px rgba(189,52,254,0.8); }
+    .splash-spark.four { right: 14px; bottom: 30px; animation-delay: 0.6s; }
+    .splash-title {
+      font-size: 27px;
+      font-weight: 800;
+      background: linear-gradient(90deg, #fff, #9cf4e5 45%, #8ee7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      opacity: 0;
+      animation: splashFadeUp 0.8s 0.15s ease forwards;
+    }
+    .splash-sub {
+      font-size: 13px;
+      color: #a8b2d1;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      animation: splashFadeUp 0.8s 0.3s ease forwards;
+    }
+    .splash-sub::before,
+    .splash-sub::after {
+      content: '';
+      width: 30px;
+      height: 1px;
+    }
+    .splash-sub::before {
+      background: linear-gradient(90deg, transparent, rgba(100,255,218,0.45));
+    }
+    .splash-sub::after {
+      background: linear-gradient(90deg, rgba(100,255,218,0.45), transparent);
+    }
+    .splash-bar {
+      width: 168px;
+      height: 4px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.09);
+      overflow: hidden;
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.35);
+      opacity: 0;
+      animation: splashFadeUp 0.8s 0.45s ease forwards;
+    }
+    .splash-bar i {
+      display: block;
+      height: 100%;
+      width: 0%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent2), var(--accent1), var(--primary));
+      background-size: 220% 100%;
+      animation: splashBarGrow 1.6s 0.2s ease-out forwards, splashBarShine 1.2s 0.5s linear infinite;
+    }
+    @keyframes splashSweep {
+      0%, 100% { transform: translateX(0) skewX(-16deg); }
+      50% { transform: translateX(340%) skewX(-16deg); }
+    }
+    @keyframes splashStarFloat {
+      0%, 100% { opacity: 0.25; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-5px); }
+    }
+    @keyframes splashOrbit {
+      0% { transform: rotate(0deg) translateX(0); }
+      100% { transform: rotate(360deg) translateX(0); }
+    }
+    @keyframes splashSpin {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes splashBgFlow {
+      0%, 100% { transform: translate3d(-2%, -1%, 0) scale(1); }
+      50% { transform: translate3d(2%, 1.5%, 0) scale(1.08); }
+    }
+    @keyframes splashMarkIn {
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes splashCore {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    @keyframes splashSpark {
+      0%, 100% { opacity: 0.3; transform: scale(0.75); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    @keyframes splashFadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes splashBarGrow {
+      0% { width: 0%; }
+      65% { width: 82%; }
+      100% { width: 100%; }
+    }
+    @keyframes splashBarShine {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
   </style>
 </head>
 <body>
+  <div class="splash-screen" id="splashScreen" aria-hidden="true">
+    <div class="splash-backdrop">
+      <div class="splash-sweep"></div>
+      <div class="splash-stars">
+        <span style="left:12%;top:18%"></span>
+        <span style="left:78%;top:14%"></span>
+        <span style="left:86%;top:62%"></span>
+        <span style="left:16%;top:72%"></span>
+        <span style="left:68%;top:84%"></span>
+        <span style="left:34%;top:10%"></span>
+      </div>
+    </div>
+    <div class="splash-mark">
+      <div class="splash-ring"></div>
+      <div class="splash-ring second"></div>
+      <div class="splash-ring third"></div>
+      <span class="splash-orbit one"></span>
+      <span class="splash-orbit two"></span>
+      <div class="splash-core">升</div>
+      <span class="splash-spark one"></span>
+      <span class="splash-spark two"></span>
+      <span class="splash-spark three"></span>
+      <span class="splash-spark four"></span>
+    </div>
+    <div class="splash-title">成长，升级，快乐。</div>
+    <div class="splash-sub">你的每一步都算数</div>
+    <div class="splash-bar"><i></i></div>
+  </div>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
@@ -4071,6 +4380,40 @@
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeNoteModal()">取消</button>
         <button class="btn-primary" onclick="confirmNote()">确认打卡</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="fuelOverlay" onclick="closeFuelModal(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>⛽ 加油记录</h3>
+        <button class="close" onclick="closeFuelModal()">&times;</button>
+      </div>
+      <div class="body-form-row">
+        <label>加油日期</label>
+        <input type="date" class="fund-form-input" id="fuelDate">
+      </div>
+      <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>加油时间</label>
+            <input type="time" class="fund-form-input" id="fuelTime">
+          </div>
+          <div>
+            <label>加油量（升）</label>
+            <input type="number" class="fund-form-input" id="fuelLiters" min="0" step="0.01" placeholder="如：45.6">
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
+        <label>本次加油后一共走了多远（公里）</label>
+        <input type="number" class="fund-form-input" id="fuelDistance" min="0" step="0.1" placeholder="如：520">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" id="fuelDeleteBtn" onclick="deleteFuelRecord()" style="display:none">取消本次记录</button>
+        <button class="btn-secondary" onclick="closeFuelModal()">取消</button>
+        <button class="btn-primary" onclick="saveFuelRecord()">保存</button>
       </div>
     </div>
   </div>
@@ -4712,9 +5055,11 @@
     let data = loadData();
     validateAndRepairData();
     const today = getTodayStr();
-    let activeModule = localStorage.getItem(LS_KEY + '_active') || 'daily';
+    let activeModule = 'daily';
     let pendingNoteId = null;
     let pendingNoteModule = null;
+    let pendingFuelId = null;
+    let pendingFuelModule = null;
     let marketFetching = false;
     let marketRefreshTimer = null;
     let marketHistoryLoading = false;
@@ -4826,10 +5171,19 @@
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
 
+    function hideSplashScreen() {
+      const splash = document.getElementById('splashScreen');
+      if (!splash) return;
+      splash.classList.add('hide');
+      setTimeout(() => { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 600);
+    }
+
     applyBgMotion();
     initStarDust();
     renderNav();
     renderModule(activeModule);
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(hideSplashScreen, reduceMotion ? 400 : 2200);
     updateTotalStats();
     autoFetchMarketData();
     startMarketAutoRefresh();
@@ -5113,7 +5467,7 @@
 
     function saveData() {
       // 保护：防止保存空数据
-      if (!data || !data.modules || !data.modules.daily || !data.modules.daily.habits || data.modules.daily.habits.length === 0) {
+      if (!data || !data.modules || !data.modules.daily || !Array.isArray(data.modules.daily.habits)) {
         console.log('saveData: 数据不完整，跳过保存');
         return;
       }
@@ -5155,6 +5509,27 @@
           });
         }
       });
+      if (data.modules.free && Array.isArray(data.modules.free.habits)) {
+        data.modules.free.habits.forEach(h => {
+          if (!h.fuelRecords || typeof h.fuelRecords !== 'object') {
+            h.fuelRecords = {};
+            repaired = true;
+          }
+        });
+        if (!data.modules.free.habits.some(h => h.name === '加油') && data.modules.free.fuelSeeded !== true && data.modules.free.fuelSeeded !== 'removed') {
+          const maxId = data.modules.free.habits.reduce((m, h) => Math.max(m, Number(h.id) || 0), 0);
+          data.modules.free.habits.push({
+            id: maxId + 1,
+            name: '加油',
+            icon: '⛽',
+            type: 'daily',
+            records: [],
+            fuelRecords: {}
+          });
+          data.modules.free.fuelSeeded = true;
+          repaired = true;
+        }
+      }
       if (!data.modules.daily || !Array.isArray(data.modules.daily.tomorrowPlans)) {
         if (data.modules.daily) data.modules.daily.tomorrowPlans = [];
         repaired = true;
@@ -5616,7 +5991,8 @@
               { id: 22, name: '骑车', icon: '🚴', type: 'daily', records: [] },
               { id: 23, name: '摄影', icon: '📷', type: 'daily', records: [] },
               { id: 24, name: '购物', icon: '🛍️', type: 'daily', records: [] },
-              { id: 25, name: '旅游', icon: '✈️', type: 'daily', records: [] }
+              { id: 25, name: '旅游', icon: '✈️', type: 'daily', records: [] },
+              { id: 26, name: '加油', icon: '⛽', type: 'daily', records: [], fuelRecords: {} }
             ]
           },
           manifestation: {
@@ -5681,7 +6057,6 @@
 
     function switchModule(moduleId) {
       activeModule = moduleId;
-      localStorage.setItem(LS_KEY + '_active', moduleId);
       const navMoreOverlay = document.getElementById('navMoreOverlay');
       if (navMoreOverlay) navMoreOverlay.classList.remove('show');
       document.body.classList.remove('nav-more-open');
@@ -6261,7 +6636,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v71');
+      info.push('版本: v77');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -6282,6 +6657,7 @@
 
     const BACKUP_KEY = LS_KEY + '_backups';
     const BACKUP_PROMPT_KEY = LS_KEY + '_backup_prompt';
+    const BACKUP_TOAST_KEY = LS_KEY + '_backup_toast';
     const MAX_AUTO_BACKUPS = 20;
 
     function isBackupReminderDue() {
@@ -6311,9 +6687,14 @@
     }
 
     function maybePromptBackup() {
-      if (isBackupReminderDue()) {
-        setTimeout(() => showInfoToast('💾 距上次导出备份已超过 7 天，建议在“备份”里导出一份'), 1200);
-      }
+      if (!isBackupReminderDue()) return;
+      try {
+        const lastToast = parseInt(localStorage.getItem(BACKUP_TOAST_KEY) || '0', 10);
+        if (!lastToast || Date.now() - lastToast > 7 * 24 * 60 * 60 * 1000) {
+          localStorage.setItem(BACKUP_TOAST_KEY, String(Date.now()));
+          setTimeout(() => showInfoToast('💾 距上次导出备份已超过 7 天，建议在“备份”里导出一份'), 1200);
+        }
+      } catch(e) {}
     }
 
     function getAutoBackups() {
@@ -6349,7 +6730,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v71',
+        version: 'v77',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -7943,7 +8324,7 @@
       const mineralKeys = ['zinc', 'magnesium', 'calcium'].filter(key => count(key) > 0);
       if (mineralKeys.length >= 2) {
         const labels = { zinc: '锌', magnesium: '镁', calcium: '钙' };
-        warnings.push({ title: '矿物质吸收竞争', text: '同时服用 ' + mineralKeys.map(k => labels[k]).join('、') + '，这些矿物质会互相影响吸收，也可能降低四环素、喹诺酮等抗生素吸收，建议间隔 2 小时以上。' });
+        warnings.push({ title: '矿物质吸收竞争', text: '同一天服用 ' + mineralKeys.map(k => labels[k]).join('、') + ' 时，这些矿物质会互相影响吸收，也可能降低四环素、喹诺酮等抗生素吸收，建议间隔 2 小时以上。' });
       }
       const bleedKeys = ['fishOil', 'sawPalmetto', 'fenugreek', 'cordyceps'].filter(key => count(key) > 0);
       if (bleedKeys.length >= 2) {
@@ -9461,6 +9842,11 @@
       const h = data.modules[moduleId].habits.find(x => x.id === id);
       if (!h) return;
 
+      if (h.name === '加油') {
+        openFuelModal(moduleId, id);
+        return;
+      }
+
       if (h.type === 'period' && isPeriodDay(h, today) && !h.records.includes(today)) {
         if (h.name === '起飞') {
           pendingNoteId = id;
@@ -9647,6 +10033,98 @@
       pendingNoteModule = null;
     }
 
+    function openFuelModal(moduleId, id) {
+      const h = data.modules[moduleId] && data.modules[moduleId].habits.find(x => x.id === id);
+      if (!h) return;
+      pendingFuelModule = moduleId;
+      pendingFuelId = id;
+      const rec = h.fuelRecords && h.fuelRecords[today] ? h.fuelRecords[today] : null;
+      const now = new Date();
+      const currentTime = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('fuelDate').value = today;
+      document.getElementById('fuelTime').value = rec ? (rec.time || currentTime) : currentTime;
+      document.getElementById('fuelLiters').value = rec ? (rec.liters !== undefined ? rec.liters : '') : '';
+      document.getElementById('fuelDistance').value = rec ? (rec.distance !== undefined ? rec.distance : '') : '';
+      const deleteBtn = document.getElementById('fuelDeleteBtn');
+      if (deleteBtn) deleteBtn.style.display = h.records.includes(today) ? 'inline-flex' : 'none';
+      document.getElementById('fuelOverlay').classList.add('show');
+    }
+
+    function closeFuelModal(e) {
+      if (e && e.target !== document.getElementById('fuelOverlay')) return;
+      document.getElementById('fuelOverlay').classList.remove('show');
+      pendingFuelId = null;
+      pendingFuelModule = null;
+    }
+
+    function saveFuelRecord() {
+      if (!pendingFuelId || !pendingFuelModule) return;
+      const h = data.modules[pendingFuelModule].habits.find(x => x.id === pendingFuelId);
+      if (!h) return;
+      const date = document.getElementById('fuelDate').value || today;
+      if (date > today) {
+        alert('不能记录未来的日期');
+        return;
+      }
+      const time = document.getElementById('fuelTime').value.trim();
+      const liters = parseFloat(document.getElementById('fuelLiters').value);
+      const distance = parseFloat(document.getElementById('fuelDistance').value);
+      if (!time) { alert('请输入加油时间'); return; }
+      if (isNaN(liters) || liters <= 0) { alert('请输入正确的加油量（升）'); return; }
+      if (isNaN(distance) || distance < 0) { alert('请输入正确的行驶公里数'); return; }
+      if (!h.fuelRecords) h.fuelRecords = {};
+      h.fuelRecords[date] = {
+        time: time,
+        liters: Math.round(liters * 100) / 100,
+        distance: Math.round(distance * 10) / 10
+      };
+      if (!h.records.includes(date)) h.records.push(date);
+      saveData();
+      closeFuelModal();
+      renderModule(activeModule);
+      updateTotalStats();
+      renderNav();
+      celebrateIfComplete();
+    }
+
+    function deleteFuelRecord() {
+      if (!pendingFuelId || !pendingFuelModule) return;
+      const h = data.modules[pendingFuelModule].habits.find(x => x.id === pendingFuelId);
+      if (!h) return;
+      const date = document.getElementById('fuelDate').value || today;
+      const idx = h.records.indexOf(date);
+      if (idx >= 0) h.records.splice(idx, 1);
+      if (h.fuelRecords) delete h.fuelRecords[date];
+      saveData();
+      closeFuelModal();
+      renderModule(activeModule);
+      updateTotalStats();
+      renderNav();
+    }
+
+    function renderFuelMetaHtml(h) {
+      const fuelRecords = h.fuelRecords || {};
+      const dates = Object.keys(fuelRecords).sort().reverse();
+      if (!dates.length) return '';
+      let totalLiters = 0;
+      let totalDistance = 0;
+      dates.forEach(d => {
+        const r = fuelRecords[d];
+        totalLiters += Number(r.liters) || 0;
+        totalDistance += Number(r.distance) || 0;
+      });
+      const last = fuelRecords[dates[0]];
+      const parts = [h.records.length + ' 次'];
+      if (totalLiters > 0) parts.push(totalLiters.toFixed(1) + ' L');
+      if (totalDistance > 0) parts.push(totalDistance.toFixed(0) + ' km');
+      return `
+        <div class="fuel-summary">
+          <span>⛽ ${parts.join(' · ')}</span>
+          <span>最近：${last.time || '--'} · ${Number(last.liters) || 0}L · ${Number(last.distance) || 0}km</span>
+        </div>
+      `;
+    }
+
     function getWeeklyCompletion(moduleId) {
       const mod = data.modules[moduleId];
       const habits = mod && Array.isArray(mod.habits) ? mod.habits : [];
@@ -9729,6 +10207,8 @@
       if (!confirm('确定删除这个目标吗？历史记录也会一并删除。')) return;
       createAutoBackup('删除打卡目标前');
       captureUndoSnapshot('已删除打卡目标');
+      const h = data.modules[moduleId] && data.modules[moduleId].habits.find(x => x.id === id);
+      if (h && h.name === '加油' && moduleId === 'free') data.modules.free.fuelSeeded = 'removed';
       data.modules[moduleId].habits = data.modules[moduleId].habits.filter(x => x.id !== id);
       saveData();
       renderModule(activeModule);
@@ -9964,6 +10444,9 @@
     }
 
     function renderDailyItem(moduleId, h, isDone, streak) {
+      const isFuel = h.name === '加油';
+      const fuelMeta = isFuel ? renderFuelMetaHtml(h) : '';
+      const makeupBtn = isFuel ? '' : `<button class="makeup-btn" onclick="openMakeupModal('${moduleId}', ${h.id})" title="补卡">↩</button>`;
       return `
         <div class="habit-card ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}">
           <div class="icon">${h.icon}</div>
@@ -9973,11 +10456,12 @@
               <span>${h.records.length} 天已坚持</span>
               ${streak > 0 ? '<span>·</span><span class="streak">' + streak + ' 天</span>' : ''}
             </div>
+            ${fuelMeta}
           </div>
-          <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="点击打卡">
+          <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="${isFuel ? '记录加油' : '点击打卡'}">
             ${isDone ? '✓' : ''}
           </button>
-          <button class="makeup-btn" onclick="openMakeupModal('${moduleId}', ${h.id})" title="补卡">↩</button>
+          ${makeupBtn}
           <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
           <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
         </div>
