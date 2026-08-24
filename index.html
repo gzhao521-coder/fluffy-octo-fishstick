@@ -4252,6 +4252,34 @@
         filter: drop-shadow(0 10px 24px rgba(100,255,218,0.14));
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      .splash-screen::before,
+      .splash-sweep,
+      .splash-stars span,
+      .splash-orbit,
+      .splash-spark,
+      .splash-ring,
+      .splash-core {
+        animation-iteration-count: infinite !important;
+      }
+      .splash-screen::before { animation-duration: 5s !important; }
+      .splash-sweep { animation-duration: 2.8s !important; }
+      .splash-stars span { animation-duration: 2.4s !important; }
+      .splash-orbit { animation-duration: 3.2s !important; }
+      .splash-orbit.two { animation-duration: 2.4s !important; }
+      .splash-spark { animation-duration: 1.3s !important; }
+      .splash-ring { animation-duration: 1.1s !important; }
+      .splash-ring.third { animation-duration: 2.1s !important; }
+      .splash-core { animation-duration: 1.4s !important; }
+      .splash-mark,
+      .splash-title,
+      .splash-sub,
+      .splash-bar {
+        animation-duration: 0.7s !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -5219,8 +5247,7 @@
     initStarDust();
     renderNav();
     renderModule(activeModule);
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    setTimeout(hideSplashScreen, reduceMotion ? 400 : 2200);
+    setTimeout(hideSplashScreen, 2200);
     updateTotalStats();
     autoFetchMarketData();
     startMarketAutoRefresh();
@@ -6673,7 +6700,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v81');
+      info.push('版本: v82');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -6767,7 +6794,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v81',
+        version: 'v82',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -10377,6 +10404,7 @@
     }
 
     function renderModule(moduleId) {
+      if (moduleId !== activeModule) return;
       const container = document.getElementById('moduleContent');
       const mod = data.modules[moduleId];
       const cfg = MODULE_CONFIG[moduleId];
