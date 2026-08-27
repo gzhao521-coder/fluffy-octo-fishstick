@@ -698,6 +698,138 @@
     .habit-card.done:hover {
       box-shadow: 0 8px 32px rgba(0,230,118,0.1);
     }
+    .habit-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .habit-card.icon-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      min-height: 112px;
+      border-radius: 18px;
+      cursor: pointer;
+      overflow: visible;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--module-color, rgba(100,255,218,0.12))2e;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+    }
+    .habit-card.icon-card::before { display: none; }
+    .habit-card.icon-card .habit-icon-tile {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      border: 1px solid var(--module-color, rgba(100,255,218,0.2))3d;
+      background: linear-gradient(145deg, var(--module-color, rgba(100,255,218,0.2))2b, var(--module-color, rgba(0,212,255,0.2))0d);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      line-height: 1;
+      color: var(--text);
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .habit-card.icon-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--module-color, rgba(100,255,218,0.35))44;
+      box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+    }
+    .habit-card.icon-card:hover .habit-icon-tile {
+      transform: translateY(-1px) scale(1.04);
+    }
+    .habit-card.icon-card .habit-icon-tile:active { transform: scale(0.94); }
+    .habit-card.icon-card.done .habit-icon-tile {
+      border-color: rgba(0,230,118,0.34);
+      background: linear-gradient(145deg, rgba(0,230,118,0.24), rgba(0,212,255,0.12));
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2), 0 0 18px rgba(0,230,118,0.12);
+    }
+    .habit-icon-label {
+      width: 100%;
+      margin-top: 7px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #c5cde6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 2px;
+    }
+    .habit-card.icon-card.expanded {
+      grid-column: 1 / -1;
+      min-height: 0;
+      align-items: stretch;
+      justify-content: flex-start;
+      cursor: default;
+      padding: 14px;
+    }
+    .habit-card.icon-card.expanded .habit-icon-tile {
+      width: 52px;
+      height: 52px;
+      font-size: 26px;
+      align-self: flex-start;
+      margin-bottom: 4px;
+    }
+    .habit-card.icon-card.expanded .habit-icon-label { display: none; }
+    .habit-detail {
+      width: 100%;
+      min-width: 0;
+    }
+    .habit-detail-head { margin-bottom: 10px; }
+    .habit-detail-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 5px;
+    }
+    .habit-detail .meta {
+      font-size: 12px;
+      color: var(--text2);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .habit-detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .habit-action-btn {
+      padding: 8px 11px;
+      border-radius: 8px;
+      border: 1px solid rgba(100,255,218,0.14);
+      background: rgba(100,255,218,0.06);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .habit-action-btn:hover {
+      border-color: rgba(100,255,218,0.35);
+      background: rgba(100,255,218,0.12);
+    }
+    .habit-action-btn.danger {
+      color: var(--danger);
+      border-color: rgba(255,82,82,0.2);
+      background: rgba(255,82,82,0.06);
+    }
+    .habit-action-btn.danger:hover {
+      border-color: rgba(255,82,82,0.45);
+      background: rgba(255,82,82,0.12);
+    }
     /* 左侧发光条 */
     .habit-card::before {
       content: '';
@@ -5121,6 +5253,7 @@
     const today = getTodayStr();
     let activeModule = 'daily';
     try { localStorage.removeItem(LS_KEY + '_active'); } catch(e) {}
+    let expandedHabitKey = null;
     let pendingNoteId = null;
     let pendingNoteModule = null;
     let pendingFuelId = null;
@@ -5411,8 +5544,15 @@
         { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '午餐后随餐服用，与铁锌间隔2小时以上。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
         { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
         { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' },
-        { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' }
+        { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' },
+        { id: 16, name: '达泊西汀 60mg', icon: '💊', dosage: '半片（30mg）', time: '按需 · 性活动前1-3小时', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: '医生建议半片；按需服用，不建议连续每天使用，请按医生指示调整频次。', warning: '不可与MAO抑制剂、其他SSRI/SNRI、圣约翰草、5-HTP同用；避免酒精和西柚汁；头晕/晕厥风险' },
+        { id: 17, name: '他达拉非 5mg', icon: '💊', dosage: '1片（5mg）', time: '午饭后固定时间', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: '医生建议每次一片；固定时间服用（吃3天休1天），避免西柚汁。', warning: '禁止与硝酸甘油等硝酸酯同用；与降压/扩血管药物同用需谨慎；胸痛或持续勃起立即就医' },
+        { id: 18, name: '阿育吠陀草本补充剂', icon: '🌿', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['草本'], note: '每次一粒；成分未注明，请先核对成分再服用。', warning: '成分不明；若含育亨宾严禁与他达拉非/达泊西汀同用；含南非醉茄需关注甲状腺/血压/血糖' }
       ].map(normalizeSupplementItem);
+    }
+
+    function createMedSupplementItems() {
+      return createDefaultSupplementItems().filter(i => i.id >= 16);
     }
 
     function migrateLegacySupplementItems(items) {
@@ -5509,6 +5649,12 @@
                 item.note = '晚餐随餐服用减少胃部刺激，与葫芦巴错开。';
               }
             });
+            if (!saved.modules.supplements.medSeeded) {
+              const existingNames = new Set(saved.modules.supplements.items.map(i => i.name));
+              const meds = createMedSupplementItems().filter(i => !existingNames.has(i.name));
+              saved.modules.supplements.items = saved.modules.supplements.items.concat(meds);
+              saved.modules.supplements.medSeeded = true;
+            }
           }
           if (!saved.modules.body || !Array.isArray(saved.modules.body.records)) {
             saved.modules.body = { records: [] };
@@ -6121,6 +6267,7 @@
 
     function switchModule(moduleId) {
       activeModule = moduleId;
+      expandedHabitKey = null;
       const navMoreOverlay = document.getElementById('navMoreOverlay');
       if (navMoreOverlay) navMoreOverlay.classList.remove('show');
       document.body.classList.remove('nav-more-open');
@@ -6700,7 +6847,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v82');
+      info.push('版本: v86');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -6794,7 +6941,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v82',
+        version: 'v86',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -8374,7 +8521,10 @@
         multi: /多维|复合维生素/.test(text),
         whey: /增肌粉/.test(text),
         collagen: /胶原蛋白/.test(text),
-        rice: /营养米粉/.test(text)
+        rice: /营养米粉/.test(text),
+        dapoxetine: /达泊西汀/.test(text),
+        tadalafil: /他达拉非/.test(text),
+        ayurveda: /阿育吠陀/.test(text)
       };
     }
 
@@ -8425,6 +8575,23 @@
       }
       if (count('rice') >= 1 && mineralKeys.length >= 1) {
         warnings.push({ title: '营养米粉与矿物质', text: '营养米粉若添加铁、钙或锌，会参与矿物质吸收竞争，建议与其他矿物质产品错开 2 小时。' });
+      }
+      if (count('dapoxetine') >= 1 && count('tadalafil') >= 1) {
+        warnings.push({ title: '达泊西汀 + 他达拉非', text: '两者都属于处方药，同用可能叠加低血压、头晕、晕厥和心血管风险。仅在医生明确安排并错开服用时使用；出现胸痛、呼吸困难或持续勃起需立即就医。' });
+      }
+      const dapVasoTitles = ['arginine', 'beetroot'].filter(key => count(key) > 0);
+      if (count('dapoxetine') >= 1 && dapVasoTitles.length) {
+        warnings.push({ title: '达泊西汀与扩血管补剂', text: '达泊西汀本身可能引起头晕和体位性低血压，与瓜氨酸/精氨酸或甜菜根同用可能增强降压/扩血管作用，建议错开时间并避免站立过快。' });
+      }
+      if (count('dapoxetine') >= 1 && count('milkThistle') >= 1) {
+        warnings.push({ title: '达泊西汀 + 水飞蓟', text: '水飞蓟可能影响肝脏代谢酶，改变达泊西汀血药浓度；同用期间出现恶心、头晕加重时咨询医生。' });
+      }
+      const tadVaso = ['arginine', 'beetroot', 'coq10', 'fishOil', 'cordyceps'].filter(key => count(key) > 0);
+      if (count('tadalafil') >= 1 && tadVaso.length) {
+        warnings.push({ title: '他达拉非与扩血管补剂', text: '他达拉非禁止与硝酸酯类药物同用；与瓜氨酸/精氨酸、甜菜根、鱼油、辅酶Q10、蛹虫草等扩血管类补剂同用可能叠加降压，注意头晕乏力。' });
+      }
+      if (count('ayurveda') >= 1) {
+        warnings.push({ title: '阿育吠陀成分未注明', text: '阿育吠陀草本成分不明：若含育亨宾，严禁与他达拉非/达泊西汀同用；含南非醉茄可能影响甲状腺、血压和血糖；请先核对成分并咨询医生。' });
       }
       return warnings;
     }
@@ -8699,6 +8866,20 @@
           </div>
         ` : ''}
 
+        <div class="add-box">
+          <input type="text" id="supplementInput" placeholder="添加新补剂..." maxlength="30"
+            onkeypress="if(event.key==='Enter') addSupplement()">
+          <button onclick="addSupplement()">添加</button>
+        </div>
+
+        ${totalCount > 0 ? groupsHtml : `
+          <div class="empty-state">
+            <div class="big">💊</div>
+            <p>还没有添加补剂</p>
+            <p style="font-size:12px;color:var(--text2);margin-top:4px">上方输入框添加你的第一瓶补剂</p>
+          </div>
+        `}
+
         ${interactionWarnings.length ? `
           <div class="supplement-interactions">
             <div class="supplement-interactions-title">⚠️ 相互作用提醒</div>
@@ -8714,20 +8895,6 @@
             </div>
           </div>
         ` : ''}
-
-        <div class="add-box">
-          <input type="text" id="supplementInput" placeholder="添加新补剂..." maxlength="30"
-            onkeypress="if(event.key==='Enter') addSupplement()">
-          <button onclick="addSupplement()">添加</button>
-        </div>
-
-        ${totalCount > 0 ? groupsHtml : `
-          <div class="empty-state">
-            <div class="big">💊</div>
-            <p>还没有添加补剂</p>
-            <p style="font-size:12px;color:var(--text2);margin-top:4px">上方输入框添加你的第一瓶补剂</p>
-          </div>
-        `}
       `;
     }
 
@@ -10508,29 +10675,50 @@
       setTimeout(() => drawMarketCharts(), 100);
     }
 
+    function toggleHabitExpand(moduleId, id) {
+      const key = moduleId + ':' + id;
+      expandedHabitKey = expandedHabitKey === key ? null : key;
+      renderModule(activeModule);
+    }
+
+    function renderHabitIconCard(moduleId, h, isDone, detailHtml) {
+      const key = moduleId + ':' + h.id;
+      const expanded = expandedHabitKey === key;
+      return `
+        <div class="habit-card icon-card ${isDone ? 'done' : ''} ${expanded ? 'expanded' : ''}" data-module="${moduleId}" data-id="${h.id}">
+          <button class="habit-icon-tile" onclick="toggleHabitExpand('${moduleId}', ${h.id})" title="${escapeHtml(h.name)}">
+            <span>${h.icon}</span>
+          </button>
+          <span class="habit-icon-label">${escapeHtml(h.name)}</span>
+          ${expanded ? `<div class="habit-detail">${detailHtml}</div>` : ''}
+        </div>
+      `;
+    }
+
     function renderDailyItem(moduleId, h, isDone, streak) {
       const isFuel = h.name === '加油';
       const fuelMeta = isFuel ? renderFuelMetaHtml(h) : '';
-      const makeupBtn = isFuel ? '' : `<button class="makeup-btn" onclick="openMakeupModal('${moduleId}', ${h.id})" title="补卡">↩</button>`;
-      return `
-        <div class="habit-card ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}">
-          <div class="icon">${h.icon}</div>
-          <div class="habit-info" onclick="showCalendar('${moduleId}', ${h.id})" style="cursor:pointer">
-            <div class="name">${escapeHtml(h.name)} <span class="achievement-badges" data-habit="${h.id}">${renderHabitAchievementBadgesHtml(h)}</span></div>
-            <div class="meta">
-              <span>${h.records.length} 天已坚持</span>
-              ${streak > 0 ? '<span>·</span><span class="streak">' + streak + ' 天</span>' : ''}
-            </div>
-            ${fuelMeta}
+      const noteHtml = (h.notes && h.notes[today]) ? `<div class="note-tag">📝 ${escapeHtml(h.notes[today])}</div>` : '';
+      const makeupBtn = isFuel ? '' : `<button class="habit-action-btn" onclick="openMakeupModal('${moduleId}', ${h.id})">↩ 补卡</button>`;
+      const detail = `
+        <div class="habit-detail-head">
+          <div class="habit-detail-title">${escapeHtml(h.name)} <span class="achievement-badges" data-habit="${h.id}">${renderHabitAchievementBadgesHtml(h)}</span></div>
+          <div class="meta">
+            <span>${h.records.length} 天已坚持</span>
+            ${streak > 0 ? '<span>·</span><span class="streak">' + streak + ' 天</span>' : ''}
           </div>
-          <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="${isFuel ? '记录加油' : '点击打卡'}">
-            ${isDone ? '✓' : ''}
-          </button>
+          ${noteHtml}
+          ${fuelMeta}
+        </div>
+        <div class="habit-detail-actions">
+          <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="${isFuel ? '记录加油' : '点击打卡'}">${isDone ? '✓' : ''}</button>
+          <button class="habit-action-btn" onclick="showCalendar('${moduleId}', ${h.id})">📅 日历</button>
           ${makeupBtn}
-          <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
-          <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
+          <button class="habit-action-btn" onclick="openHabitEdit('${moduleId}', ${h.id})">✏️ 编辑</button>
+          <button class="habit-action-btn danger" onclick="deleteHabit('${moduleId}', ${h.id})">🗑 删除</button>
         </div>
       `;
+      return renderHabitIconCard(moduleId, h, isDone, detail);
     }
 
     function renderCycleItem(moduleId, h) {
@@ -10550,23 +10738,19 @@
         const dayLabel = i === 1 ? '明天' : i === 2 ? '后天' : '大后天';
         previews.push(`${dayLabel}${escapeHtml(s)}`);
       }
-      d.setDate(d.getDate() - 3);
-
-      return `
-        <div class="habit-card" data-module="${moduleId}" data-id="${h.id}">
-          <div class="icon">${h.icon}</div>
-          <div class="habit-info" onclick="showCycleCalendar('${moduleId}', ${h.id})" style="cursor:pointer">
-            <div class="name">
-              ${escapeHtml(h.name)}
-              <span class="cycle-badge ${stateClass}">今日${escapeHtml(state)}</span>
-            </div>
-            <div class="meta">${previews.join(' · ')}</div>
-          </div>
+      const detail = `
+        <div class="habit-detail-head">
+          <div class="habit-detail-title">${escapeHtml(h.name)} <span class="cycle-badge ${stateClass}">今日${escapeHtml(state)}</span></div>
+          <div class="meta">${previews.join(' · ')}</div>
+        </div>
+        <div class="habit-detail-actions">
           ${checkBtn}
-          <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
-          <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
+          <button class="habit-action-btn" onclick="showCycleCalendar('${moduleId}', ${h.id})">📅 本月</button>
+          <button class="habit-action-btn" onclick="openHabitEdit('${moduleId}', ${h.id})">✏️ 编辑</button>
+          <button class="habit-action-btn danger" onclick="deleteHabit('${moduleId}', ${h.id})">🗑 删除</button>
         </div>
       `;
+      return renderHabitIconCard(moduleId, h, isDone, detail);
     }
 
     function renderPeriodItem(moduleId, h, isDue, isDone) {
@@ -10586,23 +10770,23 @@
       const nextDate = new Date();
       nextDate.setDate(nextDate.getDate() + daysLeft);
       const nextStr = `${nextDate.getMonth()+1}月${nextDate.getDate()}日`;
-
-      return `
-        <div class="habit-card ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}">
-          <div class="icon">${h.icon}</div>
-          <div class="habit-info" onclick="showCalendar('${moduleId}', ${h.id})" style="cursor:pointer">
-            <div class="name">${escapeHtml(h.name)} ${statusHtml}</div>
-            <div class="meta">
-              <span>${h.records.length} 次已记录</span>
-              ${!isDue ? '<span>·</span><span>下次 ' + nextStr + '（还有' + daysLeft + '天）</span>' : ''}
-            </div>
-            ${noteHtml}
+      const detail = `
+        <div class="habit-detail-head">
+          <div class="habit-detail-title">${escapeHtml(h.name)} ${statusHtml}</div>
+          <div class="meta">
+            <span>${h.records.length} 次已记录</span>
+            ${!isDue ? '<span>·</span><span>下次 ' + nextStr + '（还有' + daysLeft + '天）</span>' : ''}
           </div>
+          ${noteHtml}
+        </div>
+        <div class="habit-detail-actions">
           ${btnHtml}
-          <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
-          <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
+          <button class="habit-action-btn" onclick="showCalendar('${moduleId}', ${h.id})">📅 日历</button>
+          <button class="habit-action-btn" onclick="openHabitEdit('${moduleId}', ${h.id})">✏️ 编辑</button>
+          <button class="habit-action-btn danger" onclick="deleteHabit('${moduleId}', ${h.id})">🗑 删除</button>
         </div>
       `;
+      return renderHabitIconCard(moduleId, h, isDone, detail);
     }
 
     function getTomorrowPlans() {
