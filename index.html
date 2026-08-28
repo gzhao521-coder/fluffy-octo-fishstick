@@ -698,138 +698,6 @@
     .habit-card.done:hover {
       box-shadow: 0 8px 32px rgba(0,230,118,0.1);
     }
-    .habit-list {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-    }
-    .habit-card.icon-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px 8px;
-      min-height: 112px;
-      border-radius: 18px;
-      cursor: pointer;
-      overflow: visible;
-      background: rgba(255,255,255,0.025);
-      border: 1px solid var(--module-color, rgba(100,255,218,0.12))2e;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.14);
-    }
-    .habit-card.icon-card::before { display: none; }
-    .habit-card.icon-card .habit-icon-tile {
-      width: 62px;
-      height: 62px;
-      border-radius: 18px;
-      border: 1px solid var(--module-color, rgba(100,255,218,0.2))3d;
-      background: linear-gradient(145deg, var(--module-color, rgba(100,255,218,0.2))2b, var(--module-color, rgba(0,212,255,0.2))0d);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      line-height: 1;
-      color: var(--text);
-      cursor: pointer;
-      padding: 0;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-    .habit-card.icon-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--module-color, rgba(100,255,218,0.35))44;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.2);
-    }
-    .habit-card.icon-card:hover .habit-icon-tile {
-      transform: translateY(-1px) scale(1.04);
-    }
-    .habit-card.icon-card .habit-icon-tile:active { transform: scale(0.94); }
-    .habit-card.icon-card.done .habit-icon-tile {
-      border-color: rgba(0,230,118,0.34);
-      background: linear-gradient(145deg, rgba(0,230,118,0.24), rgba(0,212,255,0.12));
-      box-shadow: 0 6px 18px rgba(0,0,0,0.2), 0 0 18px rgba(0,230,118,0.12);
-    }
-    .habit-icon-label {
-      width: 100%;
-      margin-top: 7px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-      color: #c5cde6;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      padding: 0 2px;
-    }
-    .habit-card.icon-card.expanded {
-      grid-column: 1 / -1;
-      min-height: 0;
-      align-items: stretch;
-      justify-content: flex-start;
-      cursor: default;
-      padding: 14px;
-    }
-    .habit-card.icon-card.expanded .habit-icon-tile {
-      width: 52px;
-      height: 52px;
-      font-size: 26px;
-      align-self: flex-start;
-      margin-bottom: 4px;
-    }
-    .habit-card.icon-card.expanded .habit-icon-label { display: none; }
-    .habit-detail {
-      width: 100%;
-      min-width: 0;
-    }
-    .habit-detail-head { margin-bottom: 10px; }
-    .habit-detail-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 5px;
-    }
-    .habit-detail .meta {
-      font-size: 12px;
-      color: var(--text2);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-    .habit-detail-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
-    .habit-action-btn {
-      padding: 8px 11px;
-      border-radius: 8px;
-      border: 1px solid rgba(100,255,218,0.14);
-      background: rgba(100,255,218,0.06);
-      color: var(--text);
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .habit-action-btn:hover {
-      border-color: rgba(100,255,218,0.35);
-      background: rgba(100,255,218,0.12);
-    }
-    .habit-action-btn.danger {
-      color: var(--danger);
-      border-color: rgba(255,82,82,0.2);
-      background: rgba(255,82,82,0.06);
-    }
-    .habit-action-btn.danger:hover {
-      border-color: rgba(255,82,82,0.45);
-      background: rgba(255,82,82,0.12);
-    }
     /* 左侧发光条 */
     .habit-card::before {
       content: '';
@@ -4065,6 +3933,630 @@
     .sleep-preview-badge.night { color: #bd34fe; border-color: rgba(189,52,254,0.25); background: rgba(189,52,254,0.08); }
     .sleep-preview-meta { flex: 1; min-width: 0; font-size: 11px; color: var(--text2); line-height: 1.5; }
 
+    /* ========== 个人工作台 ========== */
+    .workbench-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .workbench-top {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      background: var(--card);
+      border: 1px solid rgba(100,255,218,0.1);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.4s ease backwards;
+      animation-delay: 0.05s;
+    }
+    .workbench-top::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--accent2), transparent);
+      opacity: 0.65;
+    }
+    .growth-score {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+    .growth-score-ring {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text);
+      background: conic-gradient(var(--primary) calc(var(--score, 0) * 1%), rgba(255,255,255,0.08) 0);
+      position: relative;
+      box-shadow: 0 6px 20px rgba(100,255,218,0.14);
+    }
+    .growth-score-ring::before {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border-radius: 50%;
+      background: var(--card-solid);
+    }
+    .growth-score-ring span {
+      position: relative;
+      z-index: 1;
+    }
+    .growth-score-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .growth-score-sub {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .workbench-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .workbench-summary div {
+      font-size: 11px;
+      color: var(--text2);
+    }
+    .workbench-summary b {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      margin-top: 1px;
+    }
+    .wb-section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 4px 2px 0;
+    }
+    .wb-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(100,255,218,0.18), transparent);
+    }
+    .wb-count {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-dim);
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+    .workbench-quick {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .wb-quick-chip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 38px;
+      padding: 8px 6px;
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      border: 1px solid rgba(100,255,218,0.08);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1.2;
+      text-align: center;
+    }
+    .wb-quick-chip .wb-chip-icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+    .wb-quick-chip:hover {
+      transform: translateY(-1px);
+      border-color: var(--nav-color, rgba(100,255,218,0.3));
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    }
+    .today-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--card);
+      border: 1px solid rgba(100,255,218,0.08);
+      border-radius: var(--radius);
+      padding: 10px;
+    }
+    .today-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 40px;
+      padding: 6px 8px;
+      border-radius: var(--radius-sm);
+      background: rgba(0,0,0,0.16);
+      border: 1px solid rgba(100,255,218,0.06);
+    }
+    .today-item-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      background: var(--primary-dim);
+      flex-shrink: 0;
+    }
+    .today-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .today-item-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .today-item-module {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 1px;
+    }
+    .today-item-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(100,255,218,0.22);
+      background: var(--primary-dim);
+      color: var(--primary);
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .today-item-btn:hover {
+      background: var(--primary);
+      color: #0a0a1a;
+      box-shadow: 0 0 16px rgba(100,255,218,0.3);
+    }
+    .wb-time-card {
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      border: 1px solid rgba(100,255,218,0.12);
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.4s ease backwards;
+      animation-delay: 0.1s;
+    }
+    .wb-time-card.morning {
+      background: linear-gradient(135deg, rgba(255,215,64,0.12), rgba(255,159,67,0.06));
+      border-color: rgba(255,215,64,0.22);
+    }
+    .wb-time-card.evening {
+      background: linear-gradient(135deg, rgba(189,52,254,0.12), rgba(0,212,255,0.06));
+      border-color: rgba(189,52,254,0.22);
+    }
+    .wb-time-card-title {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .wb-time-card.morning .wb-time-card-title { color: #ffd740; }
+    .wb-time-card.evening .wb-time-card-title { color: #bd34fe; }
+    .wb-time-card-text {
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.7;
+    }
+    .wb-time-card-text b {
+      color: var(--text);
+      font-weight: 700;
+    }
+    .month-highlights {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .highlight-item {
+      background: var(--card);
+      border: 1px solid rgba(100,255,218,0.08);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      min-width: 0;
+    }
+    .highlight-item-label {
+      font-size: 11px;
+      color: var(--text2);
+      margin-bottom: 4px;
+    }
+    .highlight-item-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.5;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    /* ========== 补剂用药日志 ========== */
+    .supp-log-section,
+    .supp-review-section {
+      margin-top: 14px;
+      background: var(--card);
+      border: 1px solid rgba(100,255,218,0.08);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .supp-log-title,
+    .supp-review-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .supp-log-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px dashed rgba(100,255,218,0.08);
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+    .supp-log-row:last-child { border-bottom: 0; }
+    .supp-log-row-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--primary-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .supp-log-row-main {
+      flex: 1;
+      min-width: 0;
+    }
+    .supp-log-row-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .supp-log-empty {
+      color: var(--text2);
+      font-size: 12px;
+      padding: 10px 0;
+    }
+    .supp-review-summary {
+      background: rgba(0,0,0,0.18);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+    .supp-review-summary b {
+      color: var(--text);
+    }
+    .supp-log-entries {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0;
+    }
+    .supp-log-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.18);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--text2);
+      line-height: 1.5;
+    }
+    .supp-log-entry b { color: var(--text); font-weight: 700; }
+    .supp-log-entry .del {
+      margin-left: auto;
+      color: var(--danger);
+      background: none;
+      border: 0;
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .supp-log-item-info {
+      background: rgba(0,0,0,0.18);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      margin-bottom: 12px;
+    }
+    .supp-log-item-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .supp-log-item-meta {
+      font-size: 12px;
+      color: var(--text2);
+      margin-top: 4px;
+    }
+    .supp-log-edit-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin: 14px 0 10px;
+    }
+    .supplement-log-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,212,255,0.2);
+      background: rgba(0,212,255,0.08);
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .supplement-log-btn:hover {
+      border-color: rgba(0,212,255,0.45);
+      background: rgba(0,212,255,0.14);
+    }
+    .manifest-goal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(100,255,218,0.08);
+      border: 1px solid rgba(100,255,218,0.14);
+      color: var(--text2);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    /* ========== 个性化 ========== */
+    .personalize-section {
+      margin-bottom: 18px;
+    }
+    .personalize-section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .theme-swatches {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .theme-swatch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 6px;
+      border-radius: var(--radius-sm);
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(100,255,218,0.1);
+      cursor: pointer;
+      color: var(--text2);
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .theme-swatch.active {
+      color: var(--text);
+      border-color: var(--primary);
+      box-shadow: 0 0 14px rgba(100,255,218,0.15);
+    }
+    .theme-swatch-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.14);
+    }
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .mode-tab {
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(100,255,218,0.1);
+      color: var(--text2);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .mode-tab.active {
+      color: var(--text);
+      border-color: var(--primary);
+      background: var(--primary-dim);
+    }
+    .quick-order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .quick-order-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: rgba(0,0,0,0.18);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(100,255,218,0.08);
+    }
+    .quick-order-item .qoi-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-dim);
+      flex-shrink: 0;
+    }
+    .quick-order-item .qoi-name {
+      flex: 1;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      min-width: 0;
+    }
+    .quick-order-item button {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: 1px solid rgba(100,255,218,0.14);
+      background: rgba(0,0,0,0.2);
+      color: var(--text2);
+      font-size: 15px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .quick-order-item button:hover {
+      color: var(--text);
+      border-color: var(--primary);
+    }
+
+    body.theme-sun {
+      --primary: #ffd93d;
+      --accent1: #ff6b6b;
+      --accent2: #ff9f43;
+      --primary-dim: rgba(255,217,61,0.15);
+      background:
+        radial-gradient(1000px 520px at 15% -10%, rgba(255,217,61,0.09), transparent 60%),
+        radial-gradient(900px 520px at 105% 108%, rgba(255,107,107,0.08), transparent 60%),
+        linear-gradient(160deg, #151022, #1b1525 55%, #141022);
+    }
+    body.theme-ocean {
+      --primary: #4d96ff;
+      --accent1: #64ffda;
+      --accent2: #00d4ff;
+      --primary-dim: rgba(77,150,255,0.15);
+      background:
+        radial-gradient(1000px 520px at 15% -10%, rgba(77,150,255,0.1), transparent 60%),
+        radial-gradient(900px 520px at 105% 108%, rgba(0,212,255,0.08), transparent 60%),
+        linear-gradient(160deg, #0a1226, #0d1830 55%, #0a1020);
+    }
+    body.theme-neon {
+      --primary: #bd34fe;
+      --accent1: #ff6b6b;
+      --accent2: #00d4ff;
+      --primary-dim: rgba(189,52,254,0.16);
+      background:
+        radial-gradient(1000px 520px at 15% -10%, rgba(189,52,254,0.12), transparent 60%),
+        radial-gradient(900px 520px at 105% 108%, rgba(255,107,107,0.07), transparent 60%),
+        linear-gradient(160deg, #170b22, #1c0f28 55%, #130a1d);
+    }
+    body.theme-forest {
+      --primary: #6bcb77;
+      --accent1: #64ffda;
+      --accent2: #00e676;
+      --primary-dim: rgba(107,203,119,0.15);
+      background:
+        radial-gradient(1000px 520px at 15% -10%, rgba(107,203,119,0.1), transparent 60%),
+        radial-gradient(900px 520px at 105% 108%, rgba(0,230,118,0.07), transparent 60%),
+        linear-gradient(160deg, #0c1a18, #0f211d 55%, #0b1715);
+    }
+
+    body.ui-simple .bg-mesh,
+    body.ui-simple .bg-swirl,
+    body.ui-simple .bg-particles,
+    body.ui-simple .daily-hero::after,
+    body.ui-simple .module-progress-bar .pb::after,
+    body.ui-simple .module-progress-bar .pf,
+    body.ui-simple .module-progress-bar .pf::after,
+    body.ui-simple .add-box button::after {
+      animation: none !important;
+      display: none !important;
+    }
+    body.ui-simple header h1,
+    body.ui-simple .module-title-bar .m-text .m-name,
+    body.ui-simple .m-progress {
+      animation: none !important;
+    }
+    body.ui-simple .habit-card:hover,
+    body.ui-simple .stat-card:hover,
+    body.ui-simple .nav-item:hover {
+      transform: none;
+    }
+    body.ui-simple .habit-card,
+    body.ui-simple .stat-card,
+    body.ui-simple .module-title-bar .m-icon {
+      box-shadow: none;
+    }
+
+    @media (max-width: 600px) {
+      .workbench-top {
+        grid-template-columns: 1fr;
+      }
+      .workbench-summary {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+        padding-top: 8px;
+        border-top: 1px dashed rgba(100,255,218,0.1);
+      }
+      .workbench-summary div {
+        text-align: left;
+      }
+      .workbench-quick {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .month-highlights {
+        grid-template-columns: 1fr;
+      }
+      .theme-swatches {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
     @media (max-width: 600px) {
       :root {
         --card: rgba(24,26,44,0.94);
@@ -4543,6 +5035,7 @@
       <div class="header-menu-grid">
         <button class="header-menu-item" onclick="closeHeaderMenu(); forceRefresh()"><span class="header-menu-icon">🔄</span><span>刷新</span></button>
         <button class="header-menu-item" onclick="closeHeaderMenu(); toggleBgMotion()"><span class="header-menu-icon">🌌</span><span>背景动态</span></button>
+        <button class="header-menu-item" onclick="closeHeaderMenu(); openPersonalizeModal()"><span class="header-menu-icon">🎨</span><span>个性化</span></button>
         <button class="header-menu-item" onclick="closeHeaderMenu(); openBackupModal()"><span class="header-menu-icon">💾</span><span>备份</span></button>
         <button class="header-menu-item" onclick="closeHeaderMenu(); openStatsModal()"><span class="header-menu-icon">📊</span><span>统计</span></button>
         <button class="header-menu-item" onclick="closeHeaderMenu(); openWeeklyReport()"><span class="header-menu-icon">📅</span><span>周报</span></button>
@@ -4765,8 +5258,10 @@
         <div class="backup-actions">
           <button class="backup-btn primary" onclick="exportBackup()">📤 导出备份</button>
           <button class="backup-btn" onclick="document.getElementById('backupFileInput').click()">📥 导入备份</button>
+          <button class="backup-btn" onclick="copyBackupToClipboard()">📋 复制备份文本</button>
+          <button class="backup-btn" onclick="pasteBackupFromClipboard()">📋 从剪贴板导入</button>
         </div>
-        <p class="backup-hint">导出的 JSON 文件可以保存到手机或电脑，随时导回。</p>
+        <p class="backup-hint">导出 JSON 保存到手机或电脑，也可以复制备份文本发到微信/文件传输助手，换设备时粘贴导入。</p>
       </div>
       <div class="backup-section">
         <div class="backup-section-title">删除 / 重置前自动备份</div>
@@ -4801,12 +5296,18 @@
         <button class="close" onclick="closeStatsModal()">&times;</button>
       </div>
       <div class="stats-range-tabs">
-        <button class="stats-range-btn active" data-range="7" onclick="setStatsRange(7)">7日</button>
-        <button class="stats-range-btn" data-range="30" onclick="setStatsRange(30)">30日</button>
+        <button class="stats-range-btn active" data-range="1" onclick="setStatsRange(1)">今日</button>
+        <button class="stats-range-btn" data-range="7" onclick="setStatsRange(7)">近7日</button>
+        <button class="stats-range-btn" data-range="30" onclick="setStatsRange(30)">近30日</button>
+        <button class="stats-range-btn" data-range="365" onclick="setStatsRange(365)">近365日</button>
       </div>
       <div class="report-actions">
-        <button class="report-btn" onclick="exportReportCSV(7)">📄 导出7日CSV</button>
-        <button class="report-btn" onclick="exportReportCSV(30)">📄 导出30日CSV</button>
+        <button class="report-btn" onclick="exportReportCSV(statsRange)">📄 导出CSV</button>
+        <button class="report-btn" onclick="copyStatsReport()">📋 复制报告</button>
+      </div>
+      <div class="stats-chart-section">
+        <div class="stats-chart-title">📈 全局成长评分</div>
+        <canvas class="stats-chart" id="statsGrowthChart"></canvas>
       </div>
       <div class="stats-chart-section">
         <div class="stats-chart-title">✅ 打卡完成率</div>
@@ -4836,6 +5337,61 @@
       <div id="weeklyReportContent"></div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeWeeklyReport()">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 补剂用药日志弹窗 -->
+  <div class="overlay" id="suppLogOverlay" onclick="closeSuppLogModal(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>💊 用药日志</h3>
+        <button class="close" onclick="closeSuppLogModal()">&times;</button>
+      </div>
+      <div id="suppLogItemInfo" class="supp-log-item-info"></div>
+      <div class="fund-form-row">
+        <label>日期</label>
+        <input type="date" class="fund-form-input" id="suppLogDate" onchange="renderSupplementLogEntries()">
+      </div>
+      <div class="supp-log-entries" id="suppLogEntries"></div>
+      <div class="supp-log-edit-title">✏️ 填写本次服用情况</div>
+      <div class="fund-form-row">
+        <div class="form-grid">
+          <div>
+            <label>实际剂量</label>
+            <input type="text" class="fund-form-input" id="suppLogDose" placeholder="如：半片、1粒">
+          </div>
+          <div>
+            <label>服用时间</label>
+            <input type="time" class="fund-form-input" id="suppLogTime">
+          </div>
+        </div>
+      </div>
+      <div class="fund-form-row">
+        <label>反应 / 感受</label>
+        <input type="text" class="fund-form-input" id="suppLogReaction" placeholder="如：无不适、轻微头晕、精力提升...">
+      </div>
+      <div class="fund-form-row">
+        <label>备注（可选）</label>
+        <textarea class="note-input" id="suppLogNote" placeholder="如：饭后服用、和医生沟通的重点..." style="min-height:70px;margin-bottom:0"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closeSuppLogModal()">取消</button>
+        <button class="btn-primary" onclick="saveSupplementLog()">保存记录</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 个性化弹窗 -->
+  <div class="overlay" id="personalizeOverlay" onclick="closePersonalizeModal(event)">
+    <div class="modal wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>🎨 视觉与个性化</h3>
+        <button class="close" onclick="closePersonalizeModal()">&times;</button>
+      </div>
+      <div id="personalizeContent"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closePersonalizeModal()">关闭</button>
       </div>
     </div>
   </div>
@@ -5253,7 +5809,6 @@
     const today = getTodayStr();
     let activeModule = 'daily';
     try { localStorage.removeItem(LS_KEY + '_active'); } catch(e) {}
-    let expandedHabitKey = null;
     let pendingNoteId = null;
     let pendingNoteModule = null;
     let pendingFuelId = null;
@@ -5377,6 +5932,7 @@
     }
 
     applyBgMotion();
+    applyUiPrefs();
     initStarDust();
     renderNav();
     renderModule(activeModule);
@@ -6267,7 +6823,6 @@
 
     function switchModule(moduleId) {
       activeModule = moduleId;
-      expandedHabitKey = null;
       const navMoreOverlay = document.getElementById('navMoreOverlay');
       if (navMoreOverlay) navMoreOverlay.classList.remove('show');
       document.body.classList.remove('nav-more-open');
@@ -6847,7 +7402,7 @@
 
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v86');
+      info.push('版本: v88');
       info.push('LS_KEY: ' + LS_KEY);
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
@@ -6941,7 +7496,7 @@
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v86',
+        version: 'v88',
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -6967,20 +7522,7 @@
       reader.onload = function(e) {
         try {
           const parsed = JSON.parse(e.target.result);
-          const imported = parsed && parsed.data && parsed.data.modules ? parsed.data : parsed;
-          if (!imported || !imported.modules) throw new Error('文件格式不正确，缺少 modules 数据');
-          if (!imported.modules.daily || !Array.isArray(imported.modules.daily.habits)) throw new Error('备份文件缺少每日打卡数据');
-          if (parsed && parsed.checksum && simpleHash(JSON.stringify(imported)) !== parsed.checksum) {
-            throw new Error('备份文件校验失败，可能已损坏');
-          }
-          createAutoBackup('导入前备份');
-          localStorage.setItem(LS_KEY, JSON.stringify(imported));
-          data = loadData();
-          saveData();
-          renderNav();
-          renderModule(activeModule);
-          updateTotalStats();
-          alert('导入成功');
+          applyImportedBackup(parsed);
           closeBackupModal();
         } catch(err) {
           alert('导入失败：' + err.message);
@@ -6988,6 +7530,23 @@
         if (event.target) event.target.value = '';
       };
       reader.readAsText(file);
+    }
+
+    function applyImportedBackup(parsed) {
+      const imported = parsed && parsed.data && parsed.data.modules ? parsed.data : parsed;
+      if (!imported || !imported.modules) throw new Error('文件格式不正确，缺少 modules 数据');
+      if (!imported.modules.daily || !Array.isArray(imported.modules.daily.habits)) throw new Error('备份文件缺少每日打卡数据');
+      if (parsed && parsed.checksum && simpleHash(JSON.stringify(imported)) !== parsed.checksum) {
+        throw new Error('备份文件校验失败，可能已损坏');
+      }
+      createAutoBackup('导入前备份');
+      localStorage.setItem(LS_KEY, JSON.stringify(imported));
+      data = loadData();
+      saveData();
+      renderNav();
+      renderModule(activeModule);
+      updateTotalStats();
+      alert('导入成功');
     }
 
     function openBackupModal() {
@@ -7095,10 +7654,19 @@
       if (!goal) return;
       editState = { kind: 'manifest', id: goalId };
       document.getElementById('editModalTitle').textContent = '编辑显化目标';
+      const linkOptions = [
+        { id: '', name: '自动识别（根据标题/描述）' },
+        { id: 'finance', name: '💰 财务存款' },
+        { id: 'fitness', name: '💪 健身训练' },
+        { id: 'reading', name: '📖 读书学习' },
+        { id: 'sleepPlan', name: '😴 睡眠作息' },
+        { id: 'body', name: '🧬 身体记录' }
+      ].map(o => `<option value="${o.id}" ${(goal.linkModule || '') === o.id ? 'selected' : ''}>${o.name}</option>`).join('');
       document.getElementById('editFormFields').innerHTML = `
         <div class="fund-form-row"><label>标题</label><input type="text" class="fund-form-input" id="editManifestTitle" maxlength="30" value="${escapeHtml(goal.title)}"></div>
         <div class="fund-form-row"><label>描述</label><textarea class="note-input" id="editManifestDesc" style="min-height:60px;margin-bottom:0">${escapeHtml(goal.description || '')}</textarea></div>
         <div class="fund-form-row"><label>目标日期（可选）</label><input type="date" class="fund-form-input" id="editManifestTargetDate" value="${goal.targetDate || ''}"></div>
+        <div class="fund-form-row"><label>关联真实数据</label><select class="fund-form-input" id="editManifestLink">${linkOptions}</select></div>
       `;
       document.getElementById('editOverlay').classList.add('show');
     }
@@ -7171,6 +7739,7 @@
         goal.title = title;
         goal.description = document.getElementById('editManifestDesc').value.trim();
         goal.targetDate = document.getElementById('editManifestTargetDate').value || '';
+        goal.linkModule = document.getElementById('editManifestLink').value || '';
         saveData();
         renderModule('manifestation');
         updateTotalStats();
@@ -7329,6 +7898,10 @@
     let statsRange = 7;
 
     function openStatsModal() {
+      const buttons = document.querySelectorAll('.stats-range-btn');
+      if (buttons && buttons.forEach) {
+        buttons.forEach(btn => btn.classList.toggle('active', Number(btn.getAttribute('data-range')) === statsRange));
+      }
       document.getElementById('statsOverlay').classList.add('show');
       renderStats();
     }
@@ -7393,6 +7966,7 @@
 
     function renderStats() {
       const dates = getStatsDates(statsRange);
+      drawStatsChart('statsGrowthChart', getGrowthStats(dates), { max: 100 });
       drawStatsChart('statsCheckinChart', getCheckinStats(dates), { max: 100 });
       drawStatsChart('statsSupplementChart', getSupplementStats(dates), { max: 100 });
       drawStatsChart('statsManifestChart', getManifestStats(dates), { max: null });
@@ -7402,11 +7976,13 @@
       const dates = getStatsDates(days);
       const checkin = getCheckinStats(dates);
       const mani = getManifestStats(dates);
+      const growth = getGrowthStats(dates);
       const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
       return dates.map((date, i) => {
         const taken = suppItems.filter(it => it.records && it.records.some(r => r.date === date && r.taken)).length;
         return {
           date: date,
+          growth: growth[i] ? growth[i].value : 0,
           checkin: Math.round(checkin[i].value * 10) / 10,
           supplement: taken + '/' + suppItems.length,
           manifest: mani[i].value
@@ -7416,14 +7992,15 @@
 
     function exportReportCSV(days) {
       const rows = getDailyReportRows(days);
-      const header = ['日期', '打卡完成率(%)', '补剂服用', '显化记录'];
-      const lines = rows.map(r => [r.date, r.checkin, r.supplement, r.manifest].join(','));
+      const header = ['日期', '成长评分', '打卡完成率(%)', '补剂服用', '显化记录'];
+      const lines = rows.map(r => [r.date, r.growth, r.checkin, r.supplement, r.manifest].join(','));
       const csv = '\uFEFF' + [header.join(','), ...lines].join('\r\n');
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = (days === 7 ? '周报' : '月报') + '_' + getTodayStr() + '.csv';
+      const rangeName = days === 1 ? '日报' : days === 7 ? '周报' : days === 30 ? '月报' : '年报';
+      a.download = rangeName + '_' + getTodayStr() + '.csv';
       document.body.appendChild(a);
       a.click();
       setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 0);
@@ -7460,12 +8037,13 @@
       });
       const isMany = points.length > 10;
       const barW = isMany ? Math.max(2, cw / points.length * 0.55) : Math.max(4, cw / points.length * 0.45);
+      const xStepDenom = Math.max(1, points.length - 1);
       const barGrad = ctx.createLinearGradient(0, pad.top, 0, pad.top + ch);
       barGrad.addColorStop(0, 'rgba(100,255,218,0.7)');
       barGrad.addColorStop(1, 'rgba(0,212,255,0.2)');
       const barPoints = [];
       points.forEach((p, i) => {
-        const x = pad.left + cw * i / (points.length - 1);
+        const x = pad.left + cw * i / xStepDenom;
         const y = pad.top + ch * (1 - p.value / max);
         const barH = ch * (p.value / max);
         barPoints.push({ x: x, y: y });
@@ -7498,7 +8076,7 @@
       ctx.textAlign = 'center';
       points.forEach((p, i) => {
         if (i % step === 0 || i === points.length - 1) {
-          const x = pad.left + cw * i / (points.length - 1);
+          const x = pad.left + cw * i / xStepDenom;
           ctx.fillText(p.label, x, h - 5);
         }
       });
@@ -8225,6 +8803,7 @@
         description: '',
         targetDate: '',
         status: 'active',
+        linkModule: '',
         records: [],
         createdAt: getTodayStr()
       });
@@ -8338,6 +8917,7 @@
         const isAchieved = goal.status === 'achieved';
         const isExpanded = manifestExpandedGoal === goal.id;
         const recordCount = goal.records ? goal.records.length : 0;
+        const linkedStats = getGoalLinkedStats(goal);
         const recordsHtml = isExpanded && recordCount > 0 ? `
           <div class="manifest-records">
             ${goal.records.map(r => `
@@ -8367,6 +8947,7 @@
                     ${isAchieved && goal.achievedAt ? '<span style="color:var(--success)">🎉 ' + goal.achievedAt + ' 实现</span>' : ''}
                   </div>
                   ${goal.description ? `<div class="manifest-goal-desc">${escapeHtml(goal.description)}</div>` : ''}
+                  <div class="manifest-goal-link">${linkedStats.icon} ${escapeHtml(linkedStats.text)}</div>
                 </div>
               </div>
               <div class="manifest-goal-actions">
@@ -8691,7 +9272,17 @@
       if (!item.records) item.records = [];
       item.records = item.records.filter(r => !(r.date === dateStr && r.taken));
       if (nextTaken) {
-        item.records.push({ date: dateStr, taken: true });
+        const now = new Date();
+        item.records.push({
+          id: Date.now(),
+          date: dateStr,
+          taken: true,
+          time: now.toTimeString().slice(0, 5),
+          dose: item.dosage || '',
+          reaction: '',
+          note: '',
+          loggedAt: now.toISOString()
+        });
         if (dateStr === getTodayStr()) {
           item.taken = true;
           if (typeof item.stock === 'number' && item.stock > 0) item.stock -= 1;
@@ -8813,6 +9404,7 @@
                     <button class="supplement-check-btn ${itemTaken ? 'taken' : ''}" onclick="toggleSupplement(${item.id})" title="${itemTaken ? '取消' : '标记已服用'}">
                       ${itemTaken ? '✓' : ''}
                     </button>
+                    <button class="supplement-log-btn" onclick="openSupplementLog(${item.id})" title="用药日志">📋</button>
                     <button class="supplement-edit-btn" onclick="openSupplementEdit(${item.id})" title="编辑">✏️</button>
                     <button class="supplement-del-btn" onclick="deleteSupplement(${item.id})" title="删除">×</button>
                   </div>
@@ -8895,6 +9487,9 @@
             </div>
           </div>
         ` : ''}
+
+        ${renderSupplementLogSection(allItems, viewDate)}
+        ${renderSupplementReviewSection()}
       `;
     }
 
@@ -10646,6 +11241,8 @@
           <div class="m-progress" style="background:linear-gradient(135deg, ${cfg.color}, ${cfg.color}88);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">${pct}%</div>
         </div>
 
+        ${moduleId === 'daily' ? renderWorkbenchHtml() : ''}
+
         <div class="add-box">
           <input type="text" id="moduleInput" placeholder="添加${cfg.name}目标..." maxlength="20"
             onkeypress="if(event.key==='Enter') addHabit()">
@@ -10675,50 +11272,29 @@
       setTimeout(() => drawMarketCharts(), 100);
     }
 
-    function toggleHabitExpand(moduleId, id) {
-      const key = moduleId + ':' + id;
-      expandedHabitKey = expandedHabitKey === key ? null : key;
-      renderModule(activeModule);
-    }
-
-    function renderHabitIconCard(moduleId, h, isDone, detailHtml) {
-      const key = moduleId + ':' + h.id;
-      const expanded = expandedHabitKey === key;
-      return `
-        <div class="habit-card icon-card ${isDone ? 'done' : ''} ${expanded ? 'expanded' : ''}" data-module="${moduleId}" data-id="${h.id}">
-          <button class="habit-icon-tile" onclick="toggleHabitExpand('${moduleId}', ${h.id})" title="${escapeHtml(h.name)}">
-            <span>${h.icon}</span>
-          </button>
-          <span class="habit-icon-label">${escapeHtml(h.name)}</span>
-          ${expanded ? `<div class="habit-detail">${detailHtml}</div>` : ''}
-        </div>
-      `;
-    }
-
     function renderDailyItem(moduleId, h, isDone, streak) {
       const isFuel = h.name === '加油';
       const fuelMeta = isFuel ? renderFuelMetaHtml(h) : '';
-      const noteHtml = (h.notes && h.notes[today]) ? `<div class="note-tag">📝 ${escapeHtml(h.notes[today])}</div>` : '';
-      const makeupBtn = isFuel ? '' : `<button class="habit-action-btn" onclick="openMakeupModal('${moduleId}', ${h.id})">↩ 补卡</button>`;
-      const detail = `
-        <div class="habit-detail-head">
-          <div class="habit-detail-title">${escapeHtml(h.name)} <span class="achievement-badges" data-habit="${h.id}">${renderHabitAchievementBadgesHtml(h)}</span></div>
-          <div class="meta">
-            <span>${h.records.length} 天已坚持</span>
-            ${streak > 0 ? '<span>·</span><span class="streak">' + streak + ' 天</span>' : ''}
+      const makeupBtn = isFuel ? '' : `<button class="makeup-btn" onclick="openMakeupModal('${moduleId}', ${h.id})" title="补卡">↩</button>`;
+      return `
+        <div class="habit-card ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}">
+          <div class="icon">${h.icon}</div>
+          <div class="habit-info" onclick="showCalendar('${moduleId}', ${h.id})" style="cursor:pointer">
+            <div class="name">${escapeHtml(h.name)} <span class="achievement-badges" data-habit="${h.id}">${renderHabitAchievementBadgesHtml(h)}</span></div>
+            <div class="meta">
+              <span>${h.records.length} 天已坚持</span>
+              ${streak > 0 ? '<span>·</span><span class="streak">' + streak + ' 天</span>' : ''}
+            </div>
+            ${fuelMeta}
           </div>
-          ${noteHtml}
-          ${fuelMeta}
-        </div>
-        <div class="habit-detail-actions">
-          <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="${isFuel ? '记录加油' : '点击打卡'}">${isDone ? '✓' : ''}</button>
-          <button class="habit-action-btn" onclick="showCalendar('${moduleId}', ${h.id})">📅 日历</button>
+          <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="${isFuel ? '记录加油' : '点击打卡'}">
+            ${isDone ? '✓' : ''}
+          </button>
           ${makeupBtn}
-          <button class="habit-action-btn" onclick="openHabitEdit('${moduleId}', ${h.id})">✏️ 编辑</button>
-          <button class="habit-action-btn danger" onclick="deleteHabit('${moduleId}', ${h.id})">🗑 删除</button>
+          <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
+          <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
         </div>
       `;
-      return renderHabitIconCard(moduleId, h, isDone, detail);
     }
 
     function renderCycleItem(moduleId, h) {
@@ -10738,19 +11314,21 @@
         const dayLabel = i === 1 ? '明天' : i === 2 ? '后天' : '大后天';
         previews.push(`${dayLabel}${escapeHtml(s)}`);
       }
-      const detail = `
-        <div class="habit-detail-head">
-          <div class="habit-detail-title">${escapeHtml(h.name)} <span class="cycle-badge ${stateClass}">今日${escapeHtml(state)}</span></div>
-          <div class="meta">${previews.join(' · ')}</div>
-        </div>
-        <div class="habit-detail-actions">
+      return `
+        <div class="habit-card" data-module="${moduleId}" data-id="${h.id}">
+          <div class="icon">${h.icon}</div>
+          <div class="habit-info" onclick="showCycleCalendar('${moduleId}', ${h.id})" style="cursor:pointer">
+            <div class="name">
+              ${escapeHtml(h.name)}
+              <span class="cycle-badge ${stateClass}">今日${escapeHtml(state)}</span>
+            </div>
+            <div class="meta">${previews.join(' · ')}</div>
+          </div>
           ${checkBtn}
-          <button class="habit-action-btn" onclick="showCycleCalendar('${moduleId}', ${h.id})">📅 本月</button>
-          <button class="habit-action-btn" onclick="openHabitEdit('${moduleId}', ${h.id})">✏️ 编辑</button>
-          <button class="habit-action-btn danger" onclick="deleteHabit('${moduleId}', ${h.id})">🗑 删除</button>
+          <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
+          <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
         </div>
       `;
-      return renderHabitIconCard(moduleId, h, isDone, detail);
     }
 
     function renderPeriodItem(moduleId, h, isDue, isDone) {
@@ -10770,23 +11348,23 @@
       const nextDate = new Date();
       nextDate.setDate(nextDate.getDate() + daysLeft);
       const nextStr = `${nextDate.getMonth()+1}月${nextDate.getDate()}日`;
-      const detail = `
-        <div class="habit-detail-head">
-          <div class="habit-detail-title">${escapeHtml(h.name)} ${statusHtml}</div>
-          <div class="meta">
-            <span>${h.records.length} 次已记录</span>
-            ${!isDue ? '<span>·</span><span>下次 ' + nextStr + '（还有' + daysLeft + '天）</span>' : ''}
+
+      return `
+        <div class="habit-card ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}">
+          <div class="icon">${h.icon}</div>
+          <div class="habit-info" onclick="showCalendar('${moduleId}', ${h.id})" style="cursor:pointer">
+            <div class="name">${escapeHtml(h.name)} ${statusHtml}</div>
+            <div class="meta">
+              <span>${h.records.length} 次已记录</span>
+              ${!isDue ? '<span>·</span><span>下次 ' + nextStr + '（还有' + daysLeft + '天）</span>' : ''}
+            </div>
+            ${noteHtml}
           </div>
-          ${noteHtml}
-        </div>
-        <div class="habit-detail-actions">
           ${btnHtml}
-          <button class="habit-action-btn" onclick="showCalendar('${moduleId}', ${h.id})">📅 日历</button>
-          <button class="habit-action-btn" onclick="openHabitEdit('${moduleId}', ${h.id})">✏️ 编辑</button>
-          <button class="habit-action-btn danger" onclick="deleteHabit('${moduleId}', ${h.id})">🗑 删除</button>
+          <button class="edit-btn" onclick="openHabitEdit('${moduleId}', ${h.id})" title="编辑">✏️</button>
+          <button class="del-btn" onclick="deleteHabit('${moduleId}', ${h.id})" title="删除">×</button>
         </div>
       `;
-      return renderHabitIconCard(moduleId, h, isDone, detail);
     }
 
     function getTomorrowPlans() {
@@ -10900,44 +11478,7 @@
     }
 
     function getTodayCompletion() {
-      let totalHabits = 0, totalNeed = 0, totalDone = 0;
-      for (const [modId, mod] of Object.entries(data.modules)) {
-        if (modId === 'supplements') {
-          if (mod.items) {
-            totalHabits += mod.items.length;
-            totalNeed += mod.items.length;
-            totalDone += mod.items.filter(i => isSupplementTakenOn(i, today)).length;
-          }
-          continue;
-        }
-        if (modId === 'sleepPlan') {
-          const steps = getSleepStepsForDate(today);
-          const doneSteps = getSleepPlan().records[today] || [];
-          totalHabits += steps.length;
-          totalNeed += steps.length;
-          totalDone += steps.filter(s => doneSteps.indexOf(s.id) !== -1).length;
-          continue;
-        }
-        if (!mod.habits) continue;
-        totalHabits += mod.habits.length;
-        for (const h of mod.habits) {
-          if (h.type === 'cycle') {
-            totalNeed++;
-            const state = getCycleState(h, today);
-            if (!isCycleCheckable(h, state) || h.records.includes(today)) totalDone++;
-          }
-          else if (h.type === 'period') {
-            if (isPeriodDay(h, today)) {
-              totalNeed++;
-              if (h.records.includes(today)) totalDone++;
-            }
-          } else {
-            totalNeed++;
-            if (h.records.includes(today)) totalDone++;
-          }
-        }
-      }
-      return { totalHabits: totalHabits, totalNeed: totalNeed, totalDone: totalDone };
+      return getCompletionForDate(today);
     }
 
     function getDateStr(d) {
@@ -10991,6 +11532,599 @@
       const ring = document.getElementById('heroRing');
       if (ring) ring.style.background = `conic-gradient(#64ffda ${pct * 3.6}deg, rgba(255,255,255,0.08) 0deg)`;
       renderDailyTips();
+    }
+
+    // ========== 个人工作台 ==========
+    function getCompletionForDate(dateStr) {
+      let totalHabits = 0, totalNeed = 0, totalDone = 0;
+      for (const [modId, mod] of Object.entries(data.modules)) {
+        if (modId === 'supplements') {
+          if (mod.items) {
+            const needItems = mod.items.filter(i => shouldTakeSupplement(i, dateStr));
+            totalHabits += mod.items.length;
+            totalNeed += needItems.length;
+            totalDone += needItems.filter(i => isSupplementTakenOn(i, dateStr)).length;
+          }
+          continue;
+        }
+        if (modId === 'sleepPlan') {
+          const steps = getSleepStepsForDate(dateStr);
+          const doneSteps = getSleepPlan().records[dateStr] || [];
+          totalHabits += steps.length;
+          totalNeed += steps.length;
+          totalDone += steps.filter(s => doneSteps.indexOf(s.id) !== -1).length;
+          continue;
+        }
+        if (!mod.habits) continue;
+        totalHabits += mod.habits.length;
+        for (const h of mod.habits) {
+          if (h.type === 'cycle') {
+            totalNeed++;
+            const state = getCycleState(h, dateStr);
+            if (!isCycleCheckable(h, state) || h.records.includes(dateStr)) totalDone++;
+          } else if (h.type === 'period') {
+            if (isPeriodDay(h, dateStr)) {
+              totalNeed++;
+              if (h.records.includes(dateStr)) totalDone++;
+            }
+          } else {
+            totalNeed++;
+            if (h.records.includes(dateStr)) totalDone++;
+          }
+        }
+      }
+      return { totalHabits, totalNeed, totalDone, pct: totalNeed ? Math.round(totalDone / totalNeed * 100) : 0 };
+    }
+
+    function getTrendCompletionPct(dateStr, days) {
+      const dates = [];
+      const d = new Date(dateStr + 'T00:00:00');
+      for (let i = 0; i < days; i++) {
+        dates.push(getDateStr(d));
+        d.setDate(d.getDate() - 1);
+      }
+      let sum = 0, count = 0;
+      dates.forEach(ds => {
+        const c = getCompletionForDate(ds);
+        if (c.totalNeed > 0) { sum += c.pct; count++; }
+      });
+      return count ? Math.round(sum / count) : 0;
+    }
+
+    function getGrowthScore(dateStr) {
+      const c = getCompletionForDate(dateStr);
+      const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
+      const needItems = suppItems.filter(i => shouldTakeSupplement(i, dateStr));
+      const suppDone = needItems.filter(i => isSupplementTakenOn(i, dateStr)).length;
+      const suppPct = needItems.length ? Math.round(suppDone / needItems.length * 100) : 100;
+      const steps = getSleepStepsForDate(dateStr);
+      const doneSteps = getSleepPlan().records[dateStr] || [];
+      const sleepPct = steps.length ? Math.round(steps.filter(s => doneSteps.indexOf(s.id) !== -1).length / steps.length * 100) : 100;
+      const reading = getReadingRecords().some(r => r.date === dateStr) ? 12 : 0;
+      const body = getBodyRecords().some(r => r.date === dateStr) ? 10 : 0;
+      const maniGoals = (data.modules.manifestation && data.modules.manifestation.goals) || [];
+      const mani = maniGoals.some(g => g.records && g.records.some(r => r.date === dateStr)) ? 8 : 0;
+      const extra = Math.min(30, reading + body + mani);
+      const trend = getTrendCompletionPct(dateStr, 7);
+      const raw = c.pct * 0.35 + suppPct * 0.2 + sleepPct * 0.2 + trend * 0.15 + extra * 0.1;
+      return Math.max(0, Math.min(100, Math.round(raw)));
+    }
+
+    function getGrowthStats(dates) {
+      return dates.map(date => ({ value: getGrowthScore(date), label: date.slice(5).replace('-', '/') }));
+    }
+
+    function getMonthHighlights() {
+      const now = new Date();
+      const monthKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+      const monthPrefix = monthKey + '-';
+      const items = [];
+      let bestHabit = null, bestStreak = 0;
+      for (const mod of Object.values(data.modules)) {
+        if (!mod || !Array.isArray(mod.habits)) continue;
+        for (const h of mod.habits) {
+          const s = getStreak(h.records);
+          if (s > bestStreak) { bestStreak = s; bestHabit = h; }
+        }
+      }
+      if (bestHabit && bestStreak > 0) items.push({ icon: '🔥', label: '本月连续', text: bestHabit.name + ' 已连续 ' + bestStreak + ' 天' });
+      const readingRecords = getReadingRecords().filter(r => String(r.date || '').indexOf(monthPrefix) === 0);
+      const readMin = readingRecords.reduce((s, r) => s + (Number(r.durationMinutes) || 0), 0);
+      if (readMin > 0) items.push({ icon: '📖', label: '本月阅读', text: formatReadingDuration(readMin) + ' · ' + readingRecords.length + ' 次' });
+      const bodyCount = getBodyRecords().filter(r => String(r.date || '').indexOf(monthPrefix) === 0).length;
+      if (bodyCount > 0) items.push({ icon: '🧬', label: '身体记录', text: '本月记录 ' + bodyCount + ' 次变化与感受' });
+      const finance = getFinanceStats();
+      if (finance.target > 0) items.push({ icon: '💰', label: '存款进度', text: formatMoney(finance.current) + ' / ' + formatMoney(finance.target) });
+      const maniCount = ((data.modules.manifestation && data.modules.manifestation.goals) || []).reduce((sum, g) => sum + (g.records ? g.records.filter(r => String(r.date || '').indexOf(monthPrefix) === 0).length : 0), 0);
+      if (maniCount > 0) items.push({ icon: '✨', label: '显化记录', text: '本月写下 ' + maniCount + ' 次显化记录' });
+      const sleepActual = getSleepActualHours(getTodayStr());
+      if (sleepActual !== null) items.push({ icon: '😴', label: '昨晚睡眠', text: '实际睡眠 ' + sleepActual + ' 小时' });
+      return items.slice(0, 4);
+    }
+
+    function getPendingTodayItems() {
+      const items = [];
+      const dateStr = getTodayStr();
+      for (const [modId, mod] of Object.entries(data.modules)) {
+        if (!mod || !Array.isArray(mod.habits)) continue;
+        const cfg = MODULE_CONFIG[modId];
+        for (const h of mod.habits) {
+          let due = false;
+          if (h.type === 'cycle') {
+            const state = getCycleState(h, dateStr);
+            due = isCycleCheckable(h, state) && !h.records.includes(dateStr);
+          } else if (h.type === 'period') {
+            due = isPeriodDay(h, dateStr) && !h.records.includes(dateStr);
+          } else {
+            due = !h.records.includes(dateStr);
+          }
+          if (due) items.push({ moduleId: modId, id: h.id, name: h.name, icon: h.icon, moduleName: cfg ? cfg.name : modId });
+        }
+      }
+      const suppItems = (data.modules.supplements && data.modules.supplements.items) || [];
+      suppItems.filter(i => shouldTakeSupplement(i, dateStr) && !isSupplementTakenOn(i, dateStr)).forEach(i => {
+        items.push({ moduleId: 'supplements', id: i.id, name: i.name, icon: i.icon, moduleName: '补剂明细', supplement: true });
+      });
+      const steps = getSleepStepsForDate(dateStr);
+      const doneSteps = getSleepPlan().records[dateStr] || [];
+      const pendingSleep = steps.filter(s => doneSteps.indexOf(s.id) === -1).length;
+      if (pendingSleep > 0) items.push({ moduleId: 'sleepPlan', id: 'sleep', name: '睡眠流程还有 ' + pendingSleep + ' 项', icon: '😴', moduleName: '睡眠流程', sleep: true });
+      return items;
+    }
+
+    function renderTimeCardHtml() {
+      const now = new Date();
+      const h = now.getHours();
+      const todayStr = getTodayStr();
+      const pendingItems = getPendingTodayItems();
+      const completion = getCompletionForDate(todayStr);
+      if (h >= 5 && h < 12) {
+        const d = new Date(todayStr + 'T00:00:00');
+        d.setDate(d.getDate() - 1);
+        const y = getDateStr(d);
+        const yc = getCompletionForDate(y);
+        const plans = getTomorrowPlans().filter(p => p.targetDate === todayStr && !p.doneDate);
+        return `
+          <div class="wb-time-card morning">
+            <div class="wb-time-card-title">☀️ 晨间卡片</div>
+            <div class="wb-time-card-text">昨天完成 <b>${yc.totalDone}/${yc.totalNeed}</b>（${yc.pct}%）；今天还有 <b>${pendingItems.length}</b> 项待办。${plans.length ? '今天已提前写好 <b>' + plans.length + '</b> 件事。' : '今天还没写待办，可以顺手写一件。'}</div>
+          </div>
+        `;
+      }
+      if (h >= 18 || h < 5) {
+        const plans = getTomorrowPlans().filter(p => p.targetDate === getTomorrowDateStr() && !p.doneDate);
+        return `
+          <div class="wb-time-card evening">
+            <div class="wb-time-card-title">🌙 睡前复盘</div>
+            <div class="wb-time-card-text">今日完成 <b>${completion.totalDone}/${completion.totalNeed}</b>（${completion.pct}%），还有 <b>${pendingItems.length}</b> 项没完成。${plans.length ? '明天已写好 <b>' + plans.length + '</b> 件事，按计划来就行。' : '明天还没有待办，睡前写一件会让早上更轻松。'}</div>
+          </div>
+        `;
+      }
+      return '';
+    }
+
+    function renderWorkbenchHtml() {
+      const s = getCompletionForDate(today);
+      const score = getGrowthScore(today);
+      const highlights = getMonthHighlights();
+      const quickEntries = getQuickEntryOrder().slice(0, 6);
+      const pendingItems = getPendingTodayItems();
+      const pendingSlice = pendingItems.slice(0, 12);
+      const moreCount = pendingItems.length - pendingSlice.length;
+      const quickHtml = quickEntries.map(id => {
+        const cfg = MODULE_CONFIG[id];
+        if (!cfg) return '';
+        return `<button class="wb-quick-chip" style="--nav-color:${cfg.color}" onclick="switchModule('${id}')"><span class="wb-chip-icon">${cfg.icon}</span><span>${cfg.name}</span></button>`;
+      }).join('');
+      const itemHtml = pendingSlice.map(it => {
+        if (it.sleep) {
+          return `<div class="today-item"><div class="today-item-icon">${it.icon}</div><div class="today-item-info"><div class="today-item-name">${escapeHtml(it.name)}</div><div class="today-item-module">${escapeHtml(it.moduleName)}</div></div><button class="today-item-btn" onclick="switchModule('sleepPlan')" title="去睡眠流程">›</button></div>`;
+        }
+        if (it.supplement) {
+          return `<div class="today-item"><div class="today-item-icon">${it.icon}</div><div class="today-item-info"><div class="today-item-name">${escapeHtml(it.name)}</div><div class="today-item-module">${escapeHtml(it.moduleName)}</div></div><button class="today-item-btn" onclick="toggleSupplement(${it.id})" title="标记已服用">✓</button></div>`;
+        }
+        return `<div class="today-item"><div class="today-item-icon">${it.icon}</div><div class="today-item-info"><div class="today-item-name">${escapeHtml(it.name)}</div><div class="today-item-module">${escapeHtml(it.moduleName)}</div></div><button class="today-item-btn" onclick="toggleCheck('${it.moduleId}', ${it.id})" title="点击打卡">✓</button></div>`;
+      }).join('');
+      return `
+        <div class="workbench-box" id="workbenchBox">
+          <div class="workbench-top">
+            <div class="growth-score">
+              <div class="growth-score-ring" style="--score:${score}"><span>${score}</span></div>
+              <div>
+                <div class="growth-score-title">今日成长评分</div>
+                <div class="growth-score-sub">综合打卡 · 补剂 · 睡眠</div>
+              </div>
+            </div>
+            <div class="workbench-summary">
+              <div>今日完成<b>${s.totalDone}/${s.totalNeed}</b></div>
+              <div>连续坚持<b>${getOverallStreak()} 天</b></div>
+            </div>
+          </div>
+          ${renderTimeCardHtml()}
+          ${highlights.length ? `<div class="wb-section-title">本月代表作</div><div class="month-highlights">${highlights.map(hl => `<div class="highlight-item"><div class="highlight-item-label">${hl.icon} ${hl.label}</div><div class="highlight-item-text">${escapeHtml(hl.text)}</div></div>`).join('')}</div>` : ''}
+          ${quickHtml ? `<div class="wb-section-title">快捷入口</div><div class="workbench-quick">${quickHtml}</div>` : ''}
+          ${pendingItems.length ? `
+            <div class="wb-section-title">今日清单 <span class="wb-count">${pendingItems.length}</span></div>
+            <div class="today-list">${itemHtml}${moreCount > 0 ? `<div class="today-item"><div class="today-item-info"><div class="today-item-name" style="color:var(--text2)">还有 ${moreCount} 项待办</div><div class="today-item-module">去对应模块继续完成</div></div></div>` : ''}</div>
+          ` : `<div class="today-list"><div class="today-item"><div class="today-item-info"><div class="today-item-name" style="color:var(--success)">今日待办已全部完成</div><div class="today-item-module">保持这个节奏</div></div></div></div>`}
+        </div>
+      `;
+    }
+
+    function refreshWorkbench() {
+      if (activeModule !== 'daily') return;
+      const box = document.getElementById('workbenchBox');
+      if (!box) return;
+      const wrap = document.createElement('div');
+      wrap.innerHTML = renderWorkbenchHtml();
+      const next = wrap.firstElementChild;
+      if (next) box.outerHTML = next.outerHTML;
+    }
+
+    // ========== 快捷入口排序 ==========
+    function getQuickEntryOrder() {
+      const defaults = ['sleepPlan', 'fitness', 'supplements', 'finance', 'manifestation', 'body'];
+      try {
+        const saved = JSON.parse(localStorage.getItem(LS_KEY + '_quickOrder'));
+        if (Array.isArray(saved) && saved.length) return saved.filter(id => MODULE_CONFIG[id]);
+      } catch(e) {}
+      return defaults;
+    }
+
+    function saveQuickEntryOrder(order) {
+      localStorage.setItem(LS_KEY + '_quickOrder', JSON.stringify(order));
+      refreshWorkbench();
+    }
+
+    // ========== 视觉个性化 ==========
+    const THEME_PRESETS = [
+      { id: 'default', name: '经典青绿', color: '#64ffda', color2: '#00d4ff' },
+      { id: 'sun', name: '暖阳', color: '#ffd93d', color2: '#ff9f43' },
+      { id: 'ocean', name: '深海', color: '#4d96ff', color2: '#00d4ff' },
+      { id: 'neon', name: '霓虹紫', color: '#bd34fe', color2: '#00d4ff' },
+      { id: 'forest', name: '森林绿', color: '#6bcb77', color2: '#00e676' }
+    ];
+
+    function getUiPrefs() {
+      try {
+        const p = JSON.parse(localStorage.getItem(LS_KEY + '_uiPrefs'));
+        if (p && p.mode && p.theme) return p;
+      } catch(e) {}
+      return { mode: 'rich', theme: 'default' };
+    }
+
+    function saveUiPrefs(prefs) {
+      localStorage.setItem(LS_KEY + '_uiPrefs', JSON.stringify(prefs));
+      applyUiPrefs();
+    }
+
+    function applyUiPrefs() {
+      const p = getUiPrefs();
+      document.body.classList.toggle('ui-simple', p.mode === 'simple');
+      document.body.classList.remove('theme-sun', 'theme-ocean', 'theme-neon', 'theme-forest');
+      if (p.theme && p.theme !== 'default') document.body.classList.add('theme-' + p.theme);
+    }
+
+    function openPersonalizeModal() {
+      renderPersonalizeContent();
+      document.getElementById('personalizeOverlay').classList.add('show');
+    }
+
+    function closePersonalizeModal(e) {
+      const overlay = document.getElementById('personalizeOverlay');
+      if (!overlay) return;
+      if (e && e.target !== overlay) return;
+      overlay.classList.remove('show');
+    }
+
+    function renderPersonalizeContent() {
+      const p = getUiPrefs();
+      const themeHtml = THEME_PRESETS.map(t => `
+        <button class="theme-swatch ${p.theme === t.id ? 'active' : ''}" onclick="selectUiTheme('${t.id}')">
+          <span class="theme-swatch-dot" style="background:linear-gradient(135deg, ${t.color}, ${t.color2})"></span>
+          <span>${t.name}</span>
+        </button>
+      `).join('');
+      const order = getQuickEntryOrder();
+      const orderHtml = order.map((id, idx) => {
+        const cfg = MODULE_CONFIG[id];
+        if (!cfg) return '';
+        return `
+          <div class="quick-order-item">
+            <span class="qoi-icon">${cfg.icon}</span>
+            <span class="qoi-name">${cfg.name}</span>
+            <button onclick="moveQuickOrder(${idx}, -1)" ${idx === 0 ? 'disabled' : ''} title="上移">↑</button>
+            <button onclick="moveQuickOrder(${idx}, 1)" ${idx === order.length - 1 ? 'disabled' : ''} title="下移">↓</button>
+          </div>
+        `;
+      }).join('');
+      document.getElementById('personalizeContent').innerHTML = `
+        <div class="personalize-section">
+          <div class="personalize-section-title">显示模式</div>
+          <div class="mode-tabs">
+            <button class="mode-tab ${p.mode === 'rich' ? 'active' : ''}" onclick="setUiMode('rich')">✨ 丰富模式</button>
+            <button class="mode-tab ${p.mode === 'simple' ? 'active' : ''}" onclick="setUiMode('simple')">简洁模式</button>
+          </div>
+        </div>
+        <div class="personalize-section">
+          <div class="personalize-section-title">主题配色</div>
+          <div class="theme-swatches">${themeHtml}</div>
+        </div>
+        <div class="personalize-section">
+          <div class="personalize-section-title">首页快捷入口顺序</div>
+          <div class="quick-order-list">${orderHtml || '<div class="supp-log-empty">暂无快捷入口</div>'}</div>
+        </div>
+      `;
+    }
+
+    function selectUiTheme(theme) {
+      const p = getUiPrefs();
+      p.theme = theme;
+      saveUiPrefs(p);
+      renderPersonalizeContent();
+    }
+
+    function setUiMode(mode) {
+      const p = getUiPrefs();
+      p.mode = mode;
+      saveUiPrefs(p);
+      renderPersonalizeContent();
+    }
+
+    function moveQuickOrder(index, delta) {
+      const order = getQuickEntryOrder();
+      const target = index + delta;
+      if (target < 0 || target >= order.length) return;
+      const tmp = order[index];
+      order[index] = order[target];
+      order[target] = tmp;
+      saveQuickEntryOrder(order);
+      renderPersonalizeContent();
+      showInfoToast('快捷入口顺序已更新');
+    }
+
+    // ========== 备份复制 / 剪贴板导入 ==========
+    function fallbackCopyText(text, done) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        if (done) done();
+      } catch(e) {
+        alert('复制失败，请手动复制备份文本');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function copyBackupToClipboard() {
+      const payload = { app: 'growth-checkin', version: 'v88', exportedAt: new Date().toISOString(), data: data };
+      payload.checksum = simpleHash(JSON.stringify(payload.data));
+      const text = JSON.stringify(payload);
+      const done = () => showInfoToast('备份已复制，可粘贴到微信/文件传输助手保存');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopyText(text, done));
+      } else {
+        fallbackCopyText(text, done);
+      }
+    }
+
+    function pasteBackupFromClipboard() {
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
+        alert('当前浏览器不支持读取剪贴板，请用“导入备份”选择文件');
+        return;
+      }
+      navigator.clipboard.readText().then(text => {
+        try {
+          applyImportedBackup(JSON.parse(text));
+          closeBackupModal();
+        } catch(err) {
+          alert('导入失败：' + err.message);
+        }
+      }).catch(err => alert('读取剪贴板失败：' + err.message));
+    }
+
+    function copyStatsReport() {
+      const rows = getDailyReportRows(statsRange);
+      const dates = getStatsDates(statsRange);
+      const growth = getGrowthStats(dates);
+      const lines = rows.map((r, i) => [r.date, growth[i] ? growth[i].value : '', r.checkin, r.supplement, r.manifest].join(' | '));
+      const text = '成长打卡统计（' + statsRange + '天）\n' + ['日期', '成长评分', '打卡完成率(%)', '补剂服用', '显化记录'].join(' | ') + '\n' + lines.join('\n');
+      const done = () => showInfoToast('统计报告已复制');
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopyText(text, done));
+      else fallbackCopyText(text, done);
+    }
+
+    // ========== 补剂用药日志 ==========
+    let suppLogItemId = null;
+
+    function openSupplementLog(itemId) {
+      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === itemId);
+      if (!item) return;
+      suppLogItemId = itemId;
+      document.getElementById('suppLogItemInfo').innerHTML = `
+        <div class="supp-log-item-name">${item.icon} ${escapeHtml(item.name)}</div>
+        <div class="supp-log-item-meta">${escapeHtml(item.dosage || '剂量未填')} · ${escapeHtml(item.time || '时间未填')}</div>
+      `;
+      const dateInput = document.getElementById('suppLogDate');
+      dateInput.max = getTodayStr();
+      dateInput.value = supplementViewDate <= getTodayStr() ? supplementViewDate : getTodayStr();
+      document.getElementById('suppLogDose').value = item.dosage || '';
+      document.getElementById('suppLogTime').value = '';
+      document.getElementById('suppLogReaction').value = '';
+      document.getElementById('suppLogNote').value = '';
+      renderSupplementLogEntries();
+      document.getElementById('suppLogOverlay').classList.add('show');
+    }
+
+    function closeSuppLogModal(e) {
+      const overlay = document.getElementById('suppLogOverlay');
+      if (!overlay) return;
+      if (e && e.target !== overlay) return;
+      overlay.classList.remove('show');
+      suppLogItemId = null;
+    }
+
+    function renderSupplementLogEntries() {
+      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === suppLogItemId);
+      const el = document.getElementById('suppLogEntries');
+      if (!item || !el) return;
+      const dateStr = document.getElementById('suppLogDate').value;
+      const records = (item.records || []).filter(r => r.date === dateStr && r.taken).sort((a, b) => String(b.loggedAt || '').localeCompare(String(a.loggedAt || '')));
+      if (!records.length) {
+        el.innerHTML = '<div class="supp-log-empty">当天还没有服用记录，填完下方内容后保存即可。</div>';
+        return;
+      }
+      el.innerHTML = records.map(r => `
+        <div class="supp-log-entry">
+          <b>${escapeHtml(r.dose || '剂量未填')}</b>
+          <span>${r.time ? '⏰ ' + escapeHtml(r.time) : '⏰ 未填时间'}</span>
+          ${r.reaction ? '<span>· ' + escapeHtml(r.reaction) + '</span>' : ''}
+          ${r.note ? '<span>· ' + escapeHtml(r.note) + '</span>' : ''}
+          <button class="del" onclick="deleteSupplementLogRecord(${typeof r.id === 'number' ? r.id : "'" + r.date + "'"})" title="删除">×</button>
+        </div>
+      `).join('');
+    }
+
+    function saveSupplementLog() {
+      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === suppLogItemId);
+      if (!item) return;
+      const dateStr = document.getElementById('suppLogDate').value;
+      if (!dateStr) { alert('请选择日期'); return; }
+      if (dateStr > getTodayStr()) { alert('不能记录未来的日期'); return; }
+      const dose = document.getElementById('suppLogDose').value.trim();
+      const time = document.getElementById('suppLogTime').value;
+      const reaction = document.getElementById('suppLogReaction').value.trim();
+      const note = document.getElementById('suppLogNote').value.trim();
+      if (!dose && !time && !reaction && !note) { alert('请至少填写一项内容'); return; }
+      if (!item.records) item.records = [];
+      const existing = item.records.find(r => r.date === dateStr && r.taken);
+      if (existing) {
+        if (dose) existing.dose = dose;
+        if (time) existing.time = time;
+        if (reaction) existing.reaction = reaction;
+        if (note) existing.note = note;
+        existing.loggedAt = new Date().toISOString();
+      } else {
+        item.records.push({ id: Date.now(), date: dateStr, taken: true, dose, time, reaction, note, loggedAt: new Date().toISOString() });
+      }
+      saveData();
+      renderSupplementLogEntries();
+      showInfoToast('用药日志已保存');
+    }
+
+    function deleteSupplementLogRecord(recordId) {
+      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === suppLogItemId);
+      if (!item) return;
+      if (typeof recordId === 'number') {
+        item.records = (item.records || []).filter(r => r.id !== recordId);
+      } else {
+        item.records = (item.records || []).filter(r => !(r.date === recordId && r.taken));
+      }
+      saveData();
+      renderSupplementLogEntries();
+      showInfoToast('日志记录已删除');
+    }
+
+    function renderSupplementLogSection(items, dateStr) {
+      const all = [];
+      items.forEach(item => {
+        (item.records || []).forEach(r => {
+          if (r.taken && r.date) all.push({ item, rec: r });
+        });
+      });
+      all.sort((a, b) => String(b.rec.date).localeCompare(String(a.rec.date)) || String(b.rec.loggedAt || '').localeCompare(String(a.rec.loggedAt || '')));
+      const rows = all.slice(0, 15);
+      if (!rows.length) return '';
+      return `
+        <div class="supp-log-section">
+          <div class="supp-log-title">📋 用药日志（近 15 条）</div>
+          ${rows.map(({ item, rec }) => `
+            <div class="supp-log-row">
+              <div class="supp-log-row-icon">${item.icon}</div>
+              <div class="supp-log-row-main">
+                <div class="supp-log-row-head">
+                  <span>${escapeHtml(item.name)}</span>
+                  <span>${rec.date}${rec.time ? ' · ' + escapeHtml(rec.time) : ''}</span>
+                </div>
+                <div>${rec.dose ? '剂量：' + escapeHtml(rec.dose) + ' · ' : ''}${rec.reaction ? '反应：' + escapeHtml(rec.reaction) : ''}${rec.note ? (rec.reaction ? '；' : '') + escapeHtml(rec.note) : ''}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function getMonthlySupplementSummary() {
+      const now = new Date();
+      const monthKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+      const items = (data.modules.supplements && data.modules.supplements.items) || [];
+      let need = 0, done = 0, missed = 0;
+      const reactions = [];
+      const seen = new Set();
+      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      for (let day = 1; day <= lastDay; day++) {
+        const ds = monthKey + '-' + String(day).padStart(2, '0');
+        if (ds > getTodayStr()) break;
+        items.forEach(i => {
+          if (!shouldTakeSupplement(i, ds)) return;
+          need++;
+          if (i.records && i.records.some(r => r.date === ds && r.taken)) done++;
+          else missed++;
+        });
+        items.forEach(i => {
+          (i.records || []).forEach(r => {
+            if (r.date === ds && r.taken && r.reaction && !seen.has(r.reaction)) {
+              seen.add(r.reaction);
+              reactions.push(r.reaction);
+            }
+          });
+        });
+      }
+      return { need, done, missed, pct: need ? Math.round(done / need * 100) : 0, reactions: reactions.slice(0, 4) };
+    }
+
+    function renderSupplementReviewSection() {
+      const summary = getMonthlySupplementSummary();
+      const note = (data.modules.supplements && data.modules.supplements.reviewNote) || '';
+      return `
+        <div class="supp-review-section">
+          <div class="supp-review-title">🩺 复诊小结</div>
+          <div class="supp-review-summary">
+            本月应服 <b>${summary.need}</b> 次，已服 <b>${summary.done}</b> 次，完成率 <b>${summary.pct}%</b>，漏服 <b>${summary.missed}</b> 次。${summary.reactions.length ? '记录到的反应：' + summary.reactions.map(escapeHtml).join('、') : '本月暂无反应记录。'}
+          </div>
+          <textarea class="note-input" id="reviewNoteInput" placeholder="写给医生看的重点：服药时间、剂量、副作用、是否停药、下次复诊时间..." style="min-height:80px">${escapeHtml(note)}</textarea>
+          <button class="btn-primary" style="margin-top:10px;width:100%" onclick="saveSupplementReviewNote()">保存复诊小结</button>
+        </div>
+      `;
+    }
+
+    function saveSupplementReviewNote() {
+      const input = document.getElementById('reviewNoteInput');
+      if (!input) return;
+      if (!data.modules.supplements) data.modules.supplements = {};
+      data.modules.supplements.reviewNote = input.value.trim();
+      saveData();
+      showInfoToast('复诊小结已保存');
+    }
+
+    // ========== 显化目标真实数据联动 ==========
+    function getGoalLinkedStats(goal) {
+      const text = ((goal.title || '') + ' ' + (goal.description || '')).toLowerCase();
+      const finance = getFinanceStats();
+      const weekDays = getWeekDates();
+      const reading = getWeeklyReadingStats(weekDays);
+      const weeklyHabit = getWeeklyHabitStats(weekDays);
+      const bodyCount = getBodyRecords().length;
+      const sleepActual = getSleepActualHours(getTodayStr());
+      if (goal.linkModule === 'finance' || /攒钱|存钱|存款|财务|挣钱|收入/.test(text)) return { icon: '💰', text: '存款 ' + formatMoney(finance.current) + ' / ' + formatMoney(finance.target) };
+      if (goal.linkModule === 'reading' || /读书|阅读|看书|学习/.test(text)) return { icon: '📖', text: '本周阅读 ' + reading.minutes + ' 分钟 · ' + reading.sessions + ' 次' };
+      if (goal.linkModule === 'fitness' || /健身|锻炼|训练|增肌|减肥|瘦/.test(text)) return { icon: '💪', text: '本周打卡 ' + weeklyHabit.done + '/' + weeklyHabit.need + ' · 身体记录 ' + bodyCount + ' 条' };
+      if (goal.linkModule === 'sleepPlan' || /睡眠|早睡|作息/.test(text)) return { icon: '😴', text: sleepActual !== null ? '昨晚实际睡眠 ' + sleepActual + ' 小时' : '今日睡眠目标 ' + getSleepTargetText(getTodayStr()) };
+      return { icon: '📈', text: '今日成长评分 ' + getGrowthScore(getTodayStr()) };
     }
 
     function renderDailyTips() {
@@ -11054,6 +12188,7 @@
       const rate = totalNeed ? Math.round(totalDone / totalNeed * 100) : 0;
       document.getElementById('sRate').textContent = rate + '%';
       updateDailyHero();
+      refreshWorkbench();
     }
 
     function showCalendar(moduleId, id) {
