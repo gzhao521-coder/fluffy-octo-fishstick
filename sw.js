@@ -1,4 +1,4 @@
-const CACHE_NAME = 'growth-checkin-v88';
+const CACHE_NAME = 'growth-checkin-v89';
 const APP_SHELL = [
   './',
   './index.html',

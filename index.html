@@ -747,6 +747,17 @@
     }
     .habit-info .streak { color: var(--warning); font-weight: 700; display: inline-flex; align-items: center; gap: 2px; }
     .habit-info .streak::before { content: '🔥'; font-size: 11px; }
+    .habit-info .remark {
+      font-size: 12px;
+      color: #9db0d8;
+      background: rgba(0,212,255,0.06);
+      border: 1px solid rgba(0,212,255,0.12);
+      border-radius: 6px;
+      padding: 3px 8px;
+      margin-top: 6px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
     .achievement-badges { display: inline-flex; flex-wrap: wrap; gap: 4px; margin-left: 4px; vertical-align: middle; }
     .achievement-badge {
       font-size: 11px;
@@ -5787,6 +5798,23 @@
     const MODULE_ORDER = ['daily','game','cycle','free','finance','shopping','fitness','supplements','body','reading','qa','study','sleepPlan','manifestation'];
     const NAV_PRIMARY_IDS = ['daily','study','sleepPlan','finance','supplements','manifestation'];
     const ACHIEVEMENT_MILESTONES = [7, 14, 21, 30, 60, 90];
+    const DAILY_HABIT_REMARKS = {
+      '戒除': '需坚持 14 天',
+      '吃早饭': '早上 9 点前完成',
+      '早睡早起': '早上 7 点起床，晚上 10 点半睡觉',
+      '学习': '每天至少 1 小时',
+      '练字': '每天最少半小时',
+      '盘串': '每天最少半小时',
+      '显化': '记住当天所有的目标',
+      '摸鱼': '全天都可以',
+      '打游戏': '每天不超过两小时',
+      '写记录': '每天睡前记得写记录',
+      '听歌': '每天不超过一小时',
+      '攒钱': '每天都攒钱',
+      '社交': '尽量保持每日社交',
+      '锻炼': '除夜班、下夜班外，尽量都坚持',
+      '吃补剂': '每日需坚持，按照补剂明细走'
+    };
     const DAILY_QUOTES = [
       '今天也是值得认真过的一天。',
       '完成一件小事，也比原地不动强。',
@@ -11276,6 +11304,7 @@
       const isFuel = h.name === '加油';
       const fuelMeta = isFuel ? renderFuelMetaHtml(h) : '';
       const makeupBtn = isFuel ? '' : `<button class="makeup-btn" onclick="openMakeupModal('${moduleId}', ${h.id})" title="补卡">↩</button>`;
+      const remark = h.remark || DAILY_HABIT_REMARKS[h.name] || '';
       return `
         <div class="habit-card ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}">
           <div class="icon">${h.icon}</div>
@@ -11285,6 +11314,7 @@
               <span>${h.records.length} 天已坚持</span>
               ${streak > 0 ? '<span>·</span><span class="streak">' + streak + ' 天</span>' : ''}
             </div>
+            ${remark ? '<div class="remark">' + escapeHtml(remark) + '</div>' : ''}
             ${fuelMeta}
           </div>
           <button class="check-btn ${isDone ? 'done' : ''}" data-module="${moduleId}" data-id="${h.id}" onclick="toggleCheck('${moduleId}', ${h.id})" title="${isFuel ? '记录加油' : '点击打卡'}">
@@ -11706,25 +11736,6 @@
     function renderWorkbenchHtml() {
       const s = getCompletionForDate(today);
       const score = getGrowthScore(today);
-      const highlights = getMonthHighlights();
-      const quickEntries = getQuickEntryOrder().slice(0, 6);
-      const pendingItems = getPendingTodayItems();
-      const pendingSlice = pendingItems.slice(0, 12);
-      const moreCount = pendingItems.length - pendingSlice.length;
-      const quickHtml = quickEntries.map(id => {
-        const cfg = MODULE_CONFIG[id];
-        if (!cfg) return '';
-        return `<button class="wb-quick-chip" style="--nav-color:${cfg.color}" onclick="switchModule('${id}')"><span class="wb-chip-icon">${cfg.icon}</span><span>${cfg.name}</span></button>`;
-      }).join('');
-      const itemHtml = pendingSlice.map(it => {
-        if (it.sleep) {
-          return `<div class="today-item"><div class="today-item-icon">${it.icon}</div><div class="today-item-info"><div class="today-item-name">${escapeHtml(it.name)}</div><div class="today-item-module">${escapeHtml(it.moduleName)}</div></div><button class="today-item-btn" onclick="switchModule('sleepPlan')" title="去睡眠流程">›</button></div>`;
-        }
-        if (it.supplement) {
-          return `<div class="today-item"><div class="today-item-icon">${it.icon}</div><div class="today-item-info"><div class="today-item-name">${escapeHtml(it.name)}</div><div class="today-item-module">${escapeHtml(it.moduleName)}</div></div><button class="today-item-btn" onclick="toggleSupplement(${it.id})" title="标记已服用">✓</button></div>`;
-        }
-        return `<div class="today-item"><div class="today-item-icon">${it.icon}</div><div class="today-item-info"><div class="today-item-name">${escapeHtml(it.name)}</div><div class="today-item-module">${escapeHtml(it.moduleName)}</div></div><button class="today-item-btn" onclick="toggleCheck('${it.moduleId}', ${it.id})" title="点击打卡">✓</button></div>`;
-      }).join('');
       return `
         <div class="workbench-box" id="workbenchBox">
           <div class="workbench-top">
@@ -11741,12 +11752,6 @@
             </div>
           </div>
           ${renderTimeCardHtml()}
-          ${highlights.length ? `<div class="wb-section-title">本月代表作</div><div class="month-highlights">${highlights.map(hl => `<div class="highlight-item"><div class="highlight-item-label">${hl.icon} ${hl.label}</div><div class="highlight-item-text">${escapeHtml(hl.text)}</div></div>`).join('')}</div>` : ''}
-          ${quickHtml ? `<div class="wb-section-title">快捷入口</div><div class="workbench-quick">${quickHtml}</div>` : ''}
-          ${pendingItems.length ? `
-            <div class="wb-section-title">今日清单 <span class="wb-count">${pendingItems.length}</span></div>
-            <div class="today-list">${itemHtml}${moreCount > 0 ? `<div class="today-item"><div class="today-item-info"><div class="today-item-name" style="color:var(--text2)">还有 ${moreCount} 项待办</div><div class="today-item-module">去对应模块继续完成</div></div></div>` : ''}</div>
-          ` : `<div class="today-list"><div class="today-item"><div class="today-item-info"><div class="today-item-name" style="color:var(--success)">今日待办已全部完成</div><div class="today-item-module">保持这个节奏</div></div></div></div>`}
         </div>
       `;
     }
