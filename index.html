@@ -581,7 +581,7 @@
     .add-box input:focus { border-color: var(--primary); background: rgba(0,0,0,0.3); box-shadow: 0 0 15px rgba(100,255,218,0.1); }
     .add-box button {
       padding: 12px 22px;
-      background: linear-gradient(135deg, var(--module-color, var(--primary)), var(--module-color, var(--primary))88);
+      background: linear-gradient(135deg, var(--module-color, var(--primary)), var(--module-color-a88, #64ffda88));
       color: #0a0a1a;
       border: none;
       border-radius: var(--radius-sm);
@@ -590,7 +590,7 @@
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px var(--module-color, #64ffda)33;
+      box-shadow: 0 4px 15px var(--module-color-a33, #64ffda33);
       position: relative;
       overflow: hidden;
     }
@@ -609,7 +609,7 @@
     .add-box button:hover::after { left: 100%; }
     .add-box button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 25px var(--module-color, #64ffda)44;
+      box-shadow: 0 6px 25px var(--module-color-a44, #64ffda44);
     }
     .add-box button:active { transform: translateY(0); }
 
@@ -1041,7 +1041,7 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border: none;
       background: transparent;
-      color: #5a5a7a;
+      color: var(--text2);
       position: relative;
     }
     .nav-item:hover { color: var(--text2); background: rgba(100,255,218,0.05); }
@@ -1066,7 +1066,9 @@
       overflow: hidden;
       text-overflow: ellipsis;
       transition: all 0.3s ease;
-      opacity: 0.7;
+      /* 以前这里是 opacity: 0.7，配上 #5a5a7a 的文字色，对比度只有约 1.3:1，几乎看不清。
+         现在底色改用 --text2 且不再降透明度，对比度约 6.3:1。 */
+      opacity: 1;
     }
     .nav-item.active .nav-label { opacity: 1; font-weight: 700; }
     /* 激活指示器 */
@@ -2162,6 +2164,7 @@
     .supplement-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
     .supplement-check-btn {
       width: 40px; height: 40px;
+      position: relative;
       border-radius: 50%;
       border: 2.5px solid rgba(100,255,218,0.15);
       background: rgba(0,0,0,0.2);
@@ -2171,6 +2174,13 @@
       transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
       flex-shrink: 0;
       color: transparent;
+    }
+    /* 扩大点击热区到 48px，视觉尺寸不变（44px 最小可点尺寸） */
+    .supplement-check-btn::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
     }
     .supplement-check-btn:hover { border-color: var(--primary); transform: scale(1.1); box-shadow: 0 0 20px rgba(100,255,218,0.2); }
     .supplement-check-btn.taken {
@@ -2477,7 +2487,7 @@
       .nav-item .nav-icon { font-size: 20px; }
       .habit-card { padding: 14px; }
       .habit-card .icon { width: 42px; height: 42px; font-size: 18px; }
-      .check-btn { width: 40px; height: 40px; }
+      .check-btn { width: 44px; height: 44px; }
       header h1 { font-size: 22px; }
     }
 
@@ -3711,6 +3721,7 @@
     .sleep-check-btn {
       width: 40px;
       height: 40px;
+      position: relative;
       border-radius: 50%;
       border: 2.5px solid rgba(0,212,255,0.18);
       background: rgba(0,0,0,0.2);
@@ -3722,6 +3733,13 @@
       align-items: center;
       justify-content: center;
       transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    /* 扩大点击热区到 48px，视觉尺寸不变 */
+    .sleep-check-btn::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
     }
     .sleep-check-btn:hover:not(:disabled) { border-color: var(--primary); transform: scale(1.08); }
     .sleep-check-btn.done {
@@ -5160,57 +5178,6 @@
     </div>
   </div>
 
-  <!-- 市场数据手动录入弹窗 -->
-  <div class="overlay" id="marketInputOverlay" onclick="closeMarketInputModal(event)">
-    <div class="modal wide" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3>✏️ 手动录入市场数据</h3>
-        <button class="close" onclick="closeMarketInputModal()">&times;</button>
-      </div>
-      <p style="font-size:13px;color:var(--text2);margin-bottom:12px">输入今日收盘点位和涨跌幅（留空则跳过）：</p>
-      <div id="marketInputList"></div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeMarketInputModal()">取消</button>
-        <button class="btn-primary" onclick="saveMarketInput()">保存</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 基金添加/编辑弹窗 -->
-  <div class="overlay" id="fundOverlay" onclick="closeFundModal(event)">
-    <div class="modal wide" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3 id="fundModalTitle">➕ 添加基金</h3>
-        <button class="close" onclick="closeFundModal()">&times;</button>
-      </div>
-      <input type="hidden" id="fundId" value="">
-      <div class="fund-form-row">
-        <label>基金名称</label>
-        <input type="text" class="fund-form-input" id="fundName" placeholder="如：易方达蓝筹精选">
-      </div>
-      <div class="fund-form-row">
-        <label>基金代码</label>
-        <input type="text" class="fund-form-input" id="fundCode" placeholder="如：005827">
-      </div>
-      <div class="fund-form-row">
-        <label>持有份额</label>
-        <input type="number" class="fund-form-input" id="fundShares" placeholder="如：1000" step="0.01">
-      </div>
-      <div class="fund-form-row">
-        <label>成本净值</label>
-        <input type="number" class="fund-form-input" id="fundCostNav" placeholder="如：1.2345" step="0.0001">
-      </div>
-      <div class="fund-form-row">
-        <label>当前净值（可选）</label>
-        <input type="number" class="fund-form-input" id="fundCurrentNav" placeholder="留空则使用成本净值，或自动获取" step="0.0001">
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeFundModal()">取消</button>
-        <button class="btn-primary" onclick="saveFund()">保存</button>
-      </div>
-    </div>
-  </div>
-
   <!-- 显化记录添加弹窗 -->
   <div class="overlay" id="manifestRecordOverlay" onclick="closeManifestRecordModal(event)">
     <div class="modal wide" onclick="event.stopPropagation()">
@@ -5348,47 +5315,6 @@
       <div id="weeklyReportContent"></div>
       <div class="modal-actions">
         <button class="btn-secondary" onclick="closeWeeklyReport()">关闭</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 补剂用药日志弹窗 -->
-  <div class="overlay" id="suppLogOverlay" onclick="closeSuppLogModal(event)">
-    <div class="modal wide" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3>💊 用药日志</h3>
-        <button class="close" onclick="closeSuppLogModal()">&times;</button>
-      </div>
-      <div id="suppLogItemInfo" class="supp-log-item-info"></div>
-      <div class="fund-form-row">
-        <label>日期</label>
-        <input type="date" class="fund-form-input" id="suppLogDate" onchange="renderSupplementLogEntries()">
-      </div>
-      <div class="supp-log-entries" id="suppLogEntries"></div>
-      <div class="supp-log-edit-title">✏️ 填写本次服用情况</div>
-      <div class="fund-form-row">
-        <div class="form-grid">
-          <div>
-            <label>实际剂量</label>
-            <input type="text" class="fund-form-input" id="suppLogDose" placeholder="如：半片、1粒">
-          </div>
-          <div>
-            <label>服用时间</label>
-            <input type="time" class="fund-form-input" id="suppLogTime">
-          </div>
-        </div>
-      </div>
-      <div class="fund-form-row">
-        <label>反应 / 感受</label>
-        <input type="text" class="fund-form-input" id="suppLogReaction" placeholder="如：无不适、轻微头晕、精力提升...">
-      </div>
-      <div class="fund-form-row">
-        <label>备注（可选）</label>
-        <textarea class="note-input" id="suppLogNote" placeholder="如：饭后服用、和医生沟通的重点..." style="min-height:70px;margin-bottom:0"></textarea>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-secondary" onclick="closeSuppLogModal()">取消</button>
-        <button class="btn-primary" onclick="saveSupplementLog()">保存记录</button>
       </div>
     </div>
   </div>
@@ -5760,6 +5686,17 @@
     }
 
     const LS_KEY = 'myCheckinApp_v10';
+    // 单一版本号来源：诊断信息、备份 payload、sw.js 的 CACHE_NAME 都应对齐这里
+    const APP_VERSION = 'v91';
+    // 存储安全状态。必须在 `let data = loadData();` 之前初始化：
+    // loadData / saveData / validateAndRepairData 都会用到它们，放在后面会踩暂时性死区（TDZ）直接报错。
+    let storageHealthy = true;
+    let storageWarned = false;
+    const RESCUE_PREFIX = LS_KEY + '_rescue_';
+    // 自动备份条数与总字符上限（约 1.2M 字符）。每份备份都是整份数据的拷贝，
+    // 不限制的话会把 localStorage 配额吃光，导致主数据无法保存。
+    const MAX_AUTO_BACKUPS = 20;
+    const MAX_AUTO_BACKUP_CHARS = 1200000;
     const ICONS = ['🌅','🏃','📖','💧','🧘','🎸','💻','🥗','✍️','🧹','🌙','💪','🎯','🎨','🎧','🚴','🏊','🧠','🌳','🔥'];
 
     function getBgMotionEnabled() {
@@ -5834,17 +5771,40 @@
 
     let data = loadData();
     validateAndRepairData();
-    const today = getTodayStr();
+    // 注意：这里必须是 let。以前是 const，只在启动时算一次；手机 PWA 常驻后台跨过午夜后，
+    // 打卡会被写到"昨天"，加油也会被判成"未来日期"而无法记录。
+    let today = getTodayStr();
+    // 补剂/睡眠模块的"按日期查看"游标（必须在 refreshTodayIfChanged 之前声明）
+    let supplementViewDate = getTodayStr();
+    let sleepViewDate = getTodayStr();
     let activeModule = 'daily';
+
+    // 跨天检测：回到前台、获得焦点或每分钟检查一次，发现日期变了就整体刷新。
+    function refreshTodayIfChanged() {
+      const nowStr = getTodayStr();
+      if (nowStr === today) return false;
+      const prevStr = today;
+      today = nowStr;
+      // 这两个是"按日期查看"的游标，若原本停在昨天就一起推进到今天
+      if (supplementViewDate === prevStr) supplementViewDate = nowStr;
+      if (sleepViewDate === prevStr) sleepViewDate = nowStr;
+      try {
+        const dateEl = document.getElementById('todayDate');
+        if (dateEl) dateEl.textContent = formatDateCN(new Date());
+        renderNav();
+        renderModule(activeModule);
+        updateTotalStats();
+        updateDailyHero();
+        showInfoToast('已进入新的一天：' + nowStr);
+      } catch (e) { console.log('跨天刷新失败:', e); }
+      return true;
+    }
+
     try { localStorage.removeItem(LS_KEY + '_active'); } catch(e) {}
     let pendingNoteId = null;
     let pendingNoteModule = null;
     let pendingFuelId = null;
     let pendingFuelModule = null;
-    let marketFetching = false;
-    let marketRefreshTimer = null;
-    let marketHistoryLoading = false;
-    let marketHistoryLastAttemptAt = 0;
     let skipCardEntryAnim = false;
     const REMINDER_KEY = LS_KEY + '_reminders';
     const PIN_KEY = LS_KEY + '_pin';
@@ -5854,8 +5814,6 @@
     let manifestExpandedGoal = null;
     let manifestPendingGoalId = null;
     let supplementTagFilter = 'all';
-    let supplementViewDate = getTodayStr();
-    let sleepViewDate = getTodayStr();
     let bodyEditId = null;
     let bodyRating = 4;
     let readingEditId = null;
@@ -5874,82 +5832,6 @@
       workout: { label: '💪 运动', color: '#00e676', order: 4 }
     };
 
-    const INDEX_CONFIG = [
-      { code: '1.000001', name: '上证指数', short: '上证', marketCode: '000001' },
-      { code: '0.399001', name: '深证成指', short: '深证', marketCode: '399001' },
-      { code: '0.399006', name: '创业板指', short: '创业板', marketCode: '399006' },
-      { code: '1.000300', name: '沪深300', short: '沪深300', marketCode: '000300' }
-    ];
-
-    const TENCENT_INDEX_MAP = {
-      '000001': { name: '上证指数', code: '000001', tencent: 'sh000001' },
-      '399001': { name: '深证成指', code: '399001', tencent: 'sz399001' },
-      '399006': { name: '创业板指', code: '399006', tencent: 'sz399006' },
-      '000300': { name: '沪深300', code: '000300', tencent: 'sh000300' }
-    };
-
-    const JSONP_ACTIVE = {};
-
-    function cancelJsonp(key) {
-      const entry = JSONP_ACTIVE[key];
-      if (!entry) return;
-      if (entry.script && entry.script.parentNode) entry.script.parentNode.removeChild(entry.script);
-      if (entry.callbackName) delete window[entry.callbackName];
-      clearTimeout(entry.timer);
-      delete JSONP_ACTIVE[key];
-    }
-
-    function jsonpFetch(src, callbackName, timeoutMs, key) {
-      const activeKey = key || callbackName;
-      if (JSONP_ACTIVE[activeKey]) {
-        const old = JSONP_ACTIVE[activeKey];
-        cancelJsonp(activeKey);
-        if (!old.settled && old.reject) old.reject(new Error('请求已取消'));
-      }
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        const entry = { script: script, callbackName: callbackName, timer: null, reject: reject, settled: false };
-        const finish = (fn, value) => {
-          if (entry.settled) return;
-          entry.settled = true;
-          clearTimeout(entry.timer);
-          cancelJsonp(activeKey);
-          fn(value);
-        };
-        entry.timer = setTimeout(() => finish(reject, new Error('请求超时')), timeoutMs || 8000);
-        JSONP_ACTIVE[activeKey] = entry;
-        window[callbackName] = function(data) { finish(resolve, data); };
-        script.onerror = function() { finish(reject, new Error('脚本加载失败')); };
-        script.src = src;
-        document.head.appendChild(script);
-      });
-    }
-
-    function scriptFetch(src, key, timeoutMs) {
-      if (JSONP_ACTIVE[key]) {
-        const old = JSONP_ACTIVE[key];
-        cancelJsonp(key);
-        if (!old.settled && old.reject) old.reject(new Error('请求已取消'));
-      }
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        const entry = { script: script, callbackName: null, timer: null, reject: reject, settled: false };
-        const finish = (fn, value) => {
-          if (entry.settled) return;
-          entry.settled = true;
-          clearTimeout(entry.timer);
-          cancelJsonp(key);
-          fn(value);
-        };
-        entry.timer = setTimeout(() => finish(reject, new Error('请求超时')), timeoutMs || 8000);
-        JSONP_ACTIVE[key] = entry;
-        script.onload = function() { finish(resolve); };
-        script.onerror = function() { finish(reject, new Error('脚本加载失败')); };
-        script.src = src;
-        document.head.appendChild(script);
-      });
-    }
-
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
 
     function hideSplashScreen() {
@@ -5966,9 +5848,6 @@
     renderModule(activeModule);
     setTimeout(hideSplashScreen, 2200);
     updateTotalStats();
-    autoFetchMarketData();
-    startMarketAutoRefresh();
-    autoRefreshFunds();
     startReminderLoop();
     maybePromptBackup();
     updateNetworkStatus();
@@ -5983,6 +5862,13 @@
         weatherEl.title = '离线，联网后自动刷新';
       }
     });
+    // 跨天 / 回到前台的处理：修掉"打卡记到昨天"的问题
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) { refreshTodayIfChanged(); updateNetworkStatus(); }
+    });
+    window.addEventListener('pageshow', () => refreshTodayIfChanged());
+    window.addEventListener('focus', () => refreshTodayIfChanged());
+    setInterval(refreshTodayIfChanged, 60000);
 
     function updateNetworkStatus() {
       const el = document.getElementById('netStatus');
@@ -6163,9 +6049,60 @@
       return merged;
     }
 
-    function loadData() {
+    // ========== 存储安全 ==========
+    // 背景：以前 JSON.parse 失败会被静默吞掉并返回空数据，紧接着启动流程会 saveData()
+    // 把空数据写回，原始数据就永久没了；写入失败（配额满）也只在 console 里留一行。
+    // 这里做三层保护：
+    //   1) 解析失败时先把原始字符串另存为"救援副本"，且本次会话禁止写入；
+    //   2) 写入失败时明确提示用户；
+    //   3) 自动备份按总字节数裁剪，避免备份把配额挤爆。
+    function isQuotaError(e) {
+      if (!e) return false;
+      const name = e.name || '';
+      return name === 'QuotaExceededError' || name === 'NS_ERROR_DOM_QUOTA_REACHED' || e.code === 22 || e.code === 1014;
+    }
+
+    function lsChars(key) {
+      try { const v = localStorage.getItem(key); return v ? v.length : 0; } catch (e) { return 0; }
+    }
+
+    function totalLocalStorageChars() {
+      let n = 0;
       try {
-        const saved = JSON.parse(localStorage.getItem(LS_KEY));
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          n += (k ? k.length : 0) + lsChars(k);
+        }
+      } catch (e) {}
+      return n;
+    }
+
+    function warnStorageOnce(msg) {
+      if (storageWarned) return;
+      storageWarned = true;
+      console.log('存储警告:', msg);
+      setTimeout(() => alert(msg), 0);
+    }
+
+    function rescueRawData(raw) {
+      if (!raw) return null;
+      const key = RESCUE_PREFIX + Date.now();
+      try {
+        localStorage.setItem(key, raw);
+        console.log('原始数据已另存为救援副本:', key);
+        return key;
+      } catch (e) {
+        console.log('救援副本写入失败:', e);
+        return null;
+      }
+    }
+
+    function loadData() {
+      let raw = null;
+      try { raw = localStorage.getItem(LS_KEY); } catch (e) { raw = null; }
+      if (raw === null || raw === '') return initData();   // 首次使用，没有历史数据
+      try {
+        const saved = JSON.parse(raw);
         if (saved && saved.modules) {
           // 数据迁移：确保 finance 模块有完整结构
           if (!saved.modules.daily) saved.modules.daily = {};
@@ -6255,11 +6192,28 @@
           if (!saved.achievements || typeof saved.achievements !== 'object') saved.achievements = {};
           return saved;
         }
-      } catch(e) {}
+        // 能解析但不是本应用的数据结构 —— 同样按损坏处理，先抢救再停写
+        const rk = rescueRawData(raw);
+        storageHealthy = false;
+        console.log('loadData: 数据结构异常（缺少 modules）');
+        warnStorageOnce('⚠️ 检测到本地数据格式异常，已暂停写入以保护原始数据。\n\n请先到「工具菜单 → 备份 → 导出备份」保存一份，再处理，不要直接重置。'
+          + (rk ? '\n（原始数据已另存为救援副本）' : ''));
+      } catch(e) {
+        const rk = rescueRawData(raw);
+        storageHealthy = false;
+        console.log('loadData 解析失败:', e);
+        warnStorageOnce('⚠️ 检测到本地数据损坏，已暂停写入以保护原始数据。\n\n请不要重置数据，先到「工具菜单 → 备份 → 导出备份」导出，再处理。'
+          + (rk ? '\n（原始数据已另存为救援副本）' : ''));
+      }
       return initData();
     }
 
     function saveData() {
+      // 保护：数据损坏时本会话一律不写回，避免用空数据覆盖还能抢救的原始字符串
+      if (!storageHealthy) {
+        console.log('saveData: 本次会话存储状态异常，已跳过写入以保护原始数据');
+        return;
+      }
       // 保护：防止保存空数据
       if (!data || !data.modules || !data.modules.daily || !Array.isArray(data.modules.daily.habits)) {
         console.log('saveData: 数据不完整，跳过保存');
@@ -6269,6 +6223,11 @@
         localStorage.setItem(LS_KEY, JSON.stringify(data));
       } catch(e) {
         console.log('saveData 失败:', e);
+        if (isQuotaError(e)) {
+          warnStorageOnce('⚠️ 手机存储空间已满，本次改动没有保存成功。\n\n请到「工具菜单 → 备份」导出备份，并删除一些自动备份后再试。');
+        } else {
+          warnStorageOnce('⚠️ 数据保存失败：' + (e && e.message ? e.message : e) + '\n\n建议先导出一份备份。');
+        }
       }
     }
 
@@ -6757,8 +6716,10 @@
           finance: { 
             targetAmount: 10000,
             currentAmount: 0,
+            monthlyBudget: 0,
             transactions: [],
             marketData: {},
+            marketHistory: {},
             funds: [],
             habits: [] 
           },
@@ -6780,12 +6741,12 @@
           },
           free: {
             habits: [
-              { id: 20, name: '按摩', icon: '💆', type: 'daily', records: [] },
-              { id: 21, name: '色色', icon: '🔞', type: 'daily', records: [] },
-              { id: 22, name: '骑车', icon: '🚴', type: 'daily', records: [] },
-              { id: 23, name: '摄影', icon: '📷', type: 'daily', records: [] },
-              { id: 24, name: '购物', icon: '🛍️', type: 'daily', records: [] },
-              { id: 25, name: '旅游', icon: '✈️', type: 'daily', records: [] },
+              { id: 20, name: '按摩', icon: '💆', type: 'daily', records: [], fuelRecords: {} },
+              { id: 21, name: '色色', icon: '🔞', type: 'daily', records: [], fuelRecords: {} },
+              { id: 22, name: '骑车', icon: '🚴', type: 'daily', records: [], fuelRecords: {} },
+              { id: 23, name: '摄影', icon: '📷', type: 'daily', records: [], fuelRecords: {} },
+              { id: 24, name: '购物', icon: '🛍️', type: 'daily', records: [], fuelRecords: {} },
+              { id: 25, name: '旅游', icon: '✈️', type: 'daily', records: [], fuelRecords: {} },
               { id: 26, name: '加油', icon: '⛽', type: 'daily', records: [], fuelRecords: {} }
             ]
           },
@@ -6856,10 +6817,6 @@
       document.body.classList.remove('nav-more-open');
       renderNav();
       renderModule(moduleId);
-      if (moduleId === 'finance') {
-        autoFetchMarketData();
-        autoRefreshFunds();
-      }
     }
 
     function moduleHasPending(id) {
@@ -7234,11 +7191,15 @@
       `;
       const amountEl = document.getElementById('currentAmountDisplay');
       if (amountEl) amountEl.textContent = formatMoney(stats.current);
-      const subCards = document.querySelectorAll('.finance-sub-cards .finance-card-value');
-      if (subCards && subCards.length >= 2) {
-        subCards[0].textContent = formatMoney(stats.monthIncome);
-        subCards[1].textContent = formatMoney(stats.monthExpense);
-      }
+      const todayTxs = (stats.txs || []).filter(t => t.date === today);
+      const todayExpense = todayTxs.filter(t => t.type === 'expense').reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+      const todayIncome = todayTxs.filter(t => t.type === 'income').reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+      const todayExpenseEl = document.getElementById('todayExpenseValue');
+      if (todayExpenseEl) todayExpenseEl.textContent = formatMoney(todayExpense);
+      const todayIncomeEl = document.getElementById('todayIncomeValue');
+      if (todayIncomeEl) todayIncomeEl.textContent = formatMoney(todayIncome);
+      const todayCountEl = document.getElementById('todayTxCount');
+      if (todayCountEl) todayCountEl.textContent = String(todayTxs.length);
       const cardSub = document.querySelector('.finance-card-sub');
       if (cardSub) {
         cardSub.innerHTML = `
@@ -7314,6 +7275,9 @@
       const cfg = MODULE_CONFIG.finance;
 
       const txHtml = renderTxListHtml(stats);
+      const todayTxs = (stats.txs || []).filter(t => t.date === today);
+      const todayExpense = todayTxs.filter(t => t.type === 'expense').reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
+      const todayIncome = todayTxs.filter(t => t.type === 'income').reduce((sum, t) => sum + (Number(t.amount) || 0), 0);
 
       container.innerHTML = `
         <div class="module-title-bar">
@@ -7341,20 +7305,15 @@
               <div class="finance-progress-text">${stats.pct}%</div>
             </div>
           </div>
-          <div class="finance-sub-cards">
-            <div class="finance-card sub-card">
-              <div class="finance-card-label" style="color:#00e676">📈 本月收入</div>
-              <div class="finance-card-value" style="font-size:20px;color:#00e676">${formatMoney(stats.monthIncome)}</div>
-            </div>
-            <div class="finance-card sub-card">
-              <div class="finance-card-label" style="color:#ff5252">📉 本月支出</div>
-              <div class="finance-card-value" style="font-size:20px;color:#ff5252">${formatMoney(stats.monthExpense)}</div>
+          <div class="finance-card sub-card today-card">
+            <div class="finance-card-label" style="color:#ff5252">💸 今日花费</div>
+            <div class="finance-card-value" id="todayExpenseValue" style="font-size:22px;color:#ff5252">${formatMoney(todayExpense)}</div>
+            <div class="finance-card-sub">
+              <span>今日收入 <b id="todayIncomeValue" style="color:#00e676">${formatMoney(todayIncome)}</b></span>
+              <span>今日 <b id="todayTxCount">${todayTxs.length}</b> 笔</span>
             </div>
           </div>
         </div>
-
-        ${renderBudgetCardHtml(stats)}
-        ${renderFinanceTrendHtml()}
 
         <!-- 快捷操作 -->
         <div class="finance-actions">
@@ -7370,23 +7329,11 @@
             <span class="finance-btn-icon">🎯</span>
             <span>设目标</span>
           </button>
-          <button class="finance-btn budget" onclick="openFinanceTargetModal()">
-            <span class="finance-btn-icon">💰</span>
-            <span>设预算</span>
-          </button>
           <button class="finance-btn" onclick="exportFinanceCSV()">
             <span class="finance-btn-icon">📄</span>
             <span>导出CSV</span>
           </button>
         </div>
-
-        ${renderCategorySectionHtml(stats)}
-
-        <!-- 市场数据 -->
-        ${renderMarketSection()}
-
-        <!-- 基金持仓 -->
-        ${renderFundsSection()}
 
         <!-- 交易记录 -->
         <div class="tx-section">
@@ -7401,37 +7348,24 @@
       `;
     }
 
-    // ========== 股市大盘数据 ==========
-    function refreshMarketData(silent) {
-      if (marketFetching) return;
-      marketFetching = true;
-      const btn = document.querySelector('.market-refresh-btn');
-      const timeLabel = document.querySelector('.market-time');
-      if (btn && !silent) { btn.style.animation = 'spin 1s linear infinite'; btn.style.opacity = '0.5'; }
-      if (timeLabel && !silent) { timeLabel.textContent = '正在获取...'; timeLabel.style.color = 'var(--primary)'; }
-
-      fetchMarketData().then(records => {
-        processMarketData(records);
-        refreshMarketHistory();
-        if (btn && !silent) { btn.style.animation = ''; btn.style.opacity = ''; }
-        if (timeLabel && !silent) { timeLabel.textContent = '更新于 ' + new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}); timeLabel.style.color = 'var(--text2)'; }
-      }).catch(err => {
-        if (err && err.message === '请求已取消') return;
-        console.error('获取市场数据失败:', err);
-        if (btn && !silent) { btn.style.animation = ''; btn.style.opacity = ''; }
-        if (timeLabel && !silent) { timeLabel.textContent = '获取失败'; timeLabel.style.color = 'var(--danger)'; }
-        if (!silent) {
-          alert('自动获取失败，原因：' + err.message + '\n\n请尝试：\n1. 检查网络连接\n2. 点击 ✏️ 手动录入');
-        }
-      }).finally(() => {
-        marketFetching = false;
-      });
-    }
-
     function showDiagnostics() {
       const info = [];
-      info.push('版本: v88');
+      info.push('版本: ' + APP_VERSION);
       info.push('LS_KEY: ' + LS_KEY);
+      info.push('存储状态: ' + (storageHealthy ? '正常' : '⚠️ 异常（已暂停写入以保护数据）'));
+      const mainChars = lsChars(LS_KEY);
+      const backupChars = lsChars(LS_KEY + '_backups');
+      info.push('主数据: ' + mainChars + ' 字符（约 ' + Math.round(mainChars / 1024) + ' KB）');
+      info.push('自动备份: ' + backupChars + ' 字符（约 ' + Math.round(backupChars / 1024) + ' KB，上限 ' + MAX_AUTO_BACKUPS + ' 份 / ' + Math.round(MAX_AUTO_BACKUP_CHARS / 1024) + ' KB）');
+      info.push('本域合计: 约 ' + Math.round(totalLocalStorageChars() / 1024) + ' KB（配额约 5 MB）');
+      let rescueCount = 0;
+      try {
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.indexOf(RESCUE_PREFIX) === 0) rescueCount++;
+        }
+      } catch (e) {}
+      if (rescueCount) info.push('⚠️ 救援副本: ' + rescueCount + ' 份（数据曾解析失败）');
       info.push('模块数: ' + Object.keys(data.modules).length);
       info.push('manifestation: ' + (data.modules.manifestation ? '有' : '无'));
       if (data.modules.manifestation) {
@@ -7452,7 +7386,6 @@
     const BACKUP_KEY = LS_KEY + '_backups';
     const BACKUP_PROMPT_KEY = LS_KEY + '_backup_prompt';
     const BACKUP_TOAST_KEY = LS_KEY + '_backup_toast';
-    const MAX_AUTO_BACKUPS = 20;
 
     function isBackupReminderDue() {
       try {
@@ -7501,15 +7434,34 @@
     }
 
     function saveAutoBackups(list) {
+      // 先按条数裁剪
+      if (list.length > MAX_AUTO_BACKUPS) list.length = MAX_AUTO_BACKUPS;
+      // 再按总字符数裁剪：每份备份都是整份数据的深拷贝，很容易把 localStorage 配额挤爆，
+      // 一旦挤爆主数据的 saveData 就会静默失败。保留最新的若干条。
+      let total = 0;
+      for (let i = 0; i < list.length; i++) {
+        total += JSON.stringify(list[i]).length;
+        if (total > MAX_AUTO_BACKUP_CHARS) { list.length = Math.max(1, i); break; }
+      }
       try {
         localStorage.setItem(BACKUP_KEY, JSON.stringify(list));
+        return true;
       } catch(e) {
         console.log('自动备份保存失败:', e);
+        if (isQuotaError(e) && list.length > 1) {
+          list.length = Math.max(1, Math.floor(list.length / 2));   // 丢掉较老的一半再试
+          try {
+            localStorage.setItem(BACKUP_KEY, JSON.stringify(list));
+            return true;
+          } catch(e2) { console.log('自动备份二次保存仍失败:', e2); }
+        }
+        warnStorageOnce('⚠️ 自动备份没能保存（存储空间不足），本次操作前没有恢复点。\n\n请先到「工具菜单 → 备份」导出备份，并删除一些旧的自动备份。');
+        return false;
       }
     }
 
     function createAutoBackup(reason) {
-      if (!data || !data.modules) return;
+      if (!data || !data.modules) return false;
       const list = getAutoBackups();
       list.unshift({
         id: Date.now(),
@@ -7517,14 +7469,13 @@
         createdAt: new Date().toLocaleString('zh-CN', { hour12: false }),
         data: JSON.parse(JSON.stringify(data))
       });
-      if (list.length > MAX_AUTO_BACKUPS) list.length = MAX_AUTO_BACKUPS;
-      saveAutoBackups(list);
+      return saveAutoBackups(list);
     }
 
     function exportBackup() {
       const payload = {
         app: 'growth-checkin',
-        version: 'v88',
+        version: APP_VERSION,
         exportedAt: new Date().toISOString(),
         data: data
       };
@@ -7560,21 +7511,76 @@
       reader.readAsText(file);
     }
 
+    // 校验导入的每个模块结构，避免"导入成功"之后页面直接崩掉
+    function validateImportedStructure(imported) {
+      const problems = [];
+      const mods = imported.modules || {};
+      if (!mods.daily || !Array.isArray(mods.daily.habits)) problems.push('每日打卡');
+      ['daily', 'study', 'game', 'fitness', 'cycle', 'free'].forEach(k => {
+        const m = mods[k];
+        if (!m) return;
+        if (m.habits !== undefined && !Array.isArray(m.habits)) problems.push(k + '.habits 不是列表');
+        else if (Array.isArray(m.habits)) {
+          m.habits.forEach((h, i) => {
+            if (!h || typeof h !== 'object') problems.push(k + '.habits[' + i + '] 不是对象');
+            else if (h.records !== undefined && !Array.isArray(h.records)) problems.push(k + '.habits[' + i + '].records 不是列表');
+          });
+        }
+      });
+      ['body', 'reading'].forEach(k => {
+        const m = mods[k];
+        if (m && m.records !== undefined && !Array.isArray(m.records)) problems.push(k + '.records 不是列表');
+      });
+      if (mods.shopping && mods.shopping.items !== undefined && !Array.isArray(mods.shopping.items)) problems.push('shopping.items 不是列表');
+      if (mods.supplements && mods.supplements.items !== undefined && !Array.isArray(mods.supplements.items)) problems.push('supplements.items 不是列表');
+      if (mods.manifestation && mods.manifestation.goals !== undefined && !Array.isArray(mods.manifestation.goals)) problems.push('manifestation.goals 不是列表');
+      if (mods.finance) {
+        if (mods.finance.transactions !== undefined && !Array.isArray(mods.finance.transactions)) problems.push('finance.transactions 不是列表');
+        if (mods.finance.funds !== undefined && !Array.isArray(mods.finance.funds)) problems.push('finance.funds 不是列表');
+      }
+      return problems;
+    }
+
     function applyImportedBackup(parsed) {
       const imported = parsed && parsed.data && parsed.data.modules ? parsed.data : parsed;
       if (!imported || !imported.modules) throw new Error('文件格式不正确，缺少 modules 数据');
       if (!imported.modules.daily || !Array.isArray(imported.modules.daily.habits)) throw new Error('备份文件缺少每日打卡数据');
-      if (parsed && parsed.checksum && simpleHash(JSON.stringify(imported)) !== parsed.checksum) {
+      // 校验和：以前 checksum 缺失时会整段跳过校验。现在给出明确提示。
+      const hasChecksum = !!(parsed && parsed.checksum);
+      if (hasChecksum && simpleHash(JSON.stringify(imported)) !== parsed.checksum) {
         throw new Error('备份文件校验失败，可能已损坏');
       }
-      createAutoBackup('导入前备份');
-      localStorage.setItem(LS_KEY, JSON.stringify(imported));
+      const isOwnBackup = !!(parsed && parsed.app === 'growth-checkin');
+      const problems = validateImportedStructure(imported);
+      if (problems.length) {
+        throw new Error('备份文件结构异常：' + problems.slice(0, 3).join('；') + (problems.length > 3 ? ' 等' : ''));
+      }
+      // 关键：导入会整体覆盖当前数据，必须先让用户确认
+      const warn = []
+        .concat(hasChecksum ? [] : ['· 这份文件没有校验和，无法确认是否完整'])
+        .concat(isOwnBackup ? [] : ['· 这不是本应用导出的标准备份文件'])
+        .join('\n');
+      if (!confirm('⚠️ 导入会覆盖当前全部数据\n\n'
+        + '打卡记录、补剂、存款、基金、显化目标都会被这份文件替换。\n'
+        + (warn ? warn + '\n' : '')
+        + '\n确定要继续吗？（会先自动备份当前数据）')) {
+        return;
+      }
+      const backedUp = createAutoBackup('导入前备份');
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(imported));
+      } catch(e) {
+        alert('导入失败：写入本地存储出错（' + (e && e.message ? e.message : e) + '）\n\n当前数据没有被修改。');
+        throw e;
+      }
       data = loadData();
+      // 以前漏了这一步：导入的数据不会被修复，缺 records 的模块会让页面直接报错
+      validateAndRepairData();
       saveData();
       renderNav();
       renderModule(activeModule);
       updateTotalStats();
-      alert('导入成功');
+      alert('导入成功' + (backedUp ? '\n\n（已保存一份"导入前备份"，可在备份弹窗里恢复）' : '\n\n注意：导入前备份未能保存，请尽快手动导出一份。'));
     }
 
     function openBackupModal() {
@@ -7594,7 +7600,7 @@
         listEl.innerHTML = '<div class="backup-empty">暂无自动备份</div>';
         return;
       }
-      listEl.innerHTML = list.slice(0, 10).map(b => `
+      listEl.innerHTML = list.slice(0, MAX_AUTO_BACKUPS).map(b => `
         <div class="backup-item">
           <div class="backup-item-info">
             <div class="backup-item-time">${b.createdAt || new Date(b.id).toLocaleString('zh-CN', { hour12: false })}</div>
@@ -8183,641 +8189,6 @@
       }
     }
 
-    function autoFetchMarketData() {
-      if (marketFetching) return;
-      const fin = data.modules.finance;
-      const today = getTodayStr();
-      const todayData = fin.marketData && fin.marketData[today];
-      const updatedAt = fin.marketUpdatedAt || 0;
-      // 刚获取过且数据很新时跳过，避免反复请求
-      if (todayData && todayData.length > 0 && Date.now() - updatedAt < 5 * 60 * 1000) {
-        refreshMarketHistory();
-        return;
-      }
-      refreshMarketData(true);
-    }
-
-    function startMarketAutoRefresh() {
-      if (marketRefreshTimer) clearInterval(marketRefreshTimer);
-      marketRefreshTimer = setInterval(() => {
-        const now = new Date();
-        const hour = now.getHours();
-        const min = now.getMinutes();
-        const day = now.getDay();
-        // 仅在工作日 9:00-15:30 自动刷新
-        if (day >= 1 && day <= 5 && ((hour === 9 && min >= 0) || (hour > 9 && hour < 15) || (hour === 15 && min <= 30))) {
-          refreshMarketData(true);
-        }
-      }, 300000); // 每5分钟检查一次
-    }
-
-    function fetchMarketData() {
-      return new Promise((resolve, reject) => {
-        // 先尝试东方财富
-        tryEastMoney().then(resolve).catch(err1 => {
-          if (err1 && err1.message === '请求已取消') { reject(err1); return; }
-          console.log('东方财富获取失败，尝试腾讯财经:', err1);
-          // fallback 到腾讯财经
-          tryTencent().then(resolve).catch(err2 => {
-            reject(new Error('所有数据源均失败: ' + err1.message + '; ' + err2.message));
-          });
-        });
-      });
-    }
-
-    function tryEastMoney() {
-      const cb = 'jQuery' + Date.now() + '_' + Math.floor(Math.random() * 100000);
-      const fields = 'f2,f3,f4,f12,f14,f18';
-      const secids = INDEX_CONFIG.map(c => c.code).join(',');
-      const url = `https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=${fields}&secids=${secids}&ut=fa5fd1943c7b386f172d6893dbfba10b&_=${Date.now()}&callback=${cb}`;
-      return jsonpFetch(url, cb, 8000, 'eastmoney').then(data => {
-        if (data && data.data && data.data.diff && data.data.diff.length > 0) {
-          const records = data.data.diff.map(item => ({
-            name: item.f14,
-            code: item.f12,
-            price: parseFloat(item.f2),
-            change: parseFloat(item.f4),
-            changePct: parseFloat(item.f3),
-            prevClose: parseFloat(item.f18)
-          })).filter(r => !isNaN(r.price) && r.price > 0);
-          if (records.length > 0) return records;
-          throw new Error('东方财富返回数据为空');
-        }
-        throw new Error('东方财富数据格式错误');
-      });
-    }
-
-    function tryTencent() {
-      const codes = Object.values(TENCENT_INDEX_MAP).map(c => c.tencent).join(',');
-      const url = `https://qt.gtimg.cn/q=${codes}?_=${Date.now()}`;
-      return scriptFetch(url, 'tencent', 8000).then(() => {
-        const records = [];
-        Object.keys(TENCENT_INDEX_MAP).forEach(key => {
-          const cfg = TENCENT_INDEX_MAP[key];
-          const varName = 'v_' + cfg.tencent;
-          if (window[varName]) {
-            const parts = window[varName].split('~');
-            if (parts.length >= 5) {
-              const price = parseFloat(parts[3]);
-              const prevClose = parseFloat(parts[4]);
-              const change = price - prevClose;
-              const changePct = prevClose > 0 ? (change / prevClose * 100) : 0;
-              if (!isNaN(price) && price > 0) {
-                records.push({ name: cfg.name, code: cfg.code, price, change, changePct, prevClose });
-              }
-            }
-          }
-        });
-        if (records.length > 0) return records;
-        throw new Error('腾讯财经返回数据为空');
-      });
-    }
-
-    function fetchIndexHistoryRows(tencentCode) {
-      if (typeof fetch !== 'function') return Promise.resolve([]);
-      const url = `https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=${tencentCode},day,,,7,qfq&_=${Date.now()}`;
-      return fetch(url).then(r => r.json()).then(data => {
-        const rows = data && data.data && data.data[tencentCode] && data.data[tencentCode].day;
-        if (!Array.isArray(rows)) return [];
-        return rows.map((row, i) => {
-          const price = parseFloat(row[2]);
-          const prevClose = i > 0 ? parseFloat(rows[i - 1][2]) : price;
-          const change = prevClose > 0 ? price - prevClose : 0;
-          return {
-            date: row[0],
-            price: price,
-            prevClose: prevClose,
-            change: change,
-            changePct: prevClose > 0 ? change / prevClose * 100 : 0
-          };
-        }).filter(r => !isNaN(r.price) && r.price > 0);
-      }).catch(() => []);
-    }
-
-    function fetchMarketHistory() {
-      return Promise.all(INDEX_CONFIG.map(cfg => {
-        const tc = TENCENT_INDEX_MAP[cfg.marketCode];
-        const tencentCode = tc && tc.tencent;
-        if (!tencentCode) return Promise.resolve([]);
-        return fetchIndexHistoryRows(tencentCode);
-      })).then(results => {
-        const history = {};
-        results.forEach((rows, idx) => {
-          const cfg = INDEX_CONFIG[idx];
-          rows.forEach(r => {
-            if (!history[r.date]) history[r.date] = [];
-            history[r.date].push({
-              name: cfg.name,
-              code: cfg.marketCode,
-              price: r.price,
-              change: r.change,
-              changePct: r.changePct,
-              prevClose: r.prevClose,
-              source: 'history'
-            });
-          });
-        });
-        return history;
-      });
-    }
-
-    function refreshMarketHistory() {
-      if (marketHistoryLoading) return;
-      if (Date.now() - marketHistoryLastAttemptAt < 10 * 60 * 1000) return;
-      marketHistoryLoading = true;
-      marketHistoryLastAttemptAt = Date.now();
-      fetchMarketHistory().then(history => {
-        if (Object.keys(history).length > 0) {
-          if (!data.modules.finance.marketHistory) data.modules.finance.marketHistory = {};
-          data.modules.finance.marketHistory = history;
-          saveData();
-          drawMarketCharts();
-        }
-      }).catch(err => {
-        console.log('获取近7日走势失败:', err);
-      }).finally(() => {
-        marketHistoryLoading = false;
-      });
-    }
-
-    function processMarketData(records) {
-      const today = getTodayStr();
-      if (!data.modules.finance.marketData) data.modules.finance.marketData = {};
-      data.modules.finance.marketUpdatedAt = Date.now();
-      data.modules.finance.marketData[today] = records;
-      saveData();
-      if (activeModule === 'finance') renderModule('finance');
-    }
-
-    function getMarketChartDates(fin) {
-      const history = (fin && fin.marketHistory) || {};
-      const local = (fin && fin.marketData) || {};
-      const historyDates = Object.keys(history).sort();
-      const localDates = Object.keys(local).sort();
-      const dates = historyDates.length >= 2 ? historyDates : localDates;
-      return dates.slice(-7);
-    }
-
-    function getTodayMarketRecords(fin) {
-      const today = getTodayStr();
-      return ((fin.marketData || {})[today] || (fin.marketHistory || {})[today] || []);
-    }
-
-    function renderMarketSection() {
-      const fin = data.modules.finance;
-      const today = getTodayStr();
-      const todayData = getTodayMarketRecords(fin);
-      const dates = getMarketChartDates(fin);
-      const updatedAt = fin.marketUpdatedAt || 0;
-      const timeText = todayData && todayData.length > 0
-        ? '更新于 ' + (updatedAt ? new Date(updatedAt).toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}) : new Date().toLocaleTimeString('zh-CN', {hour:'2-digit', minute:'2-digit'}))
-        : '暂无今日数据';
-      let html = `<div class="market-section"><div class="market-header"><span class="market-title">📊 市场概览</span><div class="market-actions"><span class="market-time">${timeText}</span><button class="market-refresh-btn" onclick="refreshMarketData(false)" title="刷新数据">🔄</button><button class="market-refresh-btn" onclick="openMarketInputModal()" title="手动录入">✏️</button></div></div>`;
-      if (todayData && todayData.length > 0) {
-        html += '<div class="market-grid">';
-        todayData.forEach(item => {
-          const isUp = item.change >= 0;
-          const color = isUp ? '#ff5252' : '#00e676';
-          const arrow = isUp ? '▲' : '▼';
-          html += `<div class="market-item"><div class="market-item-name">${item.name}</div><div class="market-item-price" style="color:${color}">${item.price.toFixed(2)}</div><div class="market-item-change" style="color:${color}">${arrow} ${item.change > 0 ? '+' : ''}${item.change.toFixed(2)} &nbsp; ${item.changePct > 0 ? '+' : ''}${item.changePct.toFixed(2)}%</div></div>`;
-        });
-        html += '</div>';
-      } else {
-        html += `<div class="empty-state" style="padding:30px 20px"><div class="big" style="font-size:36px">📊</div><p style="font-size:13px">今日暂无市场数据</p><p style="font-size:12px;color:var(--text2);margin-top:4px">点击 🔄 自动获取 或 ✏️ 手动录入</p></div>`;
-      }
-      if (dates.length >= 2) {
-        html += '<div class="market-chart-section"><div class="market-chart-title">📈 近7日走势</div><div class="market-charts">';
-        INDEX_CONFIG.forEach((cfg, idx) => {
-          html += `<div class="market-chart-wrap"><div class="market-chart-name">${cfg.short}</div><canvas class="market-chart" id="marketChart_${idx}" width="300" height="120"></canvas></div>`;
-        });
-        html += '</div></div>';
-      }
-      html += '</div>';
-      return html;
-    }
-
-    function drawMarketCharts() {
-      const fin = data.modules.finance;
-      const marketData = fin.marketData || {};
-      const marketHistory = fin.marketHistory || {};
-      const dates = getMarketChartDates(fin);
-      if (dates.length < 2) return;
-      INDEX_CONFIG.forEach((cfg, idx) => {
-        const canvas = document.getElementById(`marketChart_${idx}`);
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.scale(dpr, dpr);
-        const prices = [];
-        dates.forEach(date => {
-          const dayData = (marketHistory[date] && marketHistory[date].length ? marketHistory[date] : marketData[date]) || [];
-          const item = dayData.find(d => d.code === cfg.marketCode);
-          if (item && !isNaN(item.price)) prices.push(item.price);
-        });
-        if (prices.length < 2) return;
-        const w = rect.width, h = rect.height;
-        const pad = { top: 10, right: 10, bottom: 20, left: 10 };
-        const cw = w - pad.left - pad.right;
-        const ch = h - pad.top - pad.bottom;
-        const min = Math.min(...prices);
-        const max = Math.max(...prices);
-        const range = max - min || 1;
-        const baseY = pad.top + ch * (1 - (prices[0] - min) / range);
-        ctx.clearRect(0, 0, w, h);
-        ctx.setLineDash([3, 3]);
-        ctx.strokeStyle = 'rgba(255,255,255,0.16)';
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(pad.left, baseY); ctx.lineTo(w - pad.right, baseY); ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#5a5a7a';
-        ctx.font = '8px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText(max.toFixed(0), 1, pad.top + 8);
-        ctx.fillText(min.toFixed(0), 1, pad.top + ch);
-        ctx.strokeStyle = 'rgba(100,255,218,0.06)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i <= 3; i++) {
-          const y = pad.top + ch * i / 3;
-          ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(w - pad.right, y); ctx.stroke();
-        }
-        const isUp = prices[prices.length - 1] >= prices[0];
-        const lineColor = isUp ? '#ff5252' : '#00e676';
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.beginPath();
-        prices.forEach((p, i) => {
-          const x = pad.left + cw * i / (prices.length - 1);
-          const y = pad.top + ch * (1 - (p - min) / range);
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        });
-        ctx.stroke();
-        ctx.fillStyle = isUp ? 'rgba(255,82,82,0.08)' : 'rgba(0,230,118,0.08)';
-        ctx.beginPath();
-        prices.forEach((p, i) => {
-          const x = pad.left + cw * i / (prices.length - 1);
-          const y = pad.top + ch * (1 - (p - min) / range);
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        });
-        ctx.lineTo(pad.left + cw, pad.top + ch);
-        ctx.lineTo(pad.left, pad.top + ch);
-        ctx.closePath();
-        ctx.fill();
-        ctx.fillStyle = lineColor;
-        prices.forEach((p, i) => {
-          const x = pad.left + cw * i / (prices.length - 1);
-          const y = pad.top + ch * (1 - (p - min) / range);
-          ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
-        });
-        const lastPrice = prices[prices.length - 1];
-        const lastY = pad.top + ch * (1 - (lastPrice - min) / range);
-        ctx.fillStyle = lineColor;
-        ctx.font = 'bold 10px -apple-system, BlinkMacSystemFont, sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText(lastPrice.toFixed(0), w - pad.right, lastY - 6);
-        ctx.fillStyle = '#8892b0';
-        ctx.font = '8px sans-serif';
-        ctx.textAlign = 'center';
-        const dateStep = Math.max(1, Math.ceil((dates.length - 1) / 4));
-        dates.forEach((date, i) => {
-          if (i % dateStep === 0 || i === dates.length - 1) {
-            const x = pad.left + cw * i / (prices.length - 1);
-            ctx.fillText(date.slice(5).replace('-', '/'), x, h - 5);
-          }
-        });
-      });
-    }
-
-    function openMarketInputModal() {
-      const list = document.getElementById('marketInputList');
-      const todayData = getTodayMarketRecords(data.modules.finance);
-      list.innerHTML = INDEX_CONFIG.map((cfg, i) => {
-        const existing = todayData.find(d => d.code === cfg.marketCode);
-        return `<div class="market-input-row"><label>${cfg.name}</label><input type="number" class="market-input-price" id="marketPrice_${i}" placeholder="点位" step="0.01" value="${existing ? existing.price : ''}"><input type="number" class="market-input-pct" id="marketPct_${i}" placeholder="涨跌幅%" step="0.01" value="${existing ? existing.changePct : ''}"></div>`;
-      }).join('');
-      document.getElementById('marketInputOverlay').classList.add('show');
-    }
-
-    function closeMarketInputModal(e) {
-      if (e && e.target !== document.getElementById('marketInputOverlay')) return;
-      document.getElementById('marketInputOverlay').classList.remove('show');
-    }
-
-    function saveMarketInput() {
-      const today = getTodayStr();
-      if (!data.modules.finance.marketData) data.modules.finance.marketData = {};
-      const records = [];
-      INDEX_CONFIG.forEach((cfg, i) => {
-        const price = parseFloat(document.getElementById(`marketPrice_${i}`).value);
-        const pct = parseFloat(document.getElementById(`marketPct_${i}`).value);
-        if (!isNaN(price)) {
-          records.push({ name: cfg.name, code: cfg.marketCode, price: price, change: price * (isNaN(pct) ? 0 : pct) / 100, changePct: isNaN(pct) ? 0 : pct, prevClose: price / (1 + (isNaN(pct) ? 0 : pct) / 100) });
-        }
-      });
-      if (records.length > 0) {
-        data.modules.finance.marketData[today] = records;
-        data.modules.finance.marketUpdatedAt = Date.now();
-        saveData();
-        closeMarketInputModal();
-        renderModule('finance');
-      }
-    }
-
-
-    // ========== 个人基金持仓 ==========
-    function openFundModal(editId) {
-      const fin = data.modules.finance;
-      let fund = null;
-      if (editId) fund = fin.funds.find(f => f.id === editId);
-      document.getElementById('fundId').value = editId || '';
-      document.getElementById('fundName').value = fund ? fund.name : '';
-      document.getElementById('fundCode').value = fund ? fund.code : '';
-      document.getElementById('fundShares').value = fund ? fund.shares : '';
-      document.getElementById('fundCostNav').value = fund ? fund.costNav : '';
-      document.getElementById('fundCurrentNav').value = fund ? (fund.currentNav || '') : '';
-      document.getElementById('fundModalTitle').textContent = editId ? '✏️ 编辑基金' : '➕ 添加基金';
-      document.getElementById('fundOverlay').classList.add('show');
-      setTimeout(() => document.getElementById('fundName').focus(), 100);
-    }
-
-    function closeFundModal(e) {
-      if (e && e.target !== document.getElementById('fundOverlay')) return;
-      document.getElementById('fundOverlay').classList.remove('show');
-    }
-
-    function saveFund() {
-      const editId = document.getElementById('fundId').value;
-      const name = document.getElementById('fundName').value.trim();
-      const code = document.getElementById('fundCode').value.trim();
-      const shares = parseFloat(document.getElementById('fundShares').value);
-      const costNav = parseFloat(document.getElementById('fundCostNav').value);
-      const currentNavVal = document.getElementById('fundCurrentNav').value.trim();
-      if (!name) { alert('请输入基金名称'); return; }
-      if (!code) { alert('请输入基金代码'); return; }
-      if (isNaN(shares) || shares <= 0) { alert('请输入有效的持有份额'); return; }
-      if (isNaN(costNav) || costNav <= 0) { alert('请输入有效的成本净值'); return; }
-      const fin = data.modules.finance;
-      const currentNav = currentNavVal ? parseFloat(currentNavVal) : costNav;
-      if (editId) {
-        const idx = fin.funds.findIndex(f => f.id == editId);
-        if (idx >= 0) {
-          fin.funds[idx].name = name;
-          fin.funds[idx].code = code;
-          fin.funds[idx].shares = shares;
-          fin.funds[idx].costNav = costNav;
-          if (!isNaN(currentNav)) fin.funds[idx].currentNav = currentNav;
-        }
-      } else {
-        fin.funds.push({
-          id: Date.now(),
-          name: name,
-          code: code,
-          shares: shares,
-          costNav: costNav,
-          currentNav: currentNav,
-          navDate: getTodayStr(),
-          changePct: 0,
-          records: []
-        });
-      }
-      saveData();
-      closeFundModal();
-      renderModule('finance');
-      updateTotalStats();
-    }
-
-    function deleteFund(id) {
-      if (!confirm('确定删除这只基金吗？')) return;
-      createAutoBackup('删除基金前');
-      captureUndoSnapshot('已删除基金');
-      data.modules.finance.funds = data.modules.finance.funds.filter(f => f.id !== id);
-      saveData();
-      renderModule('finance');
-      updateTotalStats();
-    }
-
-    function fetchFundNav(fundCode) {
-      const callbackName = 'fund_cb_' + Date.now() + '_' + fundCode;
-      const url = `https://fundmobapi.eastmoney.com/FundMNewApi/FundMNFInfo?pageIndex=1&pageSize=1&plat=Android&appType=ttjj&product=EFund&Version=1&deviceid=fund_nav_${Date.now()}&Fcodes=${fundCode}&_=${Date.now()}&callback=${callbackName}`;
-      return jsonpFetch(url, callbackName, 8000, 'fund_' + fundCode).then(data => {
-        const item = data && Array.isArray(data.Datas) ? data.Datas[0] : null;
-        if (item && item.FCODE) {
-          const nav = parseFloat(item.NAV);
-          if (isNaN(nav) || nav <= 0) throw new Error('净值数据格式错误');
-          return {
-            name: item.SHORTNAME || '',
-            code: item.FCODE,
-            navDate: item.PDATE || '',
-            nav: nav,
-            estimateNav: parseFloat(item.GSZ) || nav,
-            changePct: parseFloat(item.NAVCHGRT || item.GSZZL) || 0
-          };
-        }
-        throw new Error('未查询到该基金');
-      });
-    }
-
-    function appendFundNavRecord(fund) {
-      if (!fund.records) fund.records = [];
-      const date = getTodayStr();
-      const record = { date: date, nav: fund.currentNav, changePct: fund.changePct || 0 };
-      const idx = fund.records.findIndex(r => r.date === date);
-      if (idx >= 0) {
-        fund.records[idx] = record;
-      } else {
-        fund.records.push(record);
-      }
-      if (fund.records.length > 30) fund.records = fund.records.slice(-30);
-    }
-
-    function refreshFundNav(fundId, silent) {
-      const fin = data.modules.finance;
-      const fund = fin.funds.find(f => f.id === fundId);
-      if (!fund) return;
-      fetchFundNav(fund.code).then(data => {
-        fund.currentNav = data.estimateNav || data.nav;
-        fund.navDate = data.navDate || getTodayStr();
-        fund.changePct = data.changePct || 0;
-        fund.lastUpdatedAt = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
-        appendFundNavRecord(fund);
-        saveData();
-        renderModule('finance');
-        updateTotalStats();
-        if (!silent) {
-          const btn = document.activeElement;
-          if (btn) {
-            const rect = btn.getBoundingClientRect();
-            spawnConfetti(rect.left + rect.width/2, rect.top + rect.height/2);
-          }
-        }
-      }).catch(err => {
-        if (err && err.message === '请求已取消') return;
-        console.error('获取基金净值失败:', err);
-        if (!silent) {
-          const hint = err && err.message === '未查询到该基金' ? '请检查基金代码是否正确。' : '请稍后重试。';
-          alert('获取基金净值失败：' + err.message + '\n\n' + hint);
-        }
-      });
-    }
-
-    function refreshAllFunds() {
-      const fin = data.modules.finance;
-      const funds = fin.funds || [];
-      if (funds.length === 0) return;
-      let completed = 0;
-      funds.forEach(fund => {
-        fetchFundNav(fund.code).then(data => {
-          fund.currentNav = data.estimateNav || data.nav;
-          fund.navDate = data.navDate || getTodayStr();
-          fund.changePct = data.changePct || 0;
-          fund.lastUpdatedAt = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
-          appendFundNavRecord(fund);
-          completed++;
-          if (completed === funds.length) {
-            saveData();
-            renderModule('finance');
-            updateTotalStats();
-          }
-        }).catch(() => {
-          completed++;
-          if (completed === funds.length) {
-            saveData();
-            renderModule('finance');
-            updateTotalStats();
-          }
-        });
-      });
-    }
-
-    function autoRefreshFunds() {
-      const fin = data.modules.finance;
-      const funds = fin.funds || [];
-      if (funds.length === 0) return;
-      // 检查是否已有今日数据
-      const today = getTodayStr();
-      const needRefresh = funds.some(f => !f.navDate || f.navDate !== today);
-      if (needRefresh) {
-        refreshAllFunds();
-      }
-    }
-
-    function renderFundsSection() {
-      const fin = data.modules.finance;
-      const funds = fin.funds || [];
-      let totalMarketValue = 0;
-      let totalCost = 0;
-      let totalChange = 0;
-
-      const fundCards = funds.map(fund => {
-        const nav = fund.currentNav || fund.costNav;
-        const marketValue = fund.shares * nav;
-        const costValue = fund.shares * fund.costNav;
-        const profit = marketValue - costValue;
-        const profitPct = costValue > 0 ? (profit / costValue * 100) : 0;
-        const isProfit = profit >= 0;
-        const isUp = (fund.changePct || 0) >= 0;
-        const color = isUp ? '#ff5252' : '#00e676';
-        const profitColor = isProfit ? '#ff5252' : '#00e676';
-        totalMarketValue += marketValue;
-        totalCost += costValue;
-        totalChange += profit;
-
-        return `
-          <div class="fund-card">
-            <div class="fund-card-header">
-              <div class="fund-card-info">
-                <div class="fund-card-name">${escapeHtml(fund.name)}</div>
-                <div class="fund-card-code">${escapeHtml(fund.code)}${fund.lastUpdatedAt ? ' · 更新于 ' + escapeHtml(fund.lastUpdatedAt) : ''}</div>
-              </div>
-              <div class="fund-card-actions">
-                <button class="fund-card-btn" onclick="refreshFundNav(${fund.id})" title="刷新净值">🔄</button>
-                <button class="fund-card-btn" onclick="openFundModal(${fund.id})" title="编辑">✏️</button>
-                <button class="fund-card-btn del" onclick="deleteFund(${fund.id})" title="删除">🗑️</button>
-              </div>
-            </div>
-            <div class="fund-card-body">
-              <div class="fund-card-stat">
-                <div class="fund-card-stat-label">持有份额</div>
-                <div class="fund-card-stat-value">${fund.shares.toLocaleString()}</div>
-              </div>
-              <div class="fund-card-stat">
-                <div class="fund-card-stat-label">成本净值</div>
-                <div class="fund-card-stat-value">${fund.costNav.toFixed(4)}</div>
-              </div>
-              <div class="fund-card-stat">
-                <div class="fund-card-stat-label">当前净值</div>
-                <div class="fund-card-stat-value" style="color:${color}">${nav.toFixed(4)}</div>
-              </div>
-              <div class="fund-card-stat">
-                <div class="fund-card-stat-label">当日涨跌</div>
-                <div class="fund-card-stat-value" style="color:${color}">${isUp ? '+' : ''}${(fund.changePct || 0).toFixed(2)}%</div>
-              </div>
-            </div>
-            <div class="fund-card-footer">
-              <div class="fund-card-profit">
-                <span style="color:${profitColor}">${isProfit ? '+' : ''}${formatMoney(profit)}</span>
-                <span class="fund-card-profit-pct" style="background:${profitColor}22;color:${profitColor}">${isProfit ? '+' : ''}${profitPct.toFixed(2)}%</span>
-              </div>
-              <div class="fund-card-value">市值 ${formatMoney(marketValue)}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      const totalProfitPct = totalCost > 0 ? (totalChange / totalCost * 100) : 0;
-      const totalIsProfit = totalChange >= 0;
-      const totalColor = totalIsProfit ? '#ff5252' : '#00e676';
-
-      return `
-        <div class="funds-section">
-          <div class="funds-header">
-            <div class="funds-title-wrap">
-              <span class="funds-title">📈 我的基金</span>
-              <span class="funds-count">${funds.length} 只</span>
-            </div>
-            <div class="funds-actions">
-              ${funds.length > 0 ? '<button class="funds-refresh-all" onclick="refreshAllFunds()" title="刷新全部">🔄 刷新全部</button>' : ''}
-              <button class="funds-add-btn" onclick="openFundModal()">➕ 添加</button>
-            </div>
-          </div>
-          ${funds.length > 0 ? `
-            <div class="funds-summary">
-              <div class="funds-summary-item">
-                <div class="funds-summary-label">总成本</div>
-                <div class="funds-summary-value">${formatMoney(totalCost)}</div>
-              </div>
-              <div class="funds-summary-item">
-                <div class="funds-summary-label">总市值</div>
-                <div class="funds-summary-value">${formatMoney(totalMarketValue)}</div>
-              </div>
-              <div class="funds-summary-item">
-                <div class="funds-summary-label">总盈亏</div>
-                <div class="funds-summary-value" style="color:${totalColor}">${totalIsProfit ? '+' : ''}${formatMoney(totalChange)}</div>
-              </div>
-              <div class="funds-summary-item">
-                <div class="funds-summary-label">收益率</div>
-                <div class="funds-summary-value" style="color:${totalColor}">${totalIsProfit ? '+' : ''}${totalProfitPct.toFixed(2)}%</div>
-              </div>
-            </div>
-            <div class="funds-list">
-              ${fundCards}
-            </div>
-          ` : `
-            <div class="empty-state" style="padding:30px 20px">
-              <div class="big" style="font-size:36px">📊</div>
-              <p style="font-size:13px">还没有添加基金</p>
-              <p style="font-size:12px;color:var(--text2);margin-top:4px">点击右上角添加按钮开始记录</p>
-            </div>
-          `}
-        </div>
-      `;
-    }
-
-
     // ========== 显化记录 ==========
     function addManifestGoal() {
       const input = document.getElementById('manifestGoalInput');
@@ -9298,26 +8669,46 @@
       const nextTaken = !isSupplementTakenOn(item, dateStr);
       vibrate(nextTaken ? 25 : 12);
       if (!item.records) item.records = [];
-      item.records = item.records.filter(r => !(r.date === dateStr && r.taken));
+      // 重要：不要"删掉当天记录再重建"。用药日志（剂量/时间/反应/备注）就存在这条记录里，
+      // 删除重建会把用户填写的内容清空且无法恢复。这里只切换 taken 标记，内容原样保留。
+      // 注意要按"当天所有记录"查找（不能只找 taken 的），否则取消后再勾选会新建一条空记录，
+      // 把原来填好的反应/备注挤成看不见的孤儿记录。
+      const recsForDate = item.records.filter(r => r.date === dateStr);
       if (nextTaken) {
-        const now = new Date();
-        item.records.push({
-          id: Date.now(),
-          date: dateStr,
-          taken: true,
-          time: now.toTimeString().slice(0, 5),
-          dose: item.dosage || '',
-          reaction: '',
-          note: '',
-          loggedAt: now.toISOString()
-        });
+        const takenRec = recsForDate.find(r => r.taken);
+        if (takenRec) {
+          takenRec.taken = true;
+        } else if (recsForDate.length) {
+          // 恢复当天已有记录，优先选内容最完整的一条
+          const best = recsForDate.slice().sort((a, b) =>
+            ((b.reaction ? 1 : 0) + (b.note ? 1 : 0) + (b.dose ? 1 : 0)) -
+            ((a.reaction ? 1 : 0) + (a.note ? 1 : 0) + (a.dose ? 1 : 0)))[0];
+          best.taken = true;
+        } else {
+          const now = new Date();
+          item.records.push({
+            id: Date.now(),
+            date: dateStr,
+            taken: true,
+            time: now.toTimeString().slice(0, 5),
+            dose: item.dosage || '',
+            reaction: '',
+            note: '',
+            loggedAt: now.toISOString()
+          });
+        }
         if (dateStr === getTodayStr()) {
           item.taken = true;
           if (typeof item.stock === 'number' && item.stock > 0) item.stock -= 1;
         }
-      } else if (dateStr === getTodayStr()) {
-        item.taken = false;
-        if (typeof item.stock === 'number') item.stock += 1;
+      } else {
+        // 取消服用：记录本体全部保留，只把 taken 置 false（isSupplementTakenOn 会忽略它）
+        if (recsForDate.length) recsForDate.forEach(r => { r.taken = false; });
+        else item.records = item.records.filter(r => r.date !== dateStr);
+        if (dateStr === getTodayStr()) {
+          item.taken = false;
+          if (typeof item.stock === 'number') item.stock += 1;
+        }
       }
       saveData();
       const updated = updateSupplementInPlace(item);
@@ -9432,7 +8823,6 @@
                     <button class="supplement-check-btn ${itemTaken ? 'taken' : ''}" onclick="toggleSupplement(${item.id})" title="${itemTaken ? '取消' : '标记已服用'}">
                       ${itemTaken ? '✓' : ''}
                     </button>
-                    <button class="supplement-log-btn" onclick="openSupplementLog(${item.id})" title="用药日志">📋</button>
                     <button class="supplement-edit-btn" onclick="openSupplementEdit(${item.id})" title="编辑">✏️</button>
                     <button class="supplement-del-btn" onclick="deleteSupplement(${item.id})" title="删除">×</button>
                   </div>
@@ -9515,9 +8905,6 @@
             </div>
           </div>
         ` : ''}
-
-        ${renderSupplementLogSection(allItems, viewDate)}
-        ${renderSupplementReviewSection()}
       `;
     }
 
@@ -11096,41 +10483,44 @@
 
     function renderQaModule(container) {
       const cfg = MODULE_CONFIG.qa;
-      if (!qaData) {
-        if (qaLoading) return;
-        qaLoading = true;
-        container.innerHTML = `
+      const qaTitleBar = `
           <div class="module-title-bar">
             <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
             <div class="m-text">
               <div class="m-name">${cfg.name}</div>
               <div class="m-desc">${cfg.desc}</div>
             </div>
-          </div>
+          </div>`;
+      if (!qaData) {
+        // 注意：这里以前是 `if (qaLoading) return;` —— 什么都不渲染就返回，
+        // 会让"问题档案"标签下显示上一个模块的内容。现在每次都渲染载入态。
+        if (!qaLoading) {
+          qaLoading = true;
+          fetch('questions.json')
+            .then(r => { if (!r.ok) throw new Error('load fail'); return r.json(); })
+            .then(json => {
+              qaData = json;
+              qaLoading = false;
+              // 异步回调必须确认用户还在"问题档案"页，否则会把内容盖到别的模块上
+              if (activeModule === 'qa') renderQaModule(document.getElementById('moduleContent'));
+            })
+            .catch(() => {
+              qaLoading = false;
+              if (activeModule !== 'qa') return;
+              const mc = document.getElementById('moduleContent');
+              if (!mc) return;
+              mc.innerHTML = qaTitleBar + `
+                <div class="qa-status">
+                  <div class="big">⚠️</div>
+                  <p>问题档案加载失败，请确认 questions.json 已随应用一起部署。</p>
+                </div>`;
+            });
+        }
+        container.innerHTML = qaTitleBar + `
           <div class="qa-status">
             <div class="big">📦</div>
             <p>正在载入问题档案...</p>
-          </div>
-        `;
-        fetch('questions.json')
-          .then(r => { if (!r.ok) throw new Error('load fail'); return r.json(); })
-          .then(json => { qaData = json; qaLoading = false; renderQaModule(container); })
-          .catch(() => {
-            qaLoading = false;
-            container.innerHTML = `
-              <div class="module-title-bar">
-                <div class="m-icon" style="background:${cfg.bg};border:1px solid ${cfg.color}22">${cfg.icon}</div>
-                <div class="m-text">
-                  <div class="m-name">${cfg.name}</div>
-                  <div class="m-desc">${cfg.desc}</div>
-                </div>
-              </div>
-              <div class="qa-status">
-                <div class="big">⚠️</div>
-                <p>问题档案加载失败，请确认 questions.json 已随应用一起部署。</p>
-              </div>
-            `;
-          });
+          </div>`;
         return;
       }
 
@@ -11201,10 +10591,14 @@
       if (!mod) return;
       container.setAttribute('data-module', moduleId);
       container.style.setProperty('--module-color', cfg.color);
+      // 带上透明度的派生色：CSS 里不能写成 var(--x)88（var() 替换不是字符串拼接，整条声明会失效），
+      // 所以在 JS 里拼好再注入。
+      container.style.setProperty('--module-color-a88', cfg.color + '88');
+      container.style.setProperty('--module-color-a33', cfg.color + '33');
+      container.style.setProperty('--module-color-a44', cfg.color + '44');
 
       if (moduleId === 'finance') {
         renderFinanceModule(container);
-        setTimeout(() => drawMarketCharts(), 100);
         return;
       }
       if (moduleId === 'manifestation') {
@@ -11297,7 +10691,6 @@
           </div>
         `}
       `;
-      setTimeout(() => drawMarketCharts(), 100);
     }
 
     function renderDailyItem(moduleId, h, isDone, streak) {
@@ -11906,7 +11299,7 @@
     }
 
     function copyBackupToClipboard() {
-      const payload = { app: 'growth-checkin', version: 'v88', exportedAt: new Date().toISOString(), data: data };
+      const payload = { app: 'growth-checkin', version: APP_VERSION, exportedAt: new Date().toISOString(), data: data };
       payload.checksum = simpleHash(JSON.stringify(payload.data));
       const text = JSON.stringify(payload);
       const done = () => showInfoToast('备份已复制，可粘贴到微信/文件传输助手保存');
@@ -11943,178 +11336,9 @@
       else fallbackCopyText(text, done);
     }
 
-    // ========== 补剂用药日志 ==========
-    let suppLogItemId = null;
-
-    function openSupplementLog(itemId) {
-      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === itemId);
-      if (!item) return;
-      suppLogItemId = itemId;
-      document.getElementById('suppLogItemInfo').innerHTML = `
-        <div class="supp-log-item-name">${item.icon} ${escapeHtml(item.name)}</div>
-        <div class="supp-log-item-meta">${escapeHtml(item.dosage || '剂量未填')} · ${escapeHtml(item.time || '时间未填')}</div>
-      `;
-      const dateInput = document.getElementById('suppLogDate');
-      dateInput.max = getTodayStr();
-      dateInput.value = supplementViewDate <= getTodayStr() ? supplementViewDate : getTodayStr();
-      document.getElementById('suppLogDose').value = item.dosage || '';
-      document.getElementById('suppLogTime').value = '';
-      document.getElementById('suppLogReaction').value = '';
-      document.getElementById('suppLogNote').value = '';
-      renderSupplementLogEntries();
-      document.getElementById('suppLogOverlay').classList.add('show');
-    }
-
-    function closeSuppLogModal(e) {
-      const overlay = document.getElementById('suppLogOverlay');
-      if (!overlay) return;
-      if (e && e.target !== overlay) return;
-      overlay.classList.remove('show');
-      suppLogItemId = null;
-    }
-
-    function renderSupplementLogEntries() {
-      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === suppLogItemId);
-      const el = document.getElementById('suppLogEntries');
-      if (!item || !el) return;
-      const dateStr = document.getElementById('suppLogDate').value;
-      const records = (item.records || []).filter(r => r.date === dateStr && r.taken).sort((a, b) => String(b.loggedAt || '').localeCompare(String(a.loggedAt || '')));
-      if (!records.length) {
-        el.innerHTML = '<div class="supp-log-empty">当天还没有服用记录，填完下方内容后保存即可。</div>';
-        return;
-      }
-      el.innerHTML = records.map(r => `
-        <div class="supp-log-entry">
-          <b>${escapeHtml(r.dose || '剂量未填')}</b>
-          <span>${r.time ? '⏰ ' + escapeHtml(r.time) : '⏰ 未填时间'}</span>
-          ${r.reaction ? '<span>· ' + escapeHtml(r.reaction) + '</span>' : ''}
-          ${r.note ? '<span>· ' + escapeHtml(r.note) + '</span>' : ''}
-          <button class="del" onclick="deleteSupplementLogRecord(${typeof r.id === 'number' ? r.id : "'" + r.date + "'"})" title="删除">×</button>
-        </div>
-      `).join('');
-    }
-
-    function saveSupplementLog() {
-      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === suppLogItemId);
-      if (!item) return;
-      const dateStr = document.getElementById('suppLogDate').value;
-      if (!dateStr) { alert('请选择日期'); return; }
-      if (dateStr > getTodayStr()) { alert('不能记录未来的日期'); return; }
-      const dose = document.getElementById('suppLogDose').value.trim();
-      const time = document.getElementById('suppLogTime').value;
-      const reaction = document.getElementById('suppLogReaction').value.trim();
-      const note = document.getElementById('suppLogNote').value.trim();
-      if (!dose && !time && !reaction && !note) { alert('请至少填写一项内容'); return; }
-      if (!item.records) item.records = [];
-      const existing = item.records.find(r => r.date === dateStr && r.taken);
-      if (existing) {
-        if (dose) existing.dose = dose;
-        if (time) existing.time = time;
-        if (reaction) existing.reaction = reaction;
-        if (note) existing.note = note;
-        existing.loggedAt = new Date().toISOString();
-      } else {
-        item.records.push({ id: Date.now(), date: dateStr, taken: true, dose, time, reaction, note, loggedAt: new Date().toISOString() });
-      }
-      saveData();
-      renderSupplementLogEntries();
-      showInfoToast('用药日志已保存');
-    }
-
-    function deleteSupplementLogRecord(recordId) {
-      const item = ((data.modules.supplements && data.modules.supplements.items) || []).find(i => i.id === suppLogItemId);
-      if (!item) return;
-      if (typeof recordId === 'number') {
-        item.records = (item.records || []).filter(r => r.id !== recordId);
-      } else {
-        item.records = (item.records || []).filter(r => !(r.date === recordId && r.taken));
-      }
-      saveData();
-      renderSupplementLogEntries();
-      showInfoToast('日志记录已删除');
-    }
-
-    function renderSupplementLogSection(items, dateStr) {
-      const all = [];
-      items.forEach(item => {
-        (item.records || []).forEach(r => {
-          if (r.taken && r.date) all.push({ item, rec: r });
-        });
-      });
-      all.sort((a, b) => String(b.rec.date).localeCompare(String(a.rec.date)) || String(b.rec.loggedAt || '').localeCompare(String(a.rec.loggedAt || '')));
-      const rows = all.slice(0, 15);
-      if (!rows.length) return '';
-      return `
-        <div class="supp-log-section">
-          <div class="supp-log-title">📋 用药日志（近 15 条）</div>
-          ${rows.map(({ item, rec }) => `
-            <div class="supp-log-row">
-              <div class="supp-log-row-icon">${item.icon}</div>
-              <div class="supp-log-row-main">
-                <div class="supp-log-row-head">
-                  <span>${escapeHtml(item.name)}</span>
-                  <span>${rec.date}${rec.time ? ' · ' + escapeHtml(rec.time) : ''}</span>
-                </div>
-                <div>${rec.dose ? '剂量：' + escapeHtml(rec.dose) + ' · ' : ''}${rec.reaction ? '反应：' + escapeHtml(rec.reaction) : ''}${rec.note ? (rec.reaction ? '；' : '') + escapeHtml(rec.note) : ''}</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-
-    function getMonthlySupplementSummary() {
-      const now = new Date();
-      const monthKey = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
-      const items = (data.modules.supplements && data.modules.supplements.items) || [];
-      let need = 0, done = 0, missed = 0;
-      const reactions = [];
-      const seen = new Set();
-      const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-      for (let day = 1; day <= lastDay; day++) {
-        const ds = monthKey + '-' + String(day).padStart(2, '0');
-        if (ds > getTodayStr()) break;
-        items.forEach(i => {
-          if (!shouldTakeSupplement(i, ds)) return;
-          need++;
-          if (i.records && i.records.some(r => r.date === ds && r.taken)) done++;
-          else missed++;
-        });
-        items.forEach(i => {
-          (i.records || []).forEach(r => {
-            if (r.date === ds && r.taken && r.reaction && !seen.has(r.reaction)) {
-              seen.add(r.reaction);
-              reactions.push(r.reaction);
-            }
-          });
-        });
-      }
-      return { need, done, missed, pct: need ? Math.round(done / need * 100) : 0, reactions: reactions.slice(0, 4) };
-    }
-
-    function renderSupplementReviewSection() {
-      const summary = getMonthlySupplementSummary();
-      const note = (data.modules.supplements && data.modules.supplements.reviewNote) || '';
-      return `
-        <div class="supp-review-section">
-          <div class="supp-review-title">🩺 复诊小结</div>
-          <div class="supp-review-summary">
-            本月应服 <b>${summary.need}</b> 次，已服 <b>${summary.done}</b> 次，完成率 <b>${summary.pct}%</b>，漏服 <b>${summary.missed}</b> 次。${summary.reactions.length ? '记录到的反应：' + summary.reactions.map(escapeHtml).join('、') : '本月暂无反应记录。'}
-          </div>
-          <textarea class="note-input" id="reviewNoteInput" placeholder="写给医生看的重点：服药时间、剂量、副作用、是否停药、下次复诊时间..." style="min-height:80px">${escapeHtml(note)}</textarea>
-          <button class="btn-primary" style="margin-top:10px;width:100%" onclick="saveSupplementReviewNote()">保存复诊小结</button>
-        </div>
-      `;
-    }
-
-    function saveSupplementReviewNote() {
-      const input = document.getElementById('reviewNoteInput');
-      if (!input) return;
-      if (!data.modules.supplements) data.modules.supplements = {};
-      data.modules.supplements.reviewNote = input.value.trim();
-      saveData();
-      showInfoToast('复诊小结已保存');
-    }
+    // 用药日志 / 复诊小结 已按要求移除。
+    // 数据不删：item.records 里的历史服药记录（剂量/时间/反应/备注）与 supplements.reviewNote
+    // 仍保留在本地数据中，导出备份时依然包含，只是不再有界面入口。
 
     // ========== 显化目标真实数据联动 ==========
     function getGoalLinkedStats(goal) {
@@ -12169,7 +11393,9 @@
       if (!readingToday) tips.push({ text: '今天还没有看书', cls: '' });
       if (finance.budget > 0 && finance.monthSpent > finance.budget) tips.push({ text: '本月预算已超支', cls: 'danger' });
       if (!tips.length) tips.push({ text: '今日目标已全部完成', cls: 'good' });
-      el.innerHTML = tips.map(t => `<span class="tip-chip ${t.cls}">${t.text}</span>`).join('');
+      // t.text 里包含用户填写的"明日待办"文本，必须转义后再拼进 innerHTML
+      // （其它待办渲染路径 renderTomorrowPlanHtml 已经转义，这里以前漏了）
+      el.innerHTML = tips.map(t => `<span class="tip-chip ${escapeHtml(t.cls)}">${escapeHtml(t.text)}</span>`).join('');
     }
 
     function celebrateIfComplete() {
