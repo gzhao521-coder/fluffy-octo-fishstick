@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -2209,6 +2209,42 @@
       transition: all 0.2s ease; flex-shrink: 0;
     }
     .supplement-edit-btn:hover { color: var(--primary); background: rgba(100,255,218,0.1); }
+    .supplement-archive-btn {
+      width: 28px; height: 28px;
+      border: none; background: transparent;
+      color: #4a4a6a; font-size: 14px;
+      cursor: pointer; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease; flex-shrink: 0;
+    }
+    .supplement-archive-btn:hover { color: #ffb86b; background: rgba(255,159,67,0.12); }
+    /* 已吃完 / 已停用区块 */
+    .supplement-archived {
+      margin-top: 14px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.03);
+      border-radius: var(--radius);
+    }
+    .supplement-archived-title { font-size: 13px; font-weight: 700; color: var(--text2); }
+    .supplement-archived-hint { font-size: 11px; color: var(--text2); line-height: 1.55; margin: 4px 0 9px; }
+    .supplement-archived-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 7px 0;
+      border-top: 1px dashed rgba(255,255,255,0.07);
+    }
+    .supplement-archived-name { flex: 1; min-width: 0; font-size: 12.5px; color: var(--text2); }
+    .supplement-archived-meta { font-size: 11px; color: var(--text2); white-space: nowrap; }
+    .supplement-archived-restore {
+      border: 1px solid rgba(100,255,218,0.3);
+      background: rgba(100,255,218,0.08);
+      color: var(--primary);
+      font-size: 11px; font-weight: 600;
+      padding: 4px 9px; border-radius: 7px;
+      cursor: pointer; white-space: nowrap;
+      min-height: 28px;
+    }
+    .supplement-archived-restore:hover { background: rgba(100,255,218,0.16); }
     .supplement-stock {
       display: flex;
       align-items: center;
@@ -2653,6 +2689,49 @@
       font-size: 12px;
       color: #ffb86b;
       line-height: 1.5;
+    }
+
+    /* 今日矿物质总量汇总 */
+    .mineral-summary {
+      margin: 10px 0 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.045);
+      border-radius: var(--radius);
+    }
+    .mineral-summary .mineral-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text2);
+      margin-bottom: 6px;
+    }
+    .mineral-summary .mineral-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text2);
+      margin-top: 3px;
+    }
+    .mineral-summary .mineral-row b {
+      font-size: 15px;
+      color: var(--primary);
+      font-weight: 700;
+    }
+    .mineral-summary .mineral-row b.over { color: var(--danger); }
+    .mineral-summary .mineral-ref { font-size: 11px; color: var(--text2); }
+    .mineral-summary .mineral-sources {
+      font-size: 11px;
+      color: var(--text2);
+      margin: 2px 0 0 0;
+      line-height: 1.55;
+      word-break: break-word;
+    }
+    .mineral-summary .mineral-foot {
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.55;
+      margin-top: 7px;
     }
 
     .body-trend-grid {
@@ -5687,7 +5766,7 @@
 
     const LS_KEY = 'myCheckinApp_v10';
     // 单一版本号来源：诊断信息、备份 payload、sw.js 的 CACHE_NAME 都应对齐这里
-    const APP_VERSION = 'v91';
+    const APP_VERSION = 'v103';
     // 存储安全状态。必须在 `let data = loadData();` 之前初始化：
     // loadData / saveData / validateAndRepairData 都会用到它们，放在后面会踩暂时性死区（TDZ）直接报错。
     let storageHealthy = true;
@@ -5697,6 +5776,39 @@
     // 不限制的话会把 localStorage 配额吃光，导致主数据无法保存。
     const MAX_AUTO_BACKUPS = 20;
     const MAX_AUTO_BACKUP_CHARS = 1200000;
+
+    // ========== 补剂清单版本与迁移配置 ==========
+    // 每次调整内置补剂清单就 +1；迁移只跑一次。
+    // 迁移以 id 为准就地更新，完整保留 records / taken / stock / cycleStart，并且从不删除项目。
+    // （这些常量必须在 `let data = loadData();` 之前声明，否则会踩暂时性死区。）
+    // v2：替换 #11（MEGA STRENGTH 精氨酸）；v3：替换 #17（Tadarise-5）、#18（REPL HYPOWER MUSLI）
+    // v4：替换 #1（Healthy Care CoQ10 300mg）；v5：新增 #19（NOW Foods 吡啶甲酸锌 50mg）
+    // v6：清单定稿——落地 #4/#5/#6/#7/#9/#10 六项替换，新增 #20（X5 TEST FORCE），
+    //     并把已吃完的 #2/#3/#8/#12/#13/#14/#15/#16 标记为 active:false（记录全部保留）
+    // v7：#6 改为每天2粒；#18 改为每天1粒（取消吃3停1）；#19 单独安排到新增的"下午"时段
+    // v8：矿物质汇总增加"来源明细 + 超出多少"；含锌三项显式标注错开安排
+    // v9：#5 与 #10 改为隔天轮换（每天元素锌降到 26mg 或 11mg，都在 40mg 以内）；
+    //     #19 NOW 锌 50mg 单粒即超上限，移出每日清单（记录保留，可一键恢复）
+    // v10：改为"#10 每天 + #5 隔天"——吃到 #5 的那天锌 37mg，其余天 11mg，都 ≤40mg
+    const SUPPLEMENT_LIST_VERSION = 10;
+    // 处方药类项目的 id（不要再依赖 "id >= 16" 这种范围判断，
+    // 否则以后往清单里加普通补剂会被误当成处方药）
+    const MED_SUPPLEMENT_IDS = [16, 17, 18];
+    // 本次启动是否做过了补剂清单迁移（用于静默保存，不触发"数据异常"告警）
+    let supplementsMigrated = false;
+    // 已知库存（按瓶身数量），只在首次迁移且该用户从未设过库存时写入
+    const SUPPLEMENT_STOCK_SEED = {
+      11: { stock: 120, stockTotal: 120, stockUnit: '片' }   // MEGA STRENGTH L-精氨酸：120片/瓶
+    };
+    // id 找不到时的旧名字兜底（只有这些名字对应到新清单的同一项）
+    const SUPPLEMENT_LEGACY_ALIASES = {
+      4:  ['MegLife 前列腺六合一', '番茄红素六合一'],
+      5:  ['VORSE 锌镁片', '锌镁片'],
+      7:  ['鱼油'],
+      9:  ['水飞蓟护肝片'],
+      10: ['RAINBOWBAR 葫芦巴', '葫芦巴提取物'],
+      11: ['VITAS 瓜氨酸精氨酸粉', '瓜氨酸精氨酸粉', '黑金刚精氨酸片', '复合精氨酸']
+    };
     const ICONS = ['🌅','🏃','📖','💧','🧘','🎸','💻','🥗','✍️','🧹','🌙','💪','🎯','🎨','🎧','🚴','🏊','🧠','🌳','🔥'];
 
     function getBgMotionEnabled() {
@@ -5828,8 +5940,9 @@
     const SUPPLEMENT_TIME_SLOTS = {
       morning: { label: '☀️ 早晨', color: '#ffd740', order: 1 },
       noon: { label: '🌤️ 中午', color: '#ff9f43', order: 2 },
-      evening: { label: '🌙 晚上', color: '#bd34fe', order: 3 },
-      workout: { label: '💪 运动', color: '#00e676', order: 4 }
+      afternoon: { label: '🌇 下午', color: '#4fc3f7', order: 3 },
+      evening: { label: '🌙 晚上', color: '#bd34fe', order: 4 },
+      workout: { label: '💪 运动', color: '#00e676', order: 5 }
     };
 
     document.getElementById('todayDate').textContent = formatDateCN(new Date());
@@ -5995,58 +6108,127 @@
       if (item.cycleStopDays === undefined) item.cycleStopDays = 2;
       if (item.cycleStart === undefined) item.cycleStart = '';
       if (!Array.isArray(item.tags)) item.tags = [];
+      // 元素矿物质含量（mg/份），可选。只用于"今日矿物质总量"汇总，不影响打卡逻辑。
+      if (item.zincMg === undefined) item.zincMg = null;
+      if (item.magnesiumMg === undefined) item.magnesiumMg = null;
+      // active=false 表示"已吃完 / 已停用"：不再计入今日应服、矿物质汇总和相互作用判断，
+      // 但项目本身与全部历史记录都保留（从不删除）。
+      if (item.active === undefined) item.active = true;
       return item;
     }
 
     function createDefaultSupplementItems() {
       return [
-        { id: 1, name: '辅酶Q10 (澳世康)', icon: '❤️', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '脂溶性，随餐吸收更佳。避免晚上服用以免影响睡眠。', warning: '过量可能导致胃肠不适、失眠' },
-        { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后30分钟内', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后30分钟内服用；无训练日改为早餐后，与肌酸错开。', warning: '过量增加肾脏负担' },
-        { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
-        { id: 4, name: 'MegLife 前列腺六合一', icon: '🎯', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '番茄红素、锯棕榈、南瓜籽等，针对前列腺/泌尿支持。', warning: '过量可能胃肠不适；前列腺问题建议先就医' },
-        { id: 5, name: 'VORSE 锌镁片', icon: '⚡', dosage: '按说明 1-2片', time: '晚餐后/睡前', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '锌随餐减少胃部刺激，镁睡前有助放松。避免和高钙产品同服。', warning: '锌过量影响铜吸收；镁过量致腹泻；不要与其他锌镁产品叠加' },
-        { id: 6, name: '肌酸软糖', icon: '🍬', dosage: '3-5g', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '每天早上随早餐服用，搭配葡萄糖吸收更佳。', warning: '过量可能导致胃肠不适、水肿' },
-        { id: 7, name: '鱼油', icon: '🐟', dosage: '1-2粒', time: '晚餐后', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '晚餐随餐服用减少鱼腥味，脂肪帮助吸收；与蛹虫草、锯棕榈错开。', warning: '过量可能影响凝血功能' },
-        { id: 8, name: 'Supovita 12合一多维牡蛎片', icon: '💊', dosage: '按说明 1片', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '复合维生素+牡蛎提取物，含锌、硒等，随餐服用。', warning: '含锌，避免与其他锌产品叠加；脂溶性维生素长期过量可能积累' },
-        { id: 9, name: '水飞蓟护肝片', icon: '🛡️', dosage: '1粒', time: '晚餐后', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '晚餐随餐服用减少胃部刺激，与葫芦巴错开。', warning: '过量可能加重肝脏负担' },
-        { id: 10, name: 'RAINBOWBAR 葫芦巴', icon: '🌱', dosage: '按说明 1粒', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '葫芦巴提取物，常用于健身促睾/血糖支持。', warning: '可能影响血糖；糖尿病或服降糖药慎用' },
-        { id: 11, name: 'VITAS 瓜氨酸精氨酸粉', icon: '💥', dosage: '按说明 约5g', time: '运动前30分钟', timeSlot: 'workout', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '瓜氨酸+精氨酸，提升血流与耐力，运动前服用。', warning: '过量可能胃肠不适、低血压；与降压药同用需谨慎' },
-        { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '午餐后', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '午餐后随餐服用，与铁锌间隔2小时以上。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
-        { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
-        { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' },
-        { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' },
-        { id: 16, name: '达泊西汀 60mg', icon: '💊', dosage: '半片（30mg）', time: '按需 · 性活动前1-3小时', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: '医生建议半片；按需服用，不建议连续每天使用，请按医生指示调整频次。', warning: '不可与MAO抑制剂、其他SSRI/SNRI、圣约翰草、5-HTP同用；避免酒精和西柚汁；头晕/晕厥风险' },
-        { id: 17, name: '他达拉非 5mg', icon: '💊', dosage: '1片（5mg）', time: '午饭后固定时间', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: '医生建议每次一片；固定时间服用（吃3天休1天），避免西柚汁。', warning: '禁止与硝酸甘油等硝酸酯同用；与降压/扩血管药物同用需谨慎；胸痛或持续勃起立即就医' },
-        { id: 18, name: '阿育吠陀草本补充剂', icon: '🌿', dosage: '1粒', time: '早餐后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['草本'], note: '每次一粒；成分未注明，请先核对成分再服用。', warning: '成分不明；若含育亨宾严禁与他达拉非/达泊西汀同用；含南非醉茄需关注甲状腺/血压/血糖' }
+        { id: 1, name: 'Healthy Care CoQ10 300mg', icon: '❤️', dosage: '1粒（300mg）', time: '随餐（每日1粒）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['含大豆'], note: 'Healthy Care Australia · Ultra Strength Coenzyme Q10。每粒 Ubidecarenone（辅酶Q10）300mg，规格 60粒。厂家建议：成人每日1粒，随餐服用。脂溶性，随餐（含脂肪）吸收更佳；避免晚上服用以免影响睡眠。', warning: '【标签提示】正在接受抗凝治疗者需先咨询医生。含大豆成分，过敏者注意。' },
+        { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后30分钟内', timeSlot: 'workout', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后30分钟内服用；无训练日改为早餐后，与其他产品错开时间。', warning: '过量增加肾脏负担' },
+        { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
+        { id: 4, name: 'MegLifeExten 活力精华加强版', icon: '🎯', dosage: '2粒（每日）', time: '随餐（午餐后）', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['仅限男性'], note: 'MegLifeExten · VITALITY ESSENCE ULTRA（活力精华加强版）。每份2粒含：番茄红素 80mg、牛磺酸 1000mg、锯棕榈提取物 200mg(10:1)、南瓜籽提取物 120mg(20:1)、淫羊藿提取物 60mg(10:1)、当归提取物 30mg(10:1)。规格 60粒/瓶（按每日2粒约30天）。标签注明无糖、纯素友好。', warning: '【标签说明】标签仅注明"不可替代药物"、请勿超过每日用量。成分含锯棕榈（可能影响凝血、干扰前列腺相关检查）与淫羊藿，正在服药或做检查前建议先告知医生。' },
+        { id: 5, name: 'VORSE 吡啶甲酸锌+甘氨酸镁', icon: '⚡', dosage: '1片（隔天1片）', time: '晚间 · 隔天服用', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, zincMg: 26, magnesiumMg: 118, cycleEnabled: true, cycleTakeDays: 1, cycleStopDays: 1, cycleStart: '2026-01-01', tags: ['隔天服用'], note: 'VORSE Zinc Picolinate。每片：吡啶甲酸锌 125mg（≈元素锌 26mg）、甘氨酸镁 834mg（≈元素镁 118mg），片重1700mg。规格 30片/瓶。批号 E260530，有效期至 2029-05-27，香港制造。为把每天的元素锌控制在 40mg 以内，本项**隔天**服用（#10 每天吃）：吃到本项的那天锌合计 26+11=37mg，未到 40mg；只吃 #10 的那天是 11mg。卡片上会显示今天该吃还是停服。', warning: '【标签提示】锌的每日可耐受最高摄入量约 40mg 元素锌，切勿超量；长期过量补锌可能导致铜缺乏。建议随餐服用。' },
+        { id: 6, name: 'MOOSRLE 肌酸软糖（芒果）', icon: '🍬', dosage: '2粒（肌酸3g）', time: '随餐或运动后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['运动营养'], note: 'MOOSRLE 肌酸软糖，芒果味。每粒5g，其中一水肌酸 1.5g（每粒能量49kJ、碳水2.9g、钠0mg）。规格 净含量300g＝60粒；每天 2 粒 ≈ 肌酸 3g。配料含麦芽糖醇液、异麦芽酮糖醇（代糖）等。', warning: '【标签提示】代糖含量较高，过量食用可能引起肠胃胀气或腹泻。肌酸会把水分带入肌肉细胞，服用期间请保证充足饮水。肾脏功能不全者请先咨询医生。' },
+        { id: 7, name: 'CPTKING 复合鱼油 (rTG型)', icon: '🐟', dosage: '2粒（每日1次）', time: '随餐（建议晚餐后）', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['鱼油'], note: 'CPTKING（赛霸）COMPOUND FISH OIL 复合鱼油，rTG型（再酯化甘油三酯）。每粒1g：鱼油提取物中 EPA 50%／DHA 40%，Omega-3 ≥95%。配料另含明胶、水、甘油、元宝枫籽油。规格 30g＝1g×10粒×3板（30粒/盒）。保质期至 2028-06-08。随餐服用（含脂肪的餐食帮助吸收）。', warning: '【标签提示】鱼油提取物≤3克/天、元宝枫籽油≤3克/天，本产品每日不超过 3粒；不适宜婴幼儿。高剂量鱼油可能影响凝血功能，正在服用抗凝/抗血小板药或准备手术前请先咨询医生。' },
+        { id: 8, name: 'Supovita 12合一多维牡蛎片', icon: '💊', dosage: '按说明 1片', time: '早餐后', timeSlot: 'morning', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '复合维生素+牡蛎提取物，含锌、硒等，随餐服用。', warning: '含锌，避免与其他锌产品叠加；脂溶性维生素长期过量可能积累' },
+        { id: 9, name: 'Healthy Care 护肝排毒片', icon: '🛡️', dosage: '1粒（每日）', time: '随餐（建议晚餐后）', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['含亚硫酸盐'], note: 'Healthy Care Australia · Ultimate One-A-Day LIVER DETOX，规格 60粒（按每日1粒约60天），AUST L 421902。每粒：奶蓟草干果提取物 600mg（≈干果42g，标准化至水飞蓟宾 480mg）、姜黄干根茎提取物 80mg（≈2g）、朝鲜蓟干叶提取物 20mg（≈300mg）。标签注明：17岁及以下不适用。', warning: '【标签警示】① 极少数情况下姜黄可能损害肝脏；出现皮肤/眼睛发黄、异常疲劳、恶心、食欲不振、腹痛、深色尿液或瘙痒，请停药并就医。② 含亚硫酸盐，过敏者注意。③ 避免高剂量水飞蓟长期服用，建议定期监测肝功能；服药或准备手术前先咨询医生。' },
+        { id: 10, name: 'RAINBOWBAR 男性睾酮促进剂', icon: '🌱', dosage: '2片（每日）', time: '随餐（午餐后）', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, zincMg: 11, tags: ['仅限男性'], note: 'RAINBOWBAR MEN\'S T-BOOST，标称100% PURE／2300mg，规格 90片＝45份（每份2片，约一个半月）。每份2片含：葫芦巴提取物 1200mg、葫芦巴糖苷 600mg、DIM 200mg、原薯蓣皂苷 150mg、锌 11mg、黑胡椒提取物（95%胡椒碱）10mg、硼 8mg、维生素D3 500IU。建议：每日2片随餐，本项**每天吃**。#5（含锌 26mg）隔天吃，所以吃到 #5 的那天锌合计 11+26=37mg，仍在 40mg 以内。', warning: '【标签提示】请勿超过建议每日用量；营养补充剂不可替代药物。含葫芦巴（可能影响血糖）、DIM、胡椒碱（黑胡椒提取物，常被提到会影响药物代谢酶）与硼，正在服药者建议先咨询医生。' },
+        { id: 11, name: 'MEGA STRENGTH L-精氨酸 1000mg', icon: '💥', dosage: '1片（1000mg）', time: '随餐（每日1片）', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, tags: ['医药级'], note: '每片含 L-精氨酸盐酸盐 1000mg（医药级、游离形式）。标签建议随餐服用以减少肠胃刺激；每日1至2次、每次1片。', warning: '【标签警示】低血压患者，以及正在服用降压药、硝酸甘油或伟哥类（PDE5 抑制剂）药物的人群，标签明确标注「绝对禁止服用」，可能导致血压急剧下降。另：可能引起胃肠不适；有疱疹病毒感染史者慎用；哮喘患者慎用。' },
+        { id: 12, name: '小分子液体钙', icon: '🦴', dosage: '按说明', time: '午餐后', timeSlot: 'noon', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, note: '午餐后随餐服用，与铁锌间隔2小时以上。', warning: '过量可能增加结石风险，与铁锌竞争吸收' },
+        { id: 13, name: '营养米粉', icon: '🍚', dosage: '按说明', time: '早餐/加餐', timeSlot: 'morning', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '作为代餐，早餐或加餐时服用。', warning: '过量可能导致热量过剩' },
+        { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' },
+        { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' },
+        { id: 16, name: '达泊西汀 60mg', icon: '💊', dosage: '半片（30mg）', time: '按需 · 性活动前1-3小时', timeSlot: 'evening', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: '医生建议半片；按需服用，不建议连续每天使用，请按医生指示调整频次。', warning: '不可与MAO抑制剂、其他SSRI/SNRI、圣约翰草、5-HTP同用；避免酒精和西柚汁；头晕/晕厥风险' },
+        { id: 17, name: 'Tadarise-5（他达拉非 5mg）', icon: '💊', dosage: '1片（5mg）', time: '午饭后固定时间', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: 'Sunrise 出品 · Tadalafil Tablets IP 5mg · 规格 10×10＝100片。辅料适量，色素含酒石黄（Tartrazine）。遵医嘱服用；储存：阴凉干燥、低于30°C、避光、儿童接触不到。标签注明：仅凭泌尿科/精神科/内分泌科/性病科医生处方零售。', warning: '【处方药】绝对禁止与硝酸甘油等硝酸酯类药物同用（可致血压骤降、危及生命）；严重心血管疾病、低血压患者禁用。与其他扩血管／降压类产品同用需谨慎。副作用：头痛、消化不良、背痛、肌肉痛、面部潮红、鼻塞；极少数情况可能出现突然视力丧失或听力下降，需立即就医。' },
+        { id: 18, name: 'REPL HYPOWER MUSLI（阿育吠陀）', icon: '🌿', dosage: '1粒（每日）', time: '饭后（每日1次）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 1, tags: ['阿育吠陀', '仅限男性'], note: '每粒500mg，含：Safed Musli 120mg、Sudha Shilajit 105mg、南非醉茄 95mg、刺毛黧豆（含左旋多巴）60mg、天门冬 60mg、Vidarikand 35mg、肉豆蔻 10mg、Abhrak Bhasm（云母灰）10mg。每日1粒，饭后服用（每天吃，不是吃几天停几天）。', warning: '【成分提示】① 含刺毛黧豆（左旋多巴）：正在服用帕金森药物、抗抑郁药（尤其 MAO 抑制剂）、抗精神病药物者应绝对避免。② 含 Shilajit 与云母灰（Bhasm）等矿物成分，此类阿育吠陀制剂有重金属（铅/汞/砷）超标风险，长期或超量服用可能损伤肝肾。③ 含南非醉茄，需关注甲状腺、血压、血糖。④ 仅限成年男性。⑤ 出现恶心、头晕、皮肤发黄、尿液变色等请立即停药就医。' },
+        { id: 19, name: 'NOW Foods 吡啶甲酸锌 50mg', icon: '⚡', dosage: '1粒（元素锌 50mg）', time: '已移出每日轮换', timeSlot: 'afternoon', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, zincMg: 50, tags: ['高剂量锌', '已移出轮换'], note: 'NOW Foods Zinc Picolinate。每份1粒含元素锌 50mg，规格 60粒。★ 已移出每日清单：单粒 50mg 本身就超过"每天 40mg"的参考上限，任何按天轮换的安排里，只要那天吃了它就会超标。想恢复请点本项的「重新开始」。', warning: '【应用参考】单粒元素锌 50mg，已超过应用提示里"每天锌总量不宜长期超过 40mg"的参考值；锌过量会影响铜吸收。请按标签或医生建议服用。' },
+        { id: 20, name: 'X5 TEST FORCE', icon: '🌿', dosage: '2粒（每日）／活动前3粒', time: '随餐（每日2粒）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['草本', '仅限男性'], note: 'X5 TEST FORCE（强效草本混合物）。每份2粒含：淫羊藿提取物 500mg（含淫羊藿苷 50mg）、玛卡 1200mg、蒺藜提取物 250mg（含皂苷 112.5mg）、育亨宾提取物 80mg（标准化含2%育亨宾生物碱 ≈1.6mg）、L-精氨酸盐酸盐 40mg。规格 90粒＝45份。标签建议：每日2粒随餐；为更快效果可在活动前60-90分钟服3粒。', warning: '【标签警示】① 含育亨宾（Yohimbe）：作用较强的植物生物碱，可能引起血压升高、心跳加快、焦虑、失眠；有高血压、心脏病、焦虑症，或正在服用降压药、抗抑郁药（尤其 MAO 抑制剂）、抗凝药者应避免。② 不要与硝酸酯类药物或其他血管扩张剂同服。③ 标签建议活动前服3粒属急性用法，请勿睡前服用。④ 请严格遵守每日2粒（或短期3粒），切勿超量。⑤ 有前列腺或激素相关疾病、正在服用其他药物者，务必先咨询医生。' }
       ].map(normalizeSupplementItem);
     }
 
     function createMedSupplementItems() {
-      return createDefaultSupplementItems().filter(i => i.id >= 16);
+      return createDefaultSupplementItems().filter(i => MED_SUPPLEMENT_IDS.indexOf(i.id) !== -1);
     }
 
-    function migrateLegacySupplementItems(items) {
-      const nameMap = {
-        '番茄红素六合一': 'MegLife 前列腺六合一',
-        '锌镁片': 'VORSE 锌镁片',
-        '复合多维锌镁片': 'Supovita 12合一多维牡蛎片',
-        '葫芦巴提取物': 'RAINBOWBAR 葫芦巴',
-        '黑金刚精氨酸片': 'VITAS 瓜氨酸精氨酸粉'
-      };
-      const defaults = createDefaultSupplementItems();
-      const merged = items.map(item => {
-        const newName = nameMap[item.name];
-        if (newName) {
-          const replacement = defaults.find(d => d.name === newName);
-          return replacement ? Object.assign({}, replacement, { id: item.id }) : item;
+    // 补剂清单迁移：只更新展示字段，保留用户的全部记录与库存；从不删除项目。
+    // 返回 true 表示做了改动（调用方会保存）。
+    function migrateSupplementList(saved) {
+      const sup = saved && saved.modules && saved.modules.supplements;
+      if (!sup || !Array.isArray(sup.items)) return false;
+      if (sup.listVersion === SUPPLEMENT_LIST_VERSION) return false;
+
+      const targets = createDefaultSupplementItems();
+      const items = sup.items.slice();
+      const usedIdx = new Set();
+      const result = [];
+
+      targets.forEach(t => {
+        // 1) 优先按 id 匹配（默认清单的 id 是稳定的 1..18）
+        let idx = items.findIndex((it, i) => !usedIdx.has(i) && it && it.id === t.id);
+        // 2) id 对不上时按旧名字兜底
+        if (idx < 0 && SUPPLEMENT_LEGACY_ALIASES[t.id]) {
+          const aliases = SUPPLEMENT_LEGACY_ALIASES[t.id];
+          idx = items.findIndex((it, i) => !usedIdx.has(i) && it && aliases.indexOf(it.name) !== -1);
         }
-        return item;
+
+        if (idx >= 0) {
+          usedIdx.add(idx);
+          const cur = items[idx];
+          // 先备份用户数据
+          const keptRecords = Array.isArray(cur.records) ? cur.records : [];
+          const keptStock = cur.stock;
+          const keptStockTotal = cur.stockTotal;
+          const keptCycleStart = cur.cycleStart;
+          const keptFuel = cur.fuelRecords;
+          // 用户自己动过的设置，迁移时必须尊重（否则我下次更新清单会覆盖掉你的修改）
+          const keptActive = cur.active;
+          const keptCycleOn = cur.cycleEnabled;
+          const keptCycleTake = cur.cycleTakeDays;
+          const keptCycleStop = cur.cycleStopDays;
+          const userSetActive = cur.activeUserEdited === true;
+          const userSetCycle = cur.cycleUserEdited === true;
+          // 用目标定义的展示字段覆盖（深拷贝，避免共享引用）
+          Object.keys(t).forEach(k => {
+            const v = t[k];
+            cur[k] = (v && typeof v === 'object') ? JSON.parse(JSON.stringify(v)) : v;
+          });
+          // 再还原用户数据
+          cur.records = keptRecords;
+          if (keptStock !== undefined) cur.stock = keptStock;
+          if (keptStockTotal !== undefined) cur.stockTotal = keptStockTotal;
+          if (keptCycleStart) cur.cycleStart = keptCycleStart;   // 不悄悄改周期起算日
+          if (keptFuel) cur.fuelRecords = keptFuel;
+          if (userSetActive && keptActive !== undefined) { cur.active = keptActive; cur.activeUserEdited = true; }
+          if (userSetCycle) {
+            cur.cycleEnabled = keptCycleOn;
+            cur.cycleTakeDays = keptCycleTake;
+            cur.cycleStopDays = keptCycleStop;
+            cur.cycleUserEdited = true;
+          }
+          cur.taken = keptRecords.some(r => r.date === getTodayStr() && r.taken);
+          const seed = SUPPLEMENT_STOCK_SEED[t.id];
+          if (seed && typeof cur.stock !== 'number') {
+            cur.stock = seed.stock;
+            cur.stockTotal = seed.stockTotal;
+            cur.stockUnit = seed.stockUnit;
+          }
+          result.push(cur);
+        } else {
+          const fresh = JSON.parse(JSON.stringify(t));
+          const seed = SUPPLEMENT_STOCK_SEED[t.id];
+          if (seed) { fresh.stock = seed.stock; fresh.stockTotal = seed.stockTotal; fresh.stockUnit = seed.stockUnit; }
+          result.push(fresh);
+        }
       });
-      if (!merged.some(i => i.name === '蛹虫草玛咖片')) {
-        const newItem = defaults.find(d => d.name === '蛹虫草玛咖片');
-        merged.push(Object.assign({}, newItem, { id: Date.now() }));
-      }
-      return merged;
+
+      // 用户自己新增的（id 不在目标清单里）原样保留——绝不因为迁移而丢项目
+      items.forEach((it, i) => {
+        if (usedIdx.has(i)) return;
+        if (!it) return;
+        if (targets.some(t => t.id === it.id)) return;   // 同 id 的重复项已被目标占用
+        result.push(it);
+      });
+
+      sup.items = result;
+      sup.listVersion = SUPPLEMENT_LIST_VERSION;
+      supplementsMigrated = true;
+      return true;
     }
 
     // ========== 存储安全 ==========
@@ -6130,52 +6312,17 @@
             saved.modules.supplements.items = [];
           }
           if (Array.isArray(saved.modules.supplements.items)) {
-            const badSixNames = ['VORSE 锌镁片', 'Supovita 12合一多维牡蛎片', 'VITAS 瓜氨酸精氨酸粉', 'RAINBOWBAR 葫芦巴', 'MegLife 前列腺六合一', '蛹虫草玛咖片'];
-            const isBadSixList = saved.modules.supplements.items.length === badSixNames.length && badSixNames.every(n => saved.modules.supplements.items.some(i => i.name === n));
-            if (isBadSixList) {
-              saved.modules.supplements.items = createDefaultSupplementItems();
-            } else {
-            const legacyNames = ['辅酶Q10 (澳世康)', '水解增肌粉', '冻干甜菜根粉', '番茄红素六合一', '锌镁片', '肌酸软糖', '鱼油', '复合多维锌镁片', '水飞蓟护肝片', '葫芦巴提取物', '黑金刚精氨酸片', '小分子液体钙', '营养米粉', '口服胶原蛋白'];
-            const isLegacyList = saved.modules.supplements.items.length === legacyNames.length && legacyNames.every(n => saved.modules.supplements.items.some(i => i.name === n));
-            if (isLegacyList) {
-              saved.modules.supplements.items = migrateLegacySupplementItems(saved.modules.supplements.items);
-            }
-            }
-          }
-          if (Array.isArray(saved.modules.supplements.items)) {
+            // 旧的"按名字集合判断并重置整个补剂清单"逻辑已移除：那种写法在改名后会变得不可预测，
+            // 而且理论上能把用户整份清单连历史记录一起重置。现在改用下面的版本化迁移。
             saved.modules.supplements.items = saved.modules.supplements.items.map(normalizeSupplementItem);
-            saved.modules.supplements.items.forEach(item => {
-              if (item.name === '小分子液体钙' && item.time === '晚餐后/睡前' && item.timeSlot === 'evening') {
-                item.time = '午餐后';
-                item.timeSlot = 'noon';
-              }
-              if (item.name === '肌酸软糖') {
-                item.time = '早餐后';
-                item.timeSlot = 'morning';
-                item.note = '每天早上随早餐服用，搭配葡萄糖吸收更佳。';
-              }
-              if (item.name === '水解增肌粉') {
-                item.time = '运动后30分钟内';
-                item.timeSlot = 'workout';
-                item.note = '运动后30分钟内服用；无训练日改为早餐后，与肌酸错开。';
-              }
-              if (item.name === '鱼油') {
-                item.time = '晚餐后';
-                item.timeSlot = 'evening';
-                item.note = '晚餐随餐服用减少鱼腥味，脂肪帮助吸收；与蛹虫草、锯棕榈错开。';
-              }
-              if (item.name === '水飞蓟护肝片') {
-                item.time = '晚餐后';
-                item.timeSlot = 'evening';
-                item.note = '晚餐随餐服用减少胃部刺激，与葫芦巴错开。';
-              }
-            });
             if (!saved.modules.supplements.medSeeded) {
               const existingNames = new Set(saved.modules.supplements.items.map(i => i.name));
               const meds = createMedSupplementItems().filter(i => !existingNames.has(i.name));
               saved.modules.supplements.items = saved.modules.supplements.items.concat(meds);
               saved.modules.supplements.medSeeded = true;
             }
+            // 清单迁移：按 id 就地更新展示字段，保留 records / stock / cycleStart，不删任何项目
+            migrateSupplementList(saved);
           }
           if (!saved.modules.body || !Array.isArray(saved.modules.body.records)) {
             saved.modules.body = { records: [] };
@@ -6383,6 +6530,9 @@
       if (repaired) {
         saveData();
         setTimeout(() => alert('检测到数据异常，已自动修复'), 0);
+      } else if (supplementsMigrated) {
+        // 补剂清单迁移：静默保存即可，不算"数据异常"，不弹告警
+        saveData();
       }
     }
 
@@ -7795,12 +7945,17 @@
         item.stockTotal = isNaN(stockTotalVal) || stockTotalVal < 0 ? null : stockTotalVal;
         item.stockUnit = document.getElementById('editSuppStockUnit').value.trim() || '粒';
         item.lowStockThreshold = isNaN(thresholdVal) || thresholdVal < 0 ? 10 : thresholdVal;
+        const cycleBefore = [item.cycleEnabled, item.cycleTakeDays, item.cycleStopDays, item.cycleStart].join('|');
         item.cycleEnabled = !!document.getElementById('editSuppCycleEnabled').checked;
         item.cycleTakeDays = parseInt(document.getElementById('editSuppCycleTake').value, 10) || 5;
         item.cycleStopDays = parseInt(document.getElementById('editSuppCycleStop').value, 10) || 0;
         if (item.cycleTakeDays < 1) item.cycleTakeDays = 1;
         if (item.cycleStopDays < 0) item.cycleStopDays = 0;
         item.cycleStart = document.getElementById('editSuppCycleStart').value || '';
+        // 你如果自己改过周期，就标记下来，以后我更新内置清单不会把它覆盖回去
+        if (cycleBefore !== [item.cycleEnabled, item.cycleTakeDays, item.cycleStopDays, item.cycleStart].join('|')) {
+          item.cycleUserEdited = true;
+        }
         item.tags = document.getElementById('editSuppTags').value.split(/[,，]/).map(s => s.trim()).filter(Boolean);
         item.note = document.getElementById('editSuppNote').value.trim();
         item.warning = document.getElementById('editSuppWarning').value.trim();
@@ -8435,7 +8590,77 @@
       return `<div class="low-stock-banner">⚠️ ${low.length} 种补剂需要补货：${low.map(i => escapeHtml(i.name)).join('、')}</div>`;
     }
 
+    // 今日矿物质总量：只把"填了含量"的项目相加，且不含食物来源。
+    // 参考值沿用应用里原有的两条提示（锌 40mg、镁 200-400mg），不新增任何医学结论。
+    const ZINC_REFERENCE_LIMIT = 40;
+    const MG_REFERENCE_TEXT = '参考 200-400 mg';
+
+    function getMineralTotals(dateStr) {
+      const items = (data.modules.supplements && data.modules.supplements.items) || [];
+      let zincDue = 0, zincTaken = 0, mgDue = 0, mgTaken = 0, zincSources = 0, mgSources = 0, counted = 0;
+      const zincFrom = [], mgFrom = [];
+      items.forEach(it => {
+        if (!shouldTakeSupplement(it, dateStr)) return;   // 停服日不计入
+        const taken = isSupplementTakenOn(it, dateStr);
+        let used = false;
+        if (typeof it.zincMg === 'number' && it.zincMg > 0) {
+          zincDue += it.zincMg; if (taken) zincTaken += it.zincMg; zincSources++; used = true;
+          zincFrom.push({ name: it.name, mg: it.zincMg, slot: it.timeSlot || 'noon' });
+        }
+        if (typeof it.magnesiumMg === 'number' && it.magnesiumMg > 0) {
+          mgDue += it.magnesiumMg; if (taken) mgTaken += it.magnesiumMg; mgSources++; used = true;
+          mgFrom.push({ name: it.name, mg: it.magnesiumMg, slot: it.timeSlot || 'noon' });
+        }
+        if (used) counted++;
+      });
+      return { zincDue, zincTaken, mgDue, mgTaken, zincSources, mgSources, counted, total: items.length, zincFrom, mgFrom };
+    }
+
+    // 把来源按含量从多到少排好，只显示名字里的品牌/关键字，避免刷屏
+    function formatMineralSources(list) {
+      return list.slice().sort((a, b) => b.mg - a.mg)
+        .map(s => shortSupplementName(s.name) + ' ' + s.mg + 'mg').join(' · ');
+    }
+
+    function shortSupplementName(name) {
+      const n = String(name || '');
+      if (/VORSE/.test(n)) return 'VORSE';
+      if (/NOW/.test(n)) return 'NOW';
+      if (/RAINBOWBAR/.test(n)) return 'RAINBOWBAR';
+      return n.length > 12 ? n.slice(0, 12) + '…' : n;
+    }
+
+    function renderMineralSummaryHtml(dateStr) {
+      const t = getMineralTotals(dateStr);
+      if (!t.zincSources && !t.mgSources) return '';
+      const rows = [];
+      if (t.zincSources) {
+        const overMg = Math.round(t.zincDue - ZINC_REFERENCE_LIMIT);
+        const over = overMg > 0;
+        rows.push('<div class="mineral-row"><span>锌（元素）</span><b class="' + (over ? 'over' : '') + '">≈ '
+          + Math.round(t.zincDue) + ' mg</b><span class="mineral-ref">参考上限 ' + ZINC_REFERENCE_LIMIT + ' mg'
+          + (over ? ' ⚠️ 超出 ' + overMg + ' mg' : '') + '</span></div>');
+        rows.push('<div class="mineral-sources">来源：' + escapeHtml(formatMineralSources(t.zincFrom))
+          + '　·　分属 ' + new Set(t.zincFrom.map(s => s.slot)).size + ' 个时段</div>');
+      }
+      if (t.mgSources) {
+        rows.push('<div class="mineral-row"><span>镁（元素）</span><b>≈ ' + Math.round(t.mgDue)
+          + ' mg</b><span class="mineral-ref">' + MG_REFERENCE_TEXT + '</span></div>');
+      }
+      const takenParts = [];
+      if (t.zincSources) takenParts.push('锌 ' + Math.round(t.zincTaken) + ' mg');
+      if (t.mgSources) takenParts.push('镁 ' + Math.round(t.mgTaken) + ' mg');
+      return `
+        <div class="mineral-summary" id="mineralSummary">
+          <div class="mineral-title">📦 ${dateStr === getTodayStr() ? '今日' : '当日'}矿物质总量（按标签折算）</div>
+          ${rows.join('')}
+          <div class="mineral-foot">已服：${takenParts.join(' · ')}　·　已登记 ${t.counted}/${t.total} 项，未填写含量的项目未计入；不含食物来源。仅供参考。</div>
+        </div>
+      `;
+    }
+
     function shouldTakeSupplement(item, dateStr) {
+      if (item.active === false) return false;   // 已吃完/已停用：不再计入"今天该吃"
       if (!item.cycleEnabled || !item.cycleStart || !item.cycleTakeDays) return true;
       const diff = daysBetween(item.cycleStart, dateStr);
       if (diff < 0) return false;
@@ -8497,18 +8722,25 @@
         creatine: /肌酸/.test(text),
         milkThistle: /水飞蓟/.test(text),
         cordyceps: /蛹虫草/.test(text),
-        maca: /玛咖/.test(text),
+        maca: /玛咖|玛卡/.test(text),
         multi: /多维|复合维生素/.test(text),
         whey: /增肌粉/.test(text),
         collagen: /胶原蛋白/.test(text),
         rice: /营养米粉/.test(text),
         dapoxetine: /达泊西汀/.test(text),
         tadalafil: /他达拉非/.test(text),
-        ayurveda: /阿育吠陀/.test(text)
+        ayurveda: /阿育吠陀/.test(text),
+        // —— 按标签成分补充的归类（只用于"数有几项重叠"和下面那两条提示，不生成新的医学结论）——
+        // 姜黄沿用上面的 curcumin 键（它以前定义了却没人用，现在正式用上）
+        // 元宝枫籽油按你的要求不做归类
+        yohimbine: /育亨宾|yohimbe/i.test(text),
+        piperine: /胡椒碱|黑胡椒/.test(text)
       };
     }
 
     function getSupplementInteractionWarnings(items) {
+      // 已吃完/已停用的项目不再参与"相互作用"判断——它们不在你现在吃的东西里
+      items = (items || []).filter(i => i && i.active !== false);
       const groups = items.map(getSupplementGroups);
       const count = key => groups.filter(g => g[key]).length;
       const warnings = [];
@@ -8541,11 +8773,24 @@
       if (count('sawPalmetto') >= 1) {
         warnings.push({ title: '锯棕榈注意事项', text: '前列腺六合一中的锯棕榈可能影响凝血并干扰前列腺相关检查，服用抗凝药或做检查前先告知医生。' });
       }
-      if (count('milkThistle') >= 1) {
-        warnings.push({ title: '水飞蓟与药物', text: '水飞蓟可能影响经肝脏代谢的药物（如他汀、部分抗过敏药），服药期间建议咨询医生是否需要调整。' });
+      // 影响肝脏药物代谢的成分（水飞蓟 / 胡椒碱 / 姜黄）合并为一条，避免重复刷屏
+      const hepaticParts = [];
+      if (count('milkThistle') >= 1) hepaticParts.push('水飞蓟（可能影响经肝脏代谢的药物，如他汀、部分抗过敏药）');
+      if (count('piperine') >= 1) hepaticParts.push('胡椒碱／黑胡椒提取物（常被提到会影响 CYP3A4 等药物代谢酶与药物外排转运）');
+      if (count('curcumin') >= 1) hepaticParts.push('姜黄／姜黄素（同样有影响药物代谢的讨论，标签另注极少数情况下可能损害肝脏）');
+      if (hepaticParts.length) {
+        const rxNames = [];
+        if (count('dapoxetine') >= 1) rxNames.push('达泊西汀');
+        if (count('tadalafil') >= 1) rxNames.push('他达拉非');
+        warnings.push({
+          title: '影响肝脏代谢的成分',
+          text: '清单中含 ' + hepaticParts.join('；') + '。这几类在同服时都可能改变其他药物的血药浓度。'
+              + (rxNames.length ? '你正在使用的 ' + rxNames.join('、') + ' 均经肝脏代谢，' : '')
+              + '建议把这几种成分一并告知医生或药师，由他们判断是否需要调整。'
+        });
       }
       if (count('maca') >= 1) {
-        warnings.push({ title: '玛咖注意事项', text: '蛹虫草玛咖片中的玛咖与甲状腺/激素类药物同用的证据有限，服用相关药物或激素检查前先咨询医生。' });
+        warnings.push({ title: '玛咖注意事项', text: '清单中含玛咖的产品：玛咖与甲状腺/激素类药物同用的证据有限，服用相关药物或做激素检查前建议先咨询医生。' });
       }
       if (count('multi') >= 1 && (count('zinc') >= 1 || count('magnesium') >= 1 || count('calcium') >= 1)) {
         warnings.push({ title: '多维片与矿物质间隔', text: '复合维生素/牡蛎片同时含锌、硒、碘等，与其他锌、镁、钙产品同服时建议错开 2 小时，甲状腺用药也需间隔。' });
@@ -8571,7 +8816,33 @@
         warnings.push({ title: '他达拉非与扩血管补剂', text: '他达拉非禁止与硝酸酯类药物同用；与瓜氨酸/精氨酸、甜菜根、鱼油、辅酶Q10、蛹虫草等扩血管类补剂同用可能叠加降压，注意头晕乏力。' });
       }
       if (count('ayurveda') >= 1) {
-        warnings.push({ title: '阿育吠陀成分未注明', text: '阿育吠陀草本成分不明：若含育亨宾，严禁与他达拉非/达泊西汀同用；含南非醉茄可能影响甲状腺、血压和血糖；请先核对成分并咨询医生。' });
+        warnings.push({ title: '阿育吠陀药物成分提示', text: '清单中有阿育吠陀制剂。这类配方常含矿物灰（Bhasm）与 Shilajit，有重金属（铅/汞/砷）超标风险；也可能含南非醉茄（需关注甲状腺、血压、血糖）或刺毛黧豆（含左旋多巴，正在服用帕金森药、抗抑郁药尤其 MAO 抑制剂、抗精神病药者应避免）。建议先咨询医生或药师，并从正规渠道购买。' });
+      }
+      // 育亨宾：按成分触发，不再依赖"阿育吠陀"这个名字。
+      // （否则把条目改成产品名之后，这条警告会静默消失——那正是最不该丢的一条。）
+      if (count('yohimbine') >= 1) {
+        const hasRx = count('dapoxetine') >= 1 || count('tadalafil') >= 1;
+        const names = [];
+        if (count('dapoxetine') >= 1) names.push('达泊西汀');
+        if (count('tadalafil') >= 1) names.push('他达拉非');
+        warnings.push({
+          title: '育亨宾（Yohimbe）风险',
+          text: '清单中有含育亨宾的产品。育亨宾作用较强，标签警示：应避免与硝酸酯类或其他血管扩张剂同服；有高血压、心脏病、焦虑症，'
+              + '或正在服用降压药、抗抑郁药（尤其 MAO 抑制剂）、抗凝药者应避免；可能引起血压升高、心跳加快、焦虑、失眠。'
+              + (hasRx ? '你同时在使用处方药（' + names.join('、') + '），这一组合请务必先咨询医生。' : '请务必先咨询医生。')
+        });
+      }
+      // 精氨酸/瓜氨酸类：标签级禁忌（与 PDE5 抑制剂、硝酸酯、降压药同用）
+      if (count('arginine') >= 1) {
+        const rx = [];
+        if (count('tadalafil') >= 1) rx.push('他达拉非');
+        if (count('dapoxetine') >= 1) rx.push('达泊西汀');
+        warnings.push({
+          title: '精氨酸类与处方药',
+          text: '清单中有精氨酸/瓜氨酸产品。标签警示：低血压患者，以及正在服用降压药、硝酸甘油或伟哥类（PDE5 抑制剂）药物的人群，'
+              + '标签明确标注「绝对禁止服用」，可能导致血压急剧下降。'
+              + (rx.length ? '你正在使用：' + rx.join('、') + '，请务必先咨询医生。' : '')
+        });
       }
       return warnings;
     }
@@ -8625,16 +8896,19 @@
       if (group) {
         const headerCount = group.querySelector('.supplement-group-count');
         if (headerCount) {
-          const slotItems = data.modules.supplements.items.filter(i => i.timeSlot === item.timeSlot);
+          const slotItems = data.modules.supplements.items.filter(i => i.timeSlot === item.timeSlot && i.active !== false);
           const slotTaken = slotItems.filter(i => isSupplementTakenOn(i, dateStr)).length;
           headerCount.textContent = slotTaken + '/' + slotItems.length;
         }
       }
       const container = document.getElementById('moduleContent');
       const items = data.modules.supplements.items || [];
-      const visibleItems = supplementTagFilter === 'all' ? items : items.filter(i => (i.tags || []).includes(supplementTagFilter));
+      // 必须和 renderSupplementsModule 保持一致：只统计"在用"的项目，
+      // 否则勾选一次之后进度会显示成含已吃完项目的分母。
+      const activeItems = items.filter(i => i.active !== false);
+      const visibleItems = supplementTagFilter === 'all' ? activeItems : activeItems.filter(i => (i.tags || []).includes(supplementTagFilter));
       const banner = container.querySelector('.low-stock-banner');
-      if (banner) banner.outerHTML = renderLowStockBannerHtml(items);
+      if (banner) banner.outerHTML = renderLowStockBannerHtml(activeItems);
       const takenCount = visibleItems.filter(i => isSupplementTakenOn(i, dateStr)).length;
       const totalCount = visibleItems.length;
       const pct = totalCount ? Math.round(takenCount / totalCount * 100) : 0;
@@ -8707,12 +8981,22 @@
         else item.records = item.records.filter(r => r.date !== dateStr);
         if (dateStr === getTodayStr()) {
           item.taken = false;
-          if (typeof item.stock === 'number') item.stock += 1;
+          if (typeof item.stock === 'number') {
+            // 取消勾选时把余量加回来，但不能超过瓶身总量（否则会凭空多出药）
+            const cap = (typeof item.stockTotal === 'number' && item.stockTotal > 0) ? item.stockTotal : Infinity;
+            item.stock = Math.min(cap, item.stock + 1);
+          }
         }
       }
       saveData();
       const updated = updateSupplementInPlace(item);
       if (!updated) renderModule('supplements');
+      // 就地更新不会重画页面顶部的矿物质汇总，这里单独刷新一次
+      const mineralEl = document.getElementById('mineralSummary');
+      if (mineralEl) {
+        const html = renderMineralSummaryHtml(supplementViewDate);
+        if (html) mineralEl.outerHTML = html; else mineralEl.remove();
+      }
       updateTotalStats();
       renderNav();
       celebrateIfComplete();
@@ -8763,10 +9047,33 @@
       renderNav();
     }
 
+    // 已吃完 / 已停用：只切换 active 标记，项目与全部历史记录都保留，可随时恢复
+    function setSupplementActive(id, active) {
+      const item = (data.modules.supplements.items || []).find(i => i.id === id);
+      if (!item) return;
+      if (active === false && !confirm('把「' + item.name + '」标记为已吃完／已停用？\n\n历史打卡记录会全部保留，之后随时可以点「重新开始」恢复。')) return;
+      createAutoBackup(active === false ? '标记补剂已吃完前' : '恢复补剂前');
+      captureUndoSnapshot(active === false ? '已停用补剂' : '已恢复补剂');
+      item.active = active !== false;
+      item.activeUserEdited = true;   // 记下这是你自己改的，以后我更新清单不会覆盖
+      saveData();
+      renderModule('supplements');
+      updateTotalStats();
+      renderNav();
+    }
+
+    function getLastSupplementTakenDate(item) {
+      const dates = (item.records || []).filter(r => r.taken).map(r => r.date).sort();
+      return dates.length ? dates[dates.length - 1] : '';
+    }
+
     function renderSupplementsModule(container) {
       const mod = data.modules.supplements;
       const items = mod.items || [];
-      const allItems = items;
+      // 每日列表、进度、矿物质汇总、相互作用提醒都只统计"在用"的项目；
+      // 已吃完/已停用的项目在下方单独列出，历史记录一条不删。
+      const allItems = items.filter(i => i.active !== false);
+      const inactiveItems = items.filter(i => i.active === false);
       const visibleItems = supplementTagFilter === 'all' ? allItems : allItems.filter(i => (i.tags || []).includes(supplementTagFilter));
       const allTags = [...new Set(allItems.reduce((acc, i) => acc.concat(i.tags || []), []))];
       const cfg = MODULE_CONFIG.supplements;
@@ -8824,6 +9131,7 @@
                       ${itemTaken ? '✓' : ''}
                     </button>
                     <button class="supplement-edit-btn" onclick="openSupplementEdit(${item.id})" title="编辑">✏️</button>
+                    <button class="supplement-archive-btn" onclick="setSupplementActive(${item.id}, false)" title="已吃完 / 停用">📦</button>
                     <button class="supplement-del-btn" onclick="deleteSupplement(${item.id})" title="删除">×</button>
                   </div>
                 </div>
@@ -8867,6 +9175,8 @@
           <div class="pb"><div class="pf" style="width:${pct}%;background:linear-gradient(90deg,${cfg.color},${cfg.color}66)"></div></div>
         </div>
 
+        ${renderMineralSummaryHtml(viewDate)}
+
         ${renderLowStockBannerHtml(allItems)}
 
         ${allTags.length ? `
@@ -8903,6 +9213,22 @@
               <span class="supplement-interaction-name">参考提示</span>
               <span class="supplement-interaction-text">以上为常见相互作用参考，不替代医生或药师建议；正在服药或准备手术前请咨询专业人士。</span>
             </div>
+          </div>
+        ` : ''}
+
+        ${inactiveItems.length ? `
+          <div class="supplement-archived">
+            <div class="supplement-archived-title">📦 已吃完 / 已停用（${inactiveItems.length}）</div>
+            <div class="supplement-archived-hint">这些项目不再计入今日进度、矿物质汇总和相互作用提醒；历史打卡记录全部保留，可随时恢复。</div>
+            ${inactiveItems.map(i => {
+              const last = getLastSupplementTakenDate(i);
+              return `
+              <div class="supplement-archived-row">
+                <span class="supplement-archived-name">${i.icon} ${escapeHtml(i.name)}</span>
+                <span class="supplement-archived-meta">${(i.records || []).length} 条记录${last ? ' · 最后 ' + last : ''}</span>
+                <button class="supplement-archived-restore" onclick="setSupplementActive(${i.id}, true)">重新开始</button>
+              </div>`;
+            }).join('')}
           </div>
         ` : ''}
       `;
