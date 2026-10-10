@@ -5766,7 +5766,7 @@
 
     const LS_KEY = 'myCheckinApp_v10';
     // 单一版本号来源：诊断信息、备份 payload、sw.js 的 CACHE_NAME 都应对齐这里
-    const APP_VERSION = 'v103';
+    const APP_VERSION = 'v104';
     // 存储安全状态。必须在 `let data = loadData();` 之前初始化：
     // loadData / saveData / validateAndRepairData 都会用到它们，放在后面会踩暂时性死区（TDZ）直接报错。
     let storageHealthy = true;
@@ -5790,7 +5790,7 @@
     // v9：#5 与 #10 改为隔天轮换（每天元素锌降到 26mg 或 11mg，都在 40mg 以内）；
     //     #19 NOW 锌 50mg 单粒即超上限，移出每日清单（记录保留，可一键恢复）
     // v10：改为"#10 每天 + #5 隔天"——吃到 #5 的那天锌 37mg，其余天 11mg，都 ≤40mg
-    const SUPPLEMENT_LIST_VERSION = 10;
+    const SUPPLEMENT_LIST_VERSION = 11;
     // 处方药类项目的 id（不要再依赖 "id >= 16" 这种范围判断，
     // 否则以后往清单里加普通补剂会被误当成处方药）
     const MED_SUPPLEMENT_IDS = [16, 17, 18];
@@ -6138,7 +6138,8 @@
         { id: 17, name: 'Tadarise-5（他达拉非 5mg）', icon: '💊', dosage: '1片（5mg）', time: '午饭后固定时间', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: 'Sunrise 出品 · Tadalafil Tablets IP 5mg · 规格 10×10＝100片。辅料适量，色素含酒石黄（Tartrazine）。遵医嘱服用；储存：阴凉干燥、低于30°C、避光、儿童接触不到。标签注明：仅凭泌尿科/精神科/内分泌科/性病科医生处方零售。', warning: '【处方药】绝对禁止与硝酸甘油等硝酸酯类药物同用（可致血压骤降、危及生命）；严重心血管疾病、低血压患者禁用。与其他扩血管／降压类产品同用需谨慎。副作用：头痛、消化不良、背痛、肌肉痛、面部潮红、鼻塞；极少数情况可能出现突然视力丧失或听力下降，需立即就医。' },
         { id: 18, name: 'REPL HYPOWER MUSLI（阿育吠陀）', icon: '🌿', dosage: '1粒（每日）', time: '饭后（每日1次）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 1, tags: ['阿育吠陀', '仅限男性'], note: '每粒500mg，含：Safed Musli 120mg、Sudha Shilajit 105mg、南非醉茄 95mg、刺毛黧豆（含左旋多巴）60mg、天门冬 60mg、Vidarikand 35mg、肉豆蔻 10mg、Abhrak Bhasm（云母灰）10mg。每日1粒，饭后服用（每天吃，不是吃几天停几天）。', warning: '【成分提示】① 含刺毛黧豆（左旋多巴）：正在服用帕金森药物、抗抑郁药（尤其 MAO 抑制剂）、抗精神病药物者应绝对避免。② 含 Shilajit 与云母灰（Bhasm）等矿物成分，此类阿育吠陀制剂有重金属（铅/汞/砷）超标风险，长期或超量服用可能损伤肝肾。③ 含南非醉茄，需关注甲状腺、血压、血糖。④ 仅限成年男性。⑤ 出现恶心、头晕、皮肤发黄、尿液变色等请立即停药就医。' },
         { id: 19, name: 'NOW Foods 吡啶甲酸锌 50mg', icon: '⚡', dosage: '1粒（元素锌 50mg）', time: '已移出每日轮换', timeSlot: 'afternoon', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, zincMg: 50, tags: ['高剂量锌', '已移出轮换'], note: 'NOW Foods Zinc Picolinate。每份1粒含元素锌 50mg，规格 60粒。★ 已移出每日清单：单粒 50mg 本身就超过"每天 40mg"的参考上限，任何按天轮换的安排里，只要那天吃了它就会超标。想恢复请点本项的「重新开始」。', warning: '【应用参考】单粒元素锌 50mg，已超过应用提示里"每天锌总量不宜长期超过 40mg"的参考值；锌过量会影响铜吸收。请按标签或医生建议服用。' },
-        { id: 20, name: 'X5 TEST FORCE', icon: '🌿', dosage: '2粒（每日）／活动前3粒', time: '随餐（每日2粒）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['草本', '仅限男性'], note: 'X5 TEST FORCE（强效草本混合物）。每份2粒含：淫羊藿提取物 500mg（含淫羊藿苷 50mg）、玛卡 1200mg、蒺藜提取物 250mg（含皂苷 112.5mg）、育亨宾提取物 80mg（标准化含2%育亨宾生物碱 ≈1.6mg）、L-精氨酸盐酸盐 40mg。规格 90粒＝45份。标签建议：每日2粒随餐；为更快效果可在活动前60-90分钟服3粒。', warning: '【标签警示】① 含育亨宾（Yohimbe）：作用较强的植物生物碱，可能引起血压升高、心跳加快、焦虑、失眠；有高血压、心脏病、焦虑症，或正在服用降压药、抗抑郁药（尤其 MAO 抑制剂）、抗凝药者应避免。② 不要与硝酸酯类药物或其他血管扩张剂同服。③ 标签建议活动前服3粒属急性用法，请勿睡前服用。④ 请严格遵守每日2粒（或短期3粒），切勿超量。⑤ 有前列腺或激素相关疾病、正在服用其他药物者，务必先咨询医生。' }
+        { id: 20, name: 'X5 TEST FORCE', icon: '🌿', dosage: '2粒（每日）／活动前3粒', time: '随餐（每日2粒）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['草本', '仅限男性'], note: 'X5 TEST FORCE（强效草本混合物）。每份2粒含：淫羊藿提取物 500mg（含淫羊藿苷 50mg）、玛卡 1200mg、蒺藜提取物 250mg（含皂苷 112.5mg）、育亨宾提取物 80mg（标准化含2%育亨宾生物碱 ≈1.6mg）、L-精氨酸盐酸盐 40mg。规格 90粒＝45份。标签建议：每日2粒随餐；为更快效果可在活动前60-90分钟服3粒。', warning: '【标签警示】① 含育亨宾（Yohimbe）：作用较强的植物生物碱，可能引起血压升高、心跳加快、焦虑、失眠；有高血压、心脏病、焦虑症，或正在服用降压药、抗抑郁药（尤其 MAO 抑制剂）、抗凝药者应避免。② 不要与硝酸酯类药物或其他血管扩张剂同服。③ 标签建议活动前服3粒属急性用法，请勿睡前服用。④ 请严格遵守每日2粒（或短期3粒），切勿超量。⑤ 有前列腺或激素相关疾病、正在服用其他药物者，务必先咨询医生。' },
+        { id: 21, name: 'FoYes 多种维生素矿物质耐力片', icon: '🧬', dosage: '2片（隔天2片）', time: '随餐（早餐后）· 隔天', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, zincMg: 10, magnesiumMg: 160, cycleEnabled: true, cycleTakeDays: 1, cycleStopDays: 1, cycleStart: '2026-01-02', tags: ['维生素矿物质', '隔天'], note: 'FoYes / EXE[FIT] 多种维生素矿物质耐力片 · 运动营养食品（耐力类）· GB 24154 · 生产许可证 SC10633021100134 · 净含量 90g＝1.0g×90片。食用方法：吞食，每日1次、每次2片。每份（2片）：能量15kJ、碳水0.9g、钠2mg；维生素A 220µg、D 6.0µg、E 10mg α-TE、B1 3.0mg、B2 1.2mg、B6 1.6mg、B12 2.6µg、C 80mg、烟酸14mg、叶酸120µg、泛酸3mg、生物素40µg；矿物质 镁160mg、钙200mg、铁2.5mg、锌10mg、硒40µg、铜0.8mg、锰1.6mg、钼90µg、铬24µg。另添加黑胡椒提取物。为把每天元素锌控制在 40mg 以内，本项与 #5 隔天交替（两项不会同一天吃）。', warning: '【标签提示】本品为运动营养食品，不能替代药物治疗。含黑胡椒提取物（胡椒碱，属生物利用度增强剂），可能提高同服药物或补剂的血药浓度——正在服用处方药时请先咨询医生。有肾脏疾病或正在服用利尿剂等药物者，补充矿物质前建议先咨询医生。' }
       ].map(normalizeSupplementItem);
     }
 
@@ -8627,6 +8628,7 @@
       if (/VORSE/.test(n)) return 'VORSE';
       if (/NOW/.test(n)) return 'NOW';
       if (/RAINBOWBAR/.test(n)) return 'RAINBOWBAR';
+      if (/FoYes|EXE.?FIT/i.test(n)) return 'FoYes';
       return n.length > 12 ? n.slice(0, 12) + '…' : n;
     }
 
@@ -8723,7 +8725,7 @@
         milkThistle: /水飞蓟/.test(text),
         cordyceps: /蛹虫草/.test(text),
         maca: /玛咖|玛卡/.test(text),
-        multi: /多维|复合维生素/.test(text),
+        multi: /多维|复合维生素|多种维生素/.test(text),
         whey: /增肌粉/.test(text),
         collagen: /胶原蛋白/.test(text),
         rice: /营养米粉/.test(text),
