@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -2740,6 +2740,26 @@
       gap: 10px;
       margin: 12px 0;
     }
+
+    /* 变化对比（基线 → 最新） */
+    .body-compare {
+      margin: 12px 0;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.045);
+      border-radius: var(--radius);
+    }
+    .body-compare-title { font-size: 13px; font-weight: 700; color: var(--text2); margin-bottom: 8px; }
+    .body-compare-empty { font-size: 12px; color: var(--text2); line-height: 1.6; }
+    .body-compare-row { padding: 8px 0; border-top: 1px dashed rgba(255,255,255,0.08); }
+    .body-compare-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .body-compare-name { font-size: 12.5px; color: var(--text2); }
+    .body-compare-val { font-size: 13px; color: var(--text2); white-space: nowrap; }
+    .body-compare-val b { font-size: 15px; color: var(--primary); font-weight: 700; }
+    .body-compare-arrow { font-size: 12px; color: var(--text2); }
+    .body-compare-meta { font-size: 11px; color: var(--text2); margin-top: 3px; }
+    .body-compare-period { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.5; }
+    .body-compare-foot { font-size: 11px; color: var(--text2); line-height: 1.55; margin-top: 9px; }
     .reading-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -5576,7 +5596,7 @@
         </div>
       </div>
       <div class="body-form-row">
-        <label>具体变化 / 感受</label>
+        <label>具体变化 / 感受（可留空，只要下面填了至少一项测量值）</label>
         <textarea class="note-input" id="bodyContent" placeholder="例如：训练耐力提升，睡眠更深，精力更稳定，胃口变好..." style="min-height:100px;margin-bottom:0"></textarea>
       </div>
       <div class="body-form-row">
@@ -5586,8 +5606,32 @@
             <input type="number" class="fund-form-input" id="bodyWeight" step="0.1" min="0">
           </div>
           <div>
+            <label>腰围（cm，可选）</label>
+            <input type="number" class="fund-form-input" id="bodyWaist" step="0.5" min="0">
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>静息心率（次/分，可选）</label>
+            <input type="number" class="fund-form-input" id="bodyRhr" step="1" min="0" max="250">
+          </div>
+          <div>
             <label>睡眠（小时，可选）</label>
             <input type="number" class="fund-form-input" id="bodySleep" step="0.5" min="0" max="24">
+          </div>
+        </div>
+      </div>
+      <div class="body-form-row">
+        <div class="form-grid">
+          <div>
+            <label>收缩压（mmHg，可选）</label>
+            <input type="number" class="fund-form-input" id="bodySys" step="1" min="0" max="300">
+          </div>
+          <div>
+            <label>舒张压（mmHg，可选）</label>
+            <input type="number" class="fund-form-input" id="bodyDia" step="1" min="0" max="200">
           </div>
         </div>
       </div>
@@ -5766,7 +5810,7 @@
 
     const LS_KEY = 'myCheckinApp_v10';
     // 单一版本号来源：诊断信息、备份 payload、sw.js 的 CACHE_NAME 都应对齐这里
-    const APP_VERSION = 'v104';
+    const APP_VERSION = 'v105';
     // 存储安全状态。必须在 `let data = loadData();` 之前初始化：
     // loadData / saveData / validateAndRepairData 都会用到它们，放在后面会踩暂时性死区（TDZ）直接报错。
     let storageHealthy = true;
@@ -5791,6 +5835,10 @@
     //     #19 NOW 锌 50mg 单粒即超上限，移出每日清单（记录保留，可一键恢复）
     // v10：改为"#10 每天 + #5 隔天"——吃到 #5 的那天锌 37mg，其余天 11mg，都 ≤40mg
     const SUPPLEMENT_LIST_VERSION = 11;
+    // 身体记录里"测量值"字段名。必须在这里声明：bodyRecordHasData() 会在启动时
+    // （validateAndRepairData）被调用，若此常量声明在 `let data = loadData();` 之后
+    // 就会踩暂时性死区，导致整个应用启动报错。
+    const BODY_METRIC_KEYS = ['weight', 'waist', 'restingHeartRate', 'sleepHours', 'systolic', 'diastolic'];
     // 处方药类项目的 id（不要再依赖 "id >= 16" 这种范围判断，
     // 否则以后往清单里加普通补剂会被误当成处方药）
     const MED_SUPPLEMENT_IDS = [16, 17, 18];
@@ -6122,7 +6170,7 @@
         { id: 1, name: 'Healthy Care CoQ10 300mg', icon: '❤️', dosage: '1粒（300mg）', time: '随餐（每日1粒）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['含大豆'], note: 'Healthy Care Australia · Ultra Strength Coenzyme Q10。每粒 Ubidecarenone（辅酶Q10）300mg，规格 60粒。厂家建议：成人每日1粒，随餐服用。脂溶性，随餐（含脂肪）吸收更佳；避免晚上服用以免影响睡眠。', warning: '【标签提示】正在接受抗凝治疗者需先咨询医生。含大豆成分，过敏者注意。' },
         { id: 2, name: '水解增肌粉', icon: '💪', dosage: '1勺', time: '运动后30分钟内', timeSlot: 'workout', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '运动后30分钟内服用；无训练日改为早餐后，与其他产品错开时间。', warning: '过量增加肾脏负担' },
         { id: 3, name: '冻干甜菜根粉', icon: '🍠', dosage: '5-10g', time: '早晨空腹', timeSlot: 'morning', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '富含硝酸盐，运动前1-2小时服用可提升耐力。', warning: '过量可能导致胃肠不适、尿液变红(正常现象)' },
-        { id: 4, name: 'MegLifeExten 活力精华加强版', icon: '🎯', dosage: '2粒（每日）', time: '随餐（午餐后）', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['仅限男性'], note: 'MegLifeExten · VITALITY ESSENCE ULTRA（活力精华加强版）。每份2粒含：番茄红素 80mg、牛磺酸 1000mg、锯棕榈提取物 200mg(10:1)、南瓜籽提取物 120mg(20:1)、淫羊藿提取物 60mg(10:1)、当归提取物 30mg(10:1)。规格 60粒/瓶（按每日2粒约30天）。标签注明无糖、纯素友好。', warning: '【标签说明】标签仅注明"不可替代药物"、请勿超过每日用量。成分含锯棕榈（可能影响凝血、干扰前列腺相关检查）与淫羊藿，正在服药或做检查前建议先告知医生。' },
+        { id: 4, name: 'MegLifeExten 活力精华加强版', icon: '🎯', dosage: '2粒（每日）', time: '随餐（建议晚餐后）', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['仅限男性'], note: 'MegLifeExten · VITALITY ESSENCE ULTRA（活力精华加强版）。每份2粒含：番茄红素 80mg、牛磺酸 1000mg、锯棕榈提取物 200mg(10:1)、南瓜籽提取物 120mg(20:1)、淫羊藿提取物 60mg(10:1)、当归提取物 30mg(10:1)。规格 60粒/瓶（按每日2粒约30天）。标签注明无糖、纯素友好。番茄红素为脂溶性，随晚餐（油脂最丰富的一餐）吸收更佳。', warning: '【标签说明】标签仅注明"不可替代药物"、请勿超过每日用量。成分含锯棕榈（可能影响凝血、干扰前列腺相关检查）与淫羊藿，正在服药或做检查前建议先告知医生。' },
         { id: 5, name: 'VORSE 吡啶甲酸锌+甘氨酸镁', icon: '⚡', dosage: '1片（隔天1片）', time: '晚间 · 隔天服用', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, zincMg: 26, magnesiumMg: 118, cycleEnabled: true, cycleTakeDays: 1, cycleStopDays: 1, cycleStart: '2026-01-01', tags: ['隔天服用'], note: 'VORSE Zinc Picolinate。每片：吡啶甲酸锌 125mg（≈元素锌 26mg）、甘氨酸镁 834mg（≈元素镁 118mg），片重1700mg。规格 30片/瓶。批号 E260530，有效期至 2029-05-27，香港制造。为把每天的元素锌控制在 40mg 以内，本项**隔天**服用（#10 每天吃）：吃到本项的那天锌合计 26+11=37mg，未到 40mg；只吃 #10 的那天是 11mg。卡片上会显示今天该吃还是停服。', warning: '【标签提示】锌的每日可耐受最高摄入量约 40mg 元素锌，切勿超量；长期过量补锌可能导致铜缺乏。建议随餐服用。' },
         { id: 6, name: 'MOOSRLE 肌酸软糖（芒果）', icon: '🍬', dosage: '2粒（肌酸3g）', time: '随餐或运动后', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['运动营养'], note: 'MOOSRLE 肌酸软糖，芒果味。每粒5g，其中一水肌酸 1.5g（每粒能量49kJ、碳水2.9g、钠0mg）。规格 净含量300g＝60粒；每天 2 粒 ≈ 肌酸 3g。配料含麦芽糖醇液、异麦芽酮糖醇（代糖）等。', warning: '【标签提示】代糖含量较高，过量食用可能引起肠胃胀气或腹泻。肌酸会把水分带入肌肉细胞，服用期间请保证充足饮水。肾脏功能不全者请先咨询医生。' },
         { id: 7, name: 'CPTKING 复合鱼油 (rTG型)', icon: '🐟', dosage: '2粒（每日1次）', time: '随餐（建议晚餐后）', timeSlot: 'evening', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['鱼油'], note: 'CPTKING（赛霸）COMPOUND FISH OIL 复合鱼油，rTG型（再酯化甘油三酯）。每粒1g：鱼油提取物中 EPA 50%／DHA 40%，Omega-3 ≥95%。配料另含明胶、水、甘油、元宝枫籽油。规格 30g＝1g×10粒×3板（30粒/盒）。保质期至 2028-06-08。随餐服用（含脂肪的餐食帮助吸收）。', warning: '【标签提示】鱼油提取物≤3克/天、元宝枫籽油≤3克/天，本产品每日不超过 3粒；不适宜婴幼儿。高剂量鱼油可能影响凝血功能，正在服用抗凝/抗血小板药或准备手术前请先咨询医生。' },
@@ -6135,10 +6183,10 @@
         { id: 14, name: '口服胶原蛋白', icon: '✨', dosage: '按说明', time: '睡前1小时', timeSlot: 'evening', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '克', lowStockThreshold: 10, note: '睡前1-2小时空腹服用，夜间修复效果更佳。', warning: '过量增加代谢负担' },
         { id: 15, name: '蛹虫草玛咖片', icon: '🍄', dosage: '按说明 1-2片', time: '早餐后/下午', timeSlot: 'morning', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, note: '蛹虫草+玛咖，提升精力与状态，白天服用。', warning: '可能影响血糖/血压；晚上服用可能影响睡眠' },
         { id: 16, name: '达泊西汀 60mg', icon: '💊', dosage: '半片（30mg）', time: '按需 · 性活动前1-3小时', timeSlot: 'evening', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: '医生建议半片；按需服用，不建议连续每天使用，请按医生指示调整频次。', warning: '不可与MAO抑制剂、其他SSRI/SNRI、圣约翰草、5-HTP同用；避免酒精和西柚汁；头晕/晕厥风险' },
-        { id: 17, name: 'Tadarise-5（他达拉非 5mg）', icon: '💊', dosage: '1片（5mg）', time: '午饭后固定时间', timeSlot: 'noon', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: 'Sunrise 出品 · Tadalafil Tablets IP 5mg · 规格 10×10＝100片。辅料适量，色素含酒石黄（Tartrazine）。遵医嘱服用；储存：阴凉干燥、低于30°C、避光、儿童接触不到。标签注明：仅凭泌尿科/精神科/内分泌科/性病科医生处方零售。', warning: '【处方药】绝对禁止与硝酸甘油等硝酸酯类药物同用（可致血压骤降、危及生命）；严重心血管疾病、低血压患者禁用。与其他扩血管／降压类产品同用需谨慎。副作用：头痛、消化不良、背痛、肌肉痛、面部潮红、鼻塞；极少数情况可能出现突然视力丧失或听力下降，需立即就医。' },
+        { id: 17, name: 'Tadarise-5（他达拉非 5mg）', icon: '💊', dosage: '1片（5mg）', time: '早餐后固定时间（≤9:00）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 1, cycleEnabled: true, cycleTakeDays: 3, cycleStopDays: 1, cycleStart: getTodayStr(), tags: ['处方药'], note: 'Sunrise 出品 · Tadalafil Tablets IP 5mg · 规格 10×10＝100片。辅料适量，色素含酒石黄（Tartrazine）。遵医嘱服用；储存：阴凉干燥、低于30°C、避光、儿童接触不到。标签注明：仅凭泌尿科/精神科/内分泌科/性病科医生处方零售。', warning: '【处方药】绝对禁止与硝酸甘油等硝酸酯类药物同用（可致血压骤降、危及生命）；严重心血管疾病、低血压患者禁用。与其他扩血管／降压类产品同用需谨慎。副作用：头痛、消化不良、背痛、肌肉痛、面部潮红、鼻塞；极少数情况可能出现突然视力丧失或听力下降，需立即就医。' },
         { id: 18, name: 'REPL HYPOWER MUSLI（阿育吠陀）', icon: '🌿', dosage: '1粒（每日）', time: '饭后（每日1次）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 1, tags: ['阿育吠陀', '仅限男性'], note: '每粒500mg，含：Safed Musli 120mg、Sudha Shilajit 105mg、南非醉茄 95mg、刺毛黧豆（含左旋多巴）60mg、天门冬 60mg、Vidarikand 35mg、肉豆蔻 10mg、Abhrak Bhasm（云母灰）10mg。每日1粒，饭后服用（每天吃，不是吃几天停几天）。', warning: '【成分提示】① 含刺毛黧豆（左旋多巴）：正在服用帕金森药物、抗抑郁药（尤其 MAO 抑制剂）、抗精神病药物者应绝对避免。② 含 Shilajit 与云母灰（Bhasm）等矿物成分，此类阿育吠陀制剂有重金属（铅/汞/砷）超标风险，长期或超量服用可能损伤肝肾。③ 含南非醉茄，需关注甲状腺、血压、血糖。④ 仅限成年男性。⑤ 出现恶心、头晕、皮肤发黄、尿液变色等请立即停药就医。' },
         { id: 19, name: 'NOW Foods 吡啶甲酸锌 50mg', icon: '⚡', dosage: '1粒（元素锌 50mg）', time: '已移出每日轮换', timeSlot: 'afternoon', taken: false, active: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, zincMg: 50, tags: ['高剂量锌', '已移出轮换'], note: 'NOW Foods Zinc Picolinate。每份1粒含元素锌 50mg，规格 60粒。★ 已移出每日清单：单粒 50mg 本身就超过"每天 40mg"的参考上限，任何按天轮换的安排里，只要那天吃了它就会超标。想恢复请点本项的「重新开始」。', warning: '【应用参考】单粒元素锌 50mg，已超过应用提示里"每天锌总量不宜长期超过 40mg"的参考值；锌过量会影响铜吸收。请按标签或医生建议服用。' },
-        { id: 20, name: 'X5 TEST FORCE', icon: '🌿', dosage: '2粒（每日）／活动前3粒', time: '随餐（每日2粒）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['草本', '仅限男性'], note: 'X5 TEST FORCE（强效草本混合物）。每份2粒含：淫羊藿提取物 500mg（含淫羊藿苷 50mg）、玛卡 1200mg、蒺藜提取物 250mg（含皂苷 112.5mg）、育亨宾提取物 80mg（标准化含2%育亨宾生物碱 ≈1.6mg）、L-精氨酸盐酸盐 40mg。规格 90粒＝45份。标签建议：每日2粒随餐；为更快效果可在活动前60-90分钟服3粒。', warning: '【标签警示】① 含育亨宾（Yohimbe）：作用较强的植物生物碱，可能引起血压升高、心跳加快、焦虑、失眠；有高血压、心脏病、焦虑症，或正在服用降压药、抗抑郁药（尤其 MAO 抑制剂）、抗凝药者应避免。② 不要与硝酸酯类药物或其他血管扩张剂同服。③ 标签建议活动前服3粒属急性用法，请勿睡前服用。④ 请严格遵守每日2粒（或短期3粒），切勿超量。⑤ 有前列腺或激素相关疾病、正在服用其他药物者，务必先咨询医生。' },
+        { id: 20, name: 'X5 TEST FORCE', icon: '🌿', dosage: '2粒（每日）／活动前3粒', time: '随餐（每日2粒）', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '粒', lowStockThreshold: 10, tags: ['草本', '仅限男性'], note: 'X5 TEST FORCE（强效草本混合物）。每份2粒含：淫羊藿提取物 500mg（含淫羊藿苷 50mg）、玛卡 1200mg、蒺藜提取物 250mg（含皂苷 112.5mg）、育亨宾提取物 80mg（标准化含2%育亨宾生物碱 ≈1.6mg）、L-精氨酸盐酸盐 40mg。规格 90粒＝45份。标签建议：每日2粒随餐；为更快效果可在活动前60-90分钟服3粒。⚠️ 倒班注意：育亨宾有兴奋作用，夜班前（D2）或夜班后（D3）的早晨服用可能影响班前觉/补觉；建议只在白班日/休息日的早晨服用。', warning: '【标签警示】① 含育亨宾（Yohimbe）：作用较强的植物生物碱，可能引起血压升高、心跳加快、焦虑、失眠；有高血压、心脏病、焦虑症，或正在服用降压药、抗抑郁药（尤其 MAO 抑制剂）、抗凝药者应避免。② 不要与硝酸酯类药物或其他血管扩张剂同服。③ 标签建议活动前服3粒属急性用法，请勿睡前服用。④ 请严格遵守每日2粒（或短期3粒），切勿超量。⑤ 有前列腺或激素相关疾病、正在服用其他药物者，务必先咨询医生。' },
         { id: 21, name: 'FoYes 多种维生素矿物质耐力片', icon: '🧬', dosage: '2片（隔天2片）', time: '随餐（早餐后）· 隔天', timeSlot: 'morning', taken: false, stock: null, stockTotal: null, stockUnit: '片', lowStockThreshold: 10, zincMg: 10, magnesiumMg: 160, cycleEnabled: true, cycleTakeDays: 1, cycleStopDays: 1, cycleStart: '2026-01-02', tags: ['维生素矿物质', '隔天'], note: 'FoYes / EXE[FIT] 多种维生素矿物质耐力片 · 运动营养食品（耐力类）· GB 24154 · 生产许可证 SC10633021100134 · 净含量 90g＝1.0g×90片。食用方法：吞食，每日1次、每次2片。每份（2片）：能量15kJ、碳水0.9g、钠2mg；维生素A 220µg、D 6.0µg、E 10mg α-TE、B1 3.0mg、B2 1.2mg、B6 1.6mg、B12 2.6µg、C 80mg、烟酸14mg、叶酸120µg、泛酸3mg、生物素40µg；矿物质 镁160mg、钙200mg、铁2.5mg、锌10mg、硒40µg、铜0.8mg、锰1.6mg、钼90µg、铬24µg。另添加黑胡椒提取物。为把每天元素锌控制在 40mg 以内，本项与 #5 隔天交替（两项不会同一天吃）。', warning: '【标签提示】本品为运动营养食品，不能替代药物治疗。含黑胡椒提取物（胡椒碱，属生物利用度增强剂），可能提高同服药物或补剂的血药浓度——正在服用处方药时请先咨询医生。有肾脏疾病或正在服用利尿剂等药物者，补充矿物质前建议先咨询医生。' }
       ].map(normalizeSupplementItem);
     }
@@ -6472,7 +6520,7 @@
         data.modules.body = { records: [] };
         repaired = true;
       } else {
-        const validBodyRecords = data.modules.body.records.filter(r => r && r.id && r.content);
+        const validBodyRecords = data.modules.body.records.filter(bodyRecordHasData);
         if (validBodyRecords.length !== data.modules.body.records.length) {
           data.modules.body.records = validBodyRecords;
           repaired = true;
@@ -9749,8 +9797,13 @@
       document.getElementById('bodyCategory').value = rec ? rec.category : '健身';
       document.getElementById('bodyPhase').value = rec ? (rec.phase || '第1周') : '第1周';
       document.getElementById('bodyContent').value = rec ? rec.content : '';
-      document.getElementById('bodyWeight').value = rec && typeof rec.weight === 'number' ? rec.weight : '';
-      document.getElementById('bodySleep').value = rec && typeof rec.sleepHours === 'number' ? rec.sleepHours : '';
+      const num = (v) => (rec && typeof rec[v] === 'number' ? rec[v] : '');
+      document.getElementById('bodyWeight').value = num('weight');
+      document.getElementById('bodyWaist').value = num('waist');
+      document.getElementById('bodyRhr').value = num('restingHeartRate');
+      document.getElementById('bodySleep').value = num('sleepHours');
+      document.getElementById('bodySys').value = num('systolic');
+      document.getElementById('bodyDia').value = num('diastolic');
       renderBodyRatingPicker();
       document.getElementById('bodyOverlay').classList.add('show');
     }
@@ -9761,20 +9814,35 @@
       bodyEditId = null;
     }
 
+    // 一条身体记录只要有"文字"或"任意一项测量值"就算有效
+    function bodyRecordHasData(rec) {
+      if (!rec || !rec.id) return false;
+      if (rec.content) return true;
+      return BODY_METRIC_KEYS.some(k => typeof rec[k] === 'number' && !isNaN(rec[k]));
+    }
+
     function saveBodyRecord() {
       const content = document.getElementById('bodyContent').value.trim();
       const date = document.getElementById('bodyDate').value || getTodayStr();
-      if (!content) {
-        alert('请填写具体变化或感受');
+      const readNum = (id) => {
+        const v = parseFloat(document.getElementById(id).value);
+        return isNaN(v) || v < 0 ? null : v;
+      };
+      const weight = readNum('bodyWeight');
+      const waist = readNum('bodyWaist');
+      const restingHeartRate = readNum('bodyRhr');
+      const sleepHours = readNum('bodySleep');
+      const systolic = readNum('bodySys');
+      const diastolic = readNum('bodyDia');
+      const metrics = { weight, waist, restingHeartRate, sleepHours, systolic, diastolic };
+      const hasMetric = Object.keys(metrics).some(k => typeof metrics[k] === 'number');
+      if (!content && !hasMetric) {
+        alert('请填写具体变化，或者至少填一项测量数据（体重／腰围／静息心率／血压／睡眠）');
         return;
       }
       const records = getBodyRecords();
       const category = document.getElementById('bodyCategory').value || '其他';
       const phase = document.getElementById('bodyPhase').value || '刚开始';
-      const weightInput = parseFloat(document.getElementById('bodyWeight').value);
-      const sleepInput = parseFloat(document.getElementById('bodySleep').value);
-      const weight = isNaN(weightInput) ? null : weightInput;
-      const sleepHours = isNaN(sleepInput) ? null : sleepInput;
       if (bodyEditId) {
         const rec = records.find(r => r.id === bodyEditId);
         if (rec) {
@@ -9783,11 +9851,12 @@
           rec.phase = phase;
           rec.content = content;
           rec.rating = bodyRating;
-          rec.weight = weight;
-          rec.sleepHours = sleepHours;
+          Object.assign(rec, metrics);
         }
       } else {
-        records.unshift({ id: Date.now(), date: date, category: category, phase: phase, content: content, rating: bodyRating, weight: weight, sleepHours: sleepHours });
+        const fresh = { id: Date.now(), date: date, category: category, phase: phase, content: content, rating: bodyRating };
+        Object.assign(fresh, metrics);
+        records.unshift(fresh);
       }
       data.modules.body.records = records;
       saveData();
@@ -9835,16 +9904,90 @@
       `;
     }
 
-    function renderBodyTrendsHtml(records) {
-      const weight = records.filter(r => typeof r.weight === 'number' && !isNaN(r.weight)).map(r => ({ date: r.date, value: r.weight }));
-      const sleep = records.filter(r => typeof r.sleepHours === 'number' && !isNaN(r.sleepHours)).map(r => ({ date: r.date, value: r.sleepHours }));
-      if (!weight.length && !sleep.length) return '';
+    // 用于"变化对比"的指标定义。只呈现数值变化，不做"好/坏"判断。
+    const BODY_METRIC_DEFS = [
+      { key: 'weight',           label: '体重',     unit: 'kg',    icon: '⚖️', digits: 1, seriesTitle: '⚖️ 体重趋势' },
+      { key: 'waist',            label: '腰围',     unit: 'cm',    icon: '📏', digits: 1, seriesTitle: '📏 腰围趋势' },
+      { key: 'restingHeartRate', label: '静息心率', unit: '次/分', icon: '❤️', digits: 0, seriesTitle: '❤️ 静息心率趋势' },
+      { key: 'systolic',         label: '收缩压',   unit: 'mmHg',  icon: '🩺', digits: 0, seriesTitle: '🩺 收缩压趋势' },
+      { key: 'diastolic',        label: '舒张压',   unit: 'mmHg',  icon: '🩺', digits: 0, seriesTitle: '🩺 舒张压趋势' },
+      { key: 'sleepHours',       label: '睡眠',     unit: '小时',  icon: '😴', digits: 1, seriesTitle: '😴 睡眠趋势' },
+      { key: 'rating',           label: '主观状态', unit: '分',    icon: '🙂', digits: 1, seriesTitle: '🙂 主观状态趋势' }
+    ];
+
+    function getBodyMetricPoints(key) {
+      return getBodyRecords()
+        .filter(r => r && typeof r[key] === 'number' && !isNaN(r[key]) && r[key] > 0)
+        .map(r => ({ date: String(r.date || ''), value: r[key] }))
+        .sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function formatMetricValue(def, v) {
+      return def.digits === 0 ? String(Math.round(v)) : v.toFixed(def.digits);
+    }
+
+    const BODY_COMPARE_WINDOW_DAYS = 28;
+
+    function renderBodyComparisonHtml() {
+      const DAY = 86400000;
+      const todayMs = new Date(getTodayStr() + 'T00:00:00').getTime();
+      const rows = [];
+      BODY_METRIC_DEFS.forEach(def => {
+        const pts = getBodyMetricPoints(def.key);
+        if (!pts.length) return;
+        const first = pts[0], last = pts[pts.length - 1];
+        const ago = p => (todayMs - new Date(p.date + 'T00:00:00').getTime()) / DAY;
+        const recent = pts.filter(p => { const d = ago(p); return d >= 0 && d < BODY_COMPARE_WINDOW_DAYS; });
+        const prev = pts.filter(p => { const d = ago(p); return d >= BODY_COMPARE_WINDOW_DAYS && d < BODY_COMPARE_WINDOW_DAYS * 2; });
+        const avg = arr => arr.length ? arr.reduce((s, p) => s + p.value, 0) / arr.length : null;
+        const recentAvg = avg(recent), prevAvg = avg(prev);
+        const delta = last.value - first.value;
+        rows.push({
+          def, first, last, count: pts.length,
+          arrow: delta > 0 ? '↑' : delta < 0 ? '↓' : '→',
+          absDelta: Math.abs(delta),
+          changed: pts.length > 1 && Math.abs(delta) > 0.0001,
+          periodText: (recentAvg !== null && prevAvg !== null)
+            ? ('近 4 周均值 ' + formatMetricValue(def, recentAvg) + ' ／ 前 4 周 ' + formatMetricValue(def, prevAvg)
+               + '（' + (recentAvg - prevAvg >= 0 ? '+' : '-') + formatMetricValue(def, Math.abs(recentAvg - prevAvg)) + '）')
+            : ('数据点还不足以做 4 周对比（各 1 条以上才行）')
+        });
+      });
+      if (!rows.length) {
+        return `
+          <div class="body-compare">
+            <div class="body-compare-title">📈 变化对比</div>
+            <div class="body-compare-empty">还没有可对比的测量数据。点下方「＋ 记录身体变化」，至少填一项测量值（体重／腰围／静息心率／血压／睡眠）就能开始建立基线。</div>
+          </div>`;
+      }
       return `
-        <div class="body-trend-grid">
-          ${renderNumericTrendHtml('⚖️ 体重趋势', 'kg', weight)}
-          ${renderNumericTrendHtml('😴 睡眠趋势', 'h', sleep)}
+        <div class="body-compare">
+          <div class="body-compare-title">📈 变化对比（最早 → 最新）</div>
+          ${rows.map(r => `
+            <div class="body-compare-row">
+              <div class="body-compare-head">
+                <span class="body-compare-name">${r.def.icon} ${r.def.label}</span>
+                <span class="body-compare-val">${formatMetricValue(r.def, r.first.value)} → <b>${formatMetricValue(r.def, r.last.value)}</b> ${r.def.unit}${r.changed ? ` <span class="body-compare-arrow">${r.arrow}${formatMetricValue(r.def, r.absDelta)}</span>` : ''}</span>
+              </div>
+              <div class="body-compare-meta">${r.count} 次测量 · ${r.first.date} → ${r.last.date}</div>
+              <div class="body-compare-period">${r.periodText}</div>
+            </div>
+          `).join('')}
+          <div class="body-compare-foot">只呈现你自己记录的数据变化，不做"好／坏"判断。测量条件尽量一致（同一时间、同一状态），数据点越多越可靠，单次波动不代表趋势。</div>
         </div>
       `;
+    }
+
+    function renderBodyTrendsHtml(records) {
+      const defs = BODY_METRIC_DEFS.filter(d => d.key !== 'rating');
+      const blocks = defs.map(def => {
+        const pts = records
+          .filter(r => typeof r[def.key] === 'number' && !isNaN(r[def.key]))
+          .map(r => ({ date: r.date, value: r[def.key] }));
+        return renderNumericTrendHtml(def.seriesTitle, def.unit, pts);
+      }).filter(Boolean);
+      if (!blocks.length) return '';
+      return `<div class="body-trend-grid">${blocks.join('')}</div>`;
     }
 
     function renderBodyModule(container) {
@@ -9906,6 +10049,8 @@
         </div>
 
         ${renderBodyTrendsHtml(getBodyRecords())}
+
+        ${renderBodyComparisonHtml()}
 
         <button class="body-add-btn" onclick="openBodyModal()">＋ 记录身体变化</button>
 
